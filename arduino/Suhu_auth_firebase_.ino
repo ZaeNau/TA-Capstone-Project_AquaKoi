@@ -5,8 +5,8 @@
 #include <MQ135.h>
 
 // WiFi credentials
-const char* ssid = "wifi name";
-const char* password = "pass word wifi";
+const char* ssid = "Kos34D_Lt2_plus";
+const char* password = "Eric2010";
 
 // Firebase project details
 #define DATABASE_URL "ta-capstone-22597-default-rtdb.asia-southeast1.firebasedatabase.app"
@@ -26,59 +26,57 @@ FirebaseData firebaseData;
 
 void setup() {
   Serial.begin(9600);
+  
+  // Connect to WiFi
   WiFi.begin(ssid, password);
-  if (WiFi.status() == WL_CONNECTED) {
-      Serial.println("Connected to WiFi");
-  } else {
-      Serial.println("WiFi connection failed");
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
   }
+  Serial.println("");
+  Serial.println("WiFi connected!");
 
-  Serial.println("Connected with IP: " + WiFi.localIP().toString());
+  // Print local IP address
+  Serial.println("IP Address:");
+  Serial.println(WiFi.localIP());
 
   // Configure Firebase
   firebaseConfig.api_key = API_KEY;
   firebaseConfig.database_url = DATABASE_URL;
-
   Firebase.begin(&firebaseConfig, &firebaseAuth);
 
+  // Start sensors
   sensors.begin();
 }
 
 void loop() {
+  // Read temperature
   sensors.requestTemperatures();
   float temperatureC = sensors.getTempCByIndex(0);
   
   if (temperatureC != DEVICE_DISCONNECTED_C) {
-    if (Firebase.setFloat(firebaseData, "/Temperature", temperatureC)) { // Check if Firebase transaction succeeded
-      Serial.print("Suhu: ");
+    if (Firebase.setFloat(firebaseData, "/Temperature", temperatureC)) {
+      Serial.print("Temperature: ");
       Serial.print(temperatureC);
       Serial.println(" °C");
     } else {
-      // Handle Firebase transaction error
       Serial.println("Failed to update temperature to Firebase");
       Serial.println("Reason: "+ firebaseData.errorReason());
     }
   } else {
-    Serial.println("Error: Tidak dapat membaca suhu!");
+    Serial.println("Error: Unable to read temperature!");
   }
 
-  float air_quality = gasSensor.getPPM(); // Baca kualitas udara dari sensor MQ135
-  
-  // Membandingkan nilai dengan parameter 0.2 M/L
-  if (air_quality < 7.5) {
-    Firebase.setString(firebaseData, "/Environment/AirQuality/Status", "Good"); // update value string kualitas udara di firebase 
-    Serial.println("Kualitas udara baik.");
+  // Read air quality
+  float air_quality = gasSensor.getPPM();
+  if (Firebase.setFloat(firebaseData, "/Environment/AirQuality/PPM", air_quality)) {
+    Serial.print("Air Quality (PPM): ");
+    Serial.println(air_quality);
   } else {
-    Firebase.setString(firebaseData, "/Environment/AirQuality/Status", "Bad");
-    Serial.println("Kualitas udara buruk! Perlu perhatian lebih lanjut.");
+    Serial.println("Failed to update air quality PPM to Firebase");
+    Serial.println("Reason: " + firebaseData.errorReason());
   }
-    if (Firebase.setFloat(firebaseData, "/Environment/AirQuality/PPM", air_quality)) {
-        Serial.print("Kualiatas udara (PPM): ");
-        Serial.println(air_quality);
-    } else {
-        Serial.println("Failed to update air quality PPM to Firebase");
-        Serial.println("Reason: " + firebaseData.errorReason());
-    }
 
-  delay(2000); // Tunggu 2 detik sebelum membaca nilai sensor lagi
+  // Delay before reading sensors again
+  delay(2000);
 }
