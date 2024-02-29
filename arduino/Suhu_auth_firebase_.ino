@@ -5,8 +5,8 @@
 #include <MQ135.h>
 
 // WiFi credentials
-const char* ssid = "Kos34D";
-const char* password = "Eric2010";
+const char* ssid = "wifi name";
+const char* password = "pass word wifi";
 
 // Firebase project details
 #define DATABASE_URL "ta-capstone-22597-default-rtdb.asia-southeast1.firebasedatabase.app"
