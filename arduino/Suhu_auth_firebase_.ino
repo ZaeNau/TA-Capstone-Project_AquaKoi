@@ -49,13 +49,14 @@ void loop() {
   float temperatureC = sensors.getTempCByIndex(0);
   
   if (temperatureC != DEVICE_DISCONNECTED_C) {
-    if (Firebase.setFloat(firebaseData, "Temperature", temperatureC)) { // Check if Firebase transaction succeeded
+    if (Firebase.setFloat(firebaseData, "/Temperature", temperatureC)) { // Check if Firebase transaction succeeded
       Serial.print("Suhu: ");
       Serial.print(temperatureC);
       Serial.println(" °C");
     } else {
       // Handle Firebase transaction error
       Serial.println("Failed to update temperature to Firebase");
+      Serial.println("Reason: "+ firebaseData.errorReason());
     }
   } else {
     Serial.println("Error: Tidak dapat membaca suhu!");
@@ -65,17 +66,19 @@ void loop() {
   
   // Membandingkan nilai dengan parameter 0.2 M/L
   if (air_quality < 7.5) {
-    Firebase.setString(firebaseData, "Environment/AirQuality/Status", "Good"); // update value string kualitas udara di firebase 
+    Firebase.setString(firebaseData, "/Environment/AirQuality/Status", "Good"); // update value string kualitas udara di firebase 
     Serial.println("Kualitas udara baik.");
   } else {
-    Firebase.setString(firebaseData, "Environment/AirQuality/Status", "Bad");
+    Firebase.setString(firebaseData, "/Environment/AirQuality/Status", "Bad");
     Serial.println("Kualitas udara buruk! Perlu perhatian lebih lanjut.");
   }
-  Firebase.setFloat(firebaseData, "Environment/AirQuality/PPM", air_quality); // update value number kualitas udara
-
-  Serial.print("Kualitas Udara (PPM): ");
-  Serial.print(air_quality);
-  Serial.println(" PPM");
+    if (Firebase.setFloat(firebaseData, "/Environment/AirQuality/PPM", air_quality)) {
+        Serial.print("Kualiatas udara (PPM): ");
+        Serial.println(air_quality);
+    } else {
+        Serial.println("Failed to update air quality PPM to Firebase");
+        Serial.println("Reason: " + firebaseData.errorReason());
+    }
 
   delay(2000); // Tunggu 2 detik sebelum membaca nilai sensor lagi
 }
