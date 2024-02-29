@@ -27,10 +27,12 @@ FirebaseData firebaseData;
 void setup() {
   Serial.begin(9600);
   WiFi.begin(ssid, password);
-  while (WiFi.status() != WL_CONNECTED) {
-    Serial.print(".");
-    delay(500);
+  if (WiFi.status() == WL_CONNECTED) {
+      Serial.println("Connected to WiFi");
+  } else {
+      Serial.println("WiFi connection failed");
   }
+
   Serial.println("Connected with IP: " + WiFi.localIP().toString());
 
   // Configure Firebase
