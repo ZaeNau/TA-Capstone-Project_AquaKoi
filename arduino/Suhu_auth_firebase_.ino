@@ -46,10 +46,15 @@ void setup() {
   firebaseConfig.database_url = DATABASE_URL;
 
   Serial.println("Initializing Firebase...");
-  if (Firebase.begin(&firebaseConfig, &firebaseAuth)) {
+  Firebase.begin(&firebaseConfig, &firebaseAuth); // Memanggil fungsi Firebase.begin() tanpa menyimpan hasilnya dalam variabel
+
+  // Cek koneksi Firebase
+  if (Firebase.ready()) {
     Serial.println("Firebase initialized successfully");
   } else {
     Serial.println("ERROR: Failed to initialize Firebase");
+    // Tambahkan tindakan yang sesuai untuk menangani kesalahan inisialisasi Firebase
+    // Misalnya, Anda dapat mencoba kembali atau menampilkan pesan kesalahan
   }
 
   // Start sensors
