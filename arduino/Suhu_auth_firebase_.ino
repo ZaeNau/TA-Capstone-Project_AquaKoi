@@ -28,6 +28,7 @@ void setup() {
   Serial.begin(9600);
   
   // Connect to WiFi
+  Serial.println("Connecting to WiFi...");
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
@@ -43,7 +44,13 @@ void setup() {
   // Configure Firebase
   firebaseConfig.api_key = API_KEY;
   firebaseConfig.database_url = DATABASE_URL;
-  Firebase.begin(&firebaseConfig, &firebaseAuth);
+
+  Serial.println("Initializing Firebase...");
+  if (Firebase.begin(&firebaseConfig, &firebaseAuth)) {
+    Serial.println("Firebase initialized successfully");
+  } else {
+    Serial.println("ERROR: Failed to initialize Firebase");
+  }
 
   // Start sensors
   sensors.begin();
