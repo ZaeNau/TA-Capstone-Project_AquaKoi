@@ -6,11 +6,10 @@
 #include <Firebase_ESP_Client.h>
 #include <OneWire.h>
 #include <DallasTemperature.h>
+#include <MQ135.h>
 
-
-#define WIFI_SSID "NAMA_WIFI"
-#define WIFI_PASSWORD "PASSWORD_WIFI"
-
+#define WIFI_SSID "Kos34D_Lt2_plus"
+#define WIFI_PASSWORD "Eric2010"
 
 //TOKEN GEN
 #include "addons/TokenHelper.h"
@@ -19,16 +18,16 @@
 
 // Sensor pins
 #define ONE_WIRE_BUS 2
-#define MQ135_Pin A0
+#define MQ135_Pin 35
 
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
 MQ135 gasSensor(MQ135_Pin);
 
 // Insert Firebase project API Key
-#define API_KEY "AIzaSyDnPHLcIsq_Z35Rd1HVgl4RE-T13B8FYyQ"
+#define API_KEY "AIzaSyBN2McacTs5kKbfS2Lc5umzutLqZkHuQso"
 
-#define DATABASE_URL "https://test-esp32-c5e8c-default-rtdb.asia-southeast1.firebasedatabase.app/" 
+#define DATABASE_URL "https://ta-capstone-22597-default-rtdb.asia-southeast1.firebasedatabase.app/" 
 
 // Define Firebase Data object.
 FirebaseData fbdo;
@@ -40,7 +39,7 @@ FirebaseConfig config;
 // jarak waktu data variable to send/store data ke firebase database.
 
 unsigned long sendDataPrevMillis = 0;
-const long sendDataIntervalMillis = 10000; //=> 10 detik 
+const long sendDataIntervalMillis = 2000; //=> 2 detik 
 
 // Boolean variable for sign in status.
 bool signupOK = false;
@@ -102,7 +101,7 @@ void loop() {
     sendDataPrevMillis = millis();
 
     sendTemperatureData();
-    sendGasQualityData();
+    sendGasAmoniaData();
   }
 }
 
@@ -120,16 +119,16 @@ void sendTemperatureData() {
   }
 }
 
-void sendGasQualityData() {
+void sendGasAmoniaData() {
   int gasQuality = analogRead(MQ135_Pin);
   float ppm = gasQuality * (5.0 / 1023.0); 
-  Serial.print("Gas Quality (ppm): ");
+  Serial.print("Gas Amonia (ppm): ");
   Serial.println(ppm);
 
-  if (Firebase.RTDB.setFloat(&fbdo, "Sensors/GasQuality", ppm)) {
-    Serial.println("Gas quality data sent to Firebase");
+  if (Firebase.RTDB.setFloat(&fbdo, "Sensors/GasAmonia", ppm)) {
+    Serial.println("Gas ammonia data sent to Firebase");
   } else {
-    Serial.println("Failed to send gas quality data");
+    Serial.println("Failed to send gas ammonia data");
     Serial.println("REASON: " + fbdo.errorReason());
 
     Serial.println("---------------");
