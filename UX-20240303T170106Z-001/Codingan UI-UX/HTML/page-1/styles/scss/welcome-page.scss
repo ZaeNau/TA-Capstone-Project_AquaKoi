@@ -1,0 +1,109 @@
+
+html {
+	font-size:62.5%;
+}
+* {
+	margin: 0;
+	padding: 0;
+}
+ul, li {
+	list-style: none;
+}
+input {
+	border: none;
+}
+body {
+  width: 36rem;
+}.welcome-page-RC3 {
+  padding: 28.6rem 7.4rem 7.5rem 7.4rem;
+  align-items: center;
+  border-radius: 2.7rem;
+  flex-direction: column;
+  background-color: #ffffff;
+  box-sizing: border-box;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+
+  .group-36723-jiX {
+    width: 100%;
+    height: 6.8rem;
+    cursor: pointer;
+    display: flex;
+    margin-bottom: 19.7rem;
+    box-sizing: border-box;
+    padding-right: 1rem;
+    align-items: center;
+    flex-shrink: 0;
+
+    .aquakoi-1-FRy {
+      margin-right: 0.4rem;
+      width: 6rem;
+      height: 6rem;
+      object-fit: cover;
+      vertical-align: top;
+      flex-shrink: 0;
+    }
+    .group-2-mv7 {
+      flex-shrink: 0;
+      width: 13.8rem;
+      height: 100%;
+      position: relative;
+
+      .welcome-7yy {
+        left: 0.65rem;
+        top: 0;
+        font-size: 2.8rem;
+        font-weight: 700;
+        line-height: 1.2575;
+        color: #3873f9;
+        font-family: Google Sans, 'Source Sans Pro';
+        position: absolute;
+        white-space: nowrap;
+        height: 3.6rem;
+        text-align: center;
+        width: 11.2rem;
+      }
+      .group-1-DXD {
+        position: absolute;
+        left: 0;
+        top: 3.2rem;
+        display: flex;
+        align-items: center;
+        width: 13.8rem;
+        height: 3.6rem;
+
+        .to-ZLB {
+          margin-right: 0.6rem;
+          font-size: 2.8rem;
+          font-weight: 700;
+          line-height: 1.2575;
+          color: #3873f9;
+          font-family: Google Sans, 'Source Sans Pro';
+          white-space: nowrap;
+          flex-shrink: 0;
+        }
+        .aquakoi-6L7 {
+          font-family: Google Sans, 'Source Sans Pro';
+          white-space: nowrap;
+          flex-shrink: 0;
+          font-size: 2.8rem;
+          font-weight: 700;
+          line-height: 1.2575;
+        }
+      }
+    }
+  }
+  .for-your-better-koi-pond-companion-zgP {
+    text-align: center;
+    font-size: 1.1rem;
+    color: #3873f9;
+    flex-shrink: 0;
+    margin-right: 0.1rem;
+    font-weight: 700;
+    line-height: 1.2575;
+    font-family: Google Sans, 'Source Sans Pro';
+    white-space: nowrap;
+  }
+}
