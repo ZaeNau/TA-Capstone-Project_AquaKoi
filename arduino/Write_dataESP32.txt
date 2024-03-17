@@ -17,8 +17,9 @@
 #include "addons/RTDBHelper.h"
 
 // Sensor pins
-#define ONE_WIRE_BUS 2
-#define MQ135_Pin 35
+#define ONE_WIRE_BUS 2 // Pin analog untuk sensor Temperature
+#define MQ135_Pin 35 // Pin analog untuk sensor MQ135
+#define TDS_Pin 34  // Pin analog untuk sensor TDS
 
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
@@ -37,15 +38,13 @@ FirebaseAuth auth;
 FirebaseConfig config;
 
 // jarak waktu data variable to send/store data ke firebase database.
-
 unsigned long sendDataPrevMillis = 0;
-const long sendDataIntervalMillis = 2000; //=> 2 detik 
+const long sendDataIntervalMillis = 1000; //=> 1 detik 
 
 // Boolean variable for sign in status.
 bool signupOK = false;
 
 void setup() {
-  
   Serial.begin(115200);
   Serial.println();
 
@@ -57,13 +56,10 @@ void setup() {
   Serial.println(WIFI_SSID);
   while (WiFi.status() != WL_CONNECTED){
     Serial.print(".");
-
   }
   Serial.println();
   Serial.print("Successfully connected to : ");
   Serial.println(WIFI_SSID);
-  //Serial.print("IP : ");
-  //Serial.println(WiFi.localIP());
   Serial.println("---------------");
 
   // CONFIGURATION the api key (required).
@@ -96,12 +92,12 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  
   if (Firebase.ready() && signupOK && (millis() - sendDataPrevMillis > sendDataIntervalMillis || sendDataPrevMillis == 0)){
     sendDataPrevMillis = millis();
 
     sendTemperatureData();
     sendGasAmoniaData();
+    sendTDSData(); // tambahkan pengiriman data TDS
   }
 }
 
@@ -130,7 +126,18 @@ void sendGasAmoniaData() {
   } else {
     Serial.println("Failed to send gas ammonia data");
     Serial.println("REASON: " + fbdo.errorReason());
+  }
+}
 
-    Serial.println("---------------");
+void sendTDSData() {
+  int tdsValue = analogRead(TDS_Pin);
+  Serial.print("TDS Value: ");
+  Serial.println(tdsValue);
+
+  if (Firebase.RTDB.setFloat(&fbdo, "Sensors/TDS", tdsValue)) {
+    Serial.println("TDS data sent to Firebase");
+  } else {
+    Serial.println("Failed to send TDS data");
+    Serial.println("REASON: " + fbdo.errorReason());
   }
 }
