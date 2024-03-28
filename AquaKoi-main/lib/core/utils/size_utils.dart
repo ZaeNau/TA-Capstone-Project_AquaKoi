@@ -1,3 +1,5 @@
+// ignore_for_file: unused_import, constant_identifier_names, unnecessary_this
+
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 
@@ -14,9 +16,9 @@ typedef ResponsiveBuild = Widget Function(
 
 class Sizer extends StatelessWidget {
   const Sizer({
-    Key? key,
+    super.key,
     required this.builder,
-  }) : super(key: key);
+  });
 
   /// Builds the widget whenever the orientation changes.
   final ResponsiveBuild builder;

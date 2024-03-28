@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import '../widgets/app_bar/custom_app_bar.dart';
 import '../widgets/app_bar/appbar_title_searchview.dart';
 import '../widgets/app_bar/appbar_title_circleimage.dart';
