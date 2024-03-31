@@ -1,18 +1,32 @@
 import 'package:flutter/material.dart';
-import 'Presentation/welcome_page.dart';
+import 'package:flutter/services.dart';
+import 'core/app_export.dart';
+
+var globalMessengerKey = GlobalKey<ScaffoldMessengerState>();
 void main() {
-  runApp(AquaKoi());
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]);
+
+  ///Please update theme as per your need if required.
+  ThemeHelper().changeTheme('primary');
+  runApp(MyApp());
 }
 
-class AquaKoi extends StatelessWidget {
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        fontFamily: 'Google Sans',
-      ),
-      home: WelcomePage(),
+    return Sizer(
+      builder: (context, orientation, deviceType) {
+        return MaterialApp(
+          theme: theme,
+          title: 'aquakoi',
+          debugShowCheckedModeBanner: false,
+          initialRoute: AppRoutes.loginScreen,
+          routes: AppRoutes.routes,
+        );
+      },
     );
   }
 }
