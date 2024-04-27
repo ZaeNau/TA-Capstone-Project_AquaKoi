@@ -26,6 +26,6 @@ class AppRoutes {
     registerScreen: (context) => RegisterScreen(),
     dashboardScreen: (context) => DashboardScreen(),
     editProfileScreen: (context) => EditProfileScreen(),
-    appNavigationScreen: (context) => AppNavigationScreen()
+    appNavigationScreen: (context) => const AppNavigationScreen()
   };
 }

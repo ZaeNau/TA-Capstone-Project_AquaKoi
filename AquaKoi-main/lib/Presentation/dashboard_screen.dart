@@ -7,10 +7,7 @@ import 'package:flutter/material.dart';
 import '../core/app_export.dart';
 
 class DashboardScreen extends StatelessWidget {
-  DashboardScreen({Key? key})
-      : super(
-          key: key,
-        );
+  DashboardScreen({super.key});
 
   TextEditingController searchController = TextEditingController();
 
@@ -76,7 +73,7 @@ class DashboardScreen extends StatelessWidget {
             ),
           ),
           SizedBox(height: 10.v),
-          SizedBox(
+          const SizedBox(
             width: double.maxFinite,
             child: Divider(),
           ),
@@ -146,8 +143,8 @@ class DashboardScreen extends StatelessWidget {
                                 6.h,
                               ),
                               gradient: LinearGradient(
-                                begin: Alignment(0.03, 0.13),
-                                end: Alignment(1, 1),
+                                begin: const Alignment(0.03, 0.13),
+                                end: const Alignment(1, 1),
                                 colors: [
                                   appTheme.gray200,
                                   appTheme.gray100,
@@ -310,8 +307,8 @@ class DashboardScreen extends StatelessWidget {
                                 6.h,
                               ),
                               gradient: LinearGradient(
-                                begin: Alignment(0.03, 0.13),
-                                end: Alignment(1, 1),
+                                begin: const Alignment(0.03, 0.13),
+                                end: const Alignment(1, 1),
                                 colors: [
                                   appTheme.gray200,
                                   appTheme.gray100,
@@ -570,7 +567,7 @@ class DashboardScreen extends StatelessWidget {
               ],
             ),
           ),
-          Spacer(),
+          const Spacer(),
           Padding(
             padding: EdgeInsets.only(
               top: 12.v,
@@ -703,8 +700,8 @@ class DashboardScreen extends StatelessWidget {
                                 6.h,
                               ),
                               gradient: LinearGradient(
-                                begin: Alignment(0.03, 0.13),
-                                end: Alignment(1, 1),
+                                begin: const Alignment(0.03, 0.13),
+                                end: const Alignment(1, 1),
                                 colors: [
                                   appTheme.gray200,
                                   appTheme.gray100,
@@ -902,8 +899,8 @@ class DashboardScreen extends StatelessWidget {
                                     6.h,
                                   ),
                                   gradient: LinearGradient(
-                                    begin: Alignment(0.03, 0.13),
-                                    end: Alignment(1, 1),
+                                    begin: const Alignment(0.03, 0.13),
+                                    end: const Alignment(1, 1),
                                     colors: [
                                       appTheme.gray200,
                                       appTheme.gray100,

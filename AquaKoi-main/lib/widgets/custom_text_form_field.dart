@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import '../core/app_export.dart';
 
 class CustomTextFormField extends StatelessWidget {
-  CustomTextFormField({
-    Key? key,
+  const CustomTextFormField({
+    super.key,
     this.alignment,
     this.width,
     this.scrollPadding,
@@ -26,9 +26,7 @@ class CustomTextFormField extends StatelessWidget {
     this.fillColor,
     this.filled = true,
     this.validator,
-  }) : super(
-          key: key,
-        );
+  });
 
   final Alignment? alignment;
 

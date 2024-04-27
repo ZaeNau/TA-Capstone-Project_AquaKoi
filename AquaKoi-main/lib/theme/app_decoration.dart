@@ -16,8 +16,8 @@ class AppDecoration {
   // Gradient decorations
   static BoxDecoration get gradientGrayToBlueGray => BoxDecoration(
         gradient: LinearGradient(
-          begin: Alignment(0, 0.5),
-          end: Alignment(1, 0.5),
+          begin: const Alignment(0, 0.5),
+          end: const Alignment(1, 0.5),
           colors: [
             appTheme.gray80003,
             appTheme.blueGray400,
@@ -26,8 +26,8 @@ class AppDecoration {
       );
   static BoxDecoration get gradientLightBlueToBlueA => BoxDecoration(
         gradient: LinearGradient(
-          begin: Alignment(0, 0.5),
-          end: Alignment(1, 0.5),
+          begin: const Alignment(0, 0.5),
+          end: const Alignment(1, 0.5),
           colors: [
             appTheme.lightBlue400,
             appTheme.blueA400,

@@ -6,7 +6,7 @@ import '../core/app_export.dart';
 
 // ignore_for_file: must_be_immutable
 class EditProfileScreen extends StatelessWidget {
-  EditProfileScreen({Key? key}) : super(key: key);
+  EditProfileScreen({super.key});
 
   TextEditingController nameController = TextEditingController();
 
@@ -18,7 +18,7 @@ class EditProfileScreen extends StatelessWidget {
 
   TextEditingController confirmpasswordController = TextEditingController();
 
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {

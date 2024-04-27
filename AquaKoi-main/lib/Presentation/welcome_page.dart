@@ -35,7 +35,7 @@ class WelcomePage extends StatelessWidget {
                   style: TextStyle(
                     fontSize: screenSize.height * 0.048, // 3.5% of screen height for the font size
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF3873F9),
+                    color: const Color(0xFF3873F9),
                   ),
                 ),
               ),
@@ -46,7 +46,7 @@ class WelcomePage extends StatelessWidget {
                   style: TextStyle(
                     fontSize: screenSize.height * 0.021, // 2% of screen height for the font size
                     fontWeight: FontWeight.w400,
-                    color: Color(0xFF6B6B6B),
+                    color: const Color(0xFF6B6B6B),
                   ),
                   textAlign: TextAlign.center,
                 ),

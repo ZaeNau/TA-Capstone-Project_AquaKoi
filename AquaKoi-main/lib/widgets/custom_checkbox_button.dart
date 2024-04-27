@@ -5,7 +5,7 @@ import '../core/app_export.dart';
 
 class CustomCheckboxButton extends StatelessWidget {
   CustomCheckboxButton({
-    Key? key,
+    super.key,
     required this.onChange,
     this.decoration,
     this.alignment,
@@ -18,9 +18,7 @@ class CustomCheckboxButton extends StatelessWidget {
     this.textStyle,
     this.textAlignment,
     this.isExpandedText = false,
-  }) : super(
-          key: key,
-        );
+  });
 
   final BoxDecoration? decoration;
 
@@ -70,8 +68,8 @@ class CustomCheckboxButton extends StatelessWidget {
   Widget get leftSideCheckbox => Row(
         children: [
           Padding(
+            padding: const EdgeInsets.only(right: 8),
             child: checkboxWidget,
-            padding: EdgeInsets.only(right: 8),
           ),
           isExpandedText ? Expanded(child: textWidget) : textWidget,
         ],
@@ -81,7 +79,7 @@ class CustomCheckboxButton extends StatelessWidget {
         children: [
           isExpandedText ? Expanded(child: textWidget) : textWidget,
           Padding(
-            padding: EdgeInsets.only(left: 8),
+            padding: const EdgeInsets.only(left: 8),
             child: checkboxWidget,
           ),
         ],
@@ -95,7 +93,7 @@ class CustomCheckboxButton extends StatelessWidget {
         height: iconSize ?? 11.h,
         width: iconSize ?? 11.h,
         child: Checkbox(
-          visualDensity: VisualDensity(
+          visualDensity: const VisualDensity(
             vertical: -4,
             horizontal: -4,
           ),

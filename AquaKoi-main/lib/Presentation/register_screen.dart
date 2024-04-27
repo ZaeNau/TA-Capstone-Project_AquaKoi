@@ -6,10 +6,7 @@ import '../widgets/custom_text_form_field.dart';
 import '../core/app_export.dart';
 
 class RegisterScreen extends StatelessWidget {
-  RegisterScreen({Key? key})
-      : super(
-          key: key,
-        );
+  RegisterScreen({super.key});
 
   TextEditingController nameController = TextEditingController();
 
@@ -19,7 +16,7 @@ class RegisterScreen extends StatelessWidget {
 
   TextEditingController confirmpasswordController = TextEditingController();
 
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {

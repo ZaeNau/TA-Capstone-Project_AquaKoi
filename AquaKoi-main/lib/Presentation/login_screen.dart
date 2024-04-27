@@ -6,7 +6,7 @@ import '../core/app_export.dart';
 
 // ignore_for_file: must_be_immutable
 class LoginScreen extends StatelessWidget {
-  LoginScreen({Key? key}) : super(key: key);
+  LoginScreen({super.key});
 
   TextEditingController emailController = TextEditingController();
 
@@ -14,7 +14,7 @@ class LoginScreen extends StatelessWidget {
 
   bool rememberme = false;
 
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {

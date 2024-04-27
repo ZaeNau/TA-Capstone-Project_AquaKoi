@@ -3,8 +3,8 @@ import '/core/app_export.dart';
 
 // ignore: must_be_immutable
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  CustomAppBar({
-    Key? key,
+  const CustomAppBar({
+    super.key,
     this.height,
     this.styleType,
     this.leadingWidth,
@@ -12,9 +12,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.title,
     this.centerTitle,
     this.actions,
-  }) : super(
-          key: key,
-        );
+  });
 
   final double? height;
 

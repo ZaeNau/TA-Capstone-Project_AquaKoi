@@ -5,13 +5,11 @@ import '/core/app_export.dart';
 // ignore: must_be_immutable
 class AppbarTitleSearchview extends StatelessWidget {
   AppbarTitleSearchview({
-    Key? key,
+    super.key,
     this.hintText,
     this.controller,
     this.margin,
-  }) : super(
-          key: key,
-        );
+  });
 
   String? hintText;
 

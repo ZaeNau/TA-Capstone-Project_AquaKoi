@@ -27,10 +27,10 @@ class CustomTextStyles {
         color: theme.colorScheme.primary.withOpacity(0.5),
       );
   static get bodyMediumff000000 => theme.textTheme.bodyMedium!.copyWith(
-        color: Color(0XFF000000),
+        color: const Color(0XFF000000),
       );
   static get bodyMediumffffffff => theme.textTheme.bodyMedium!.copyWith(
-        color: Color(0XFFFFFFFF),
+        color: const Color(0XFFFFFFFF),
       );
   static get bodySmallGray80003 => theme.textTheme.bodySmall!.copyWith(
         color: appTheme.gray80003,
@@ -66,11 +66,11 @@ class CustomTextStyles {
       );
   // Label text style
   static get labelLargeff000000 => theme.textTheme.labelLarge!.copyWith(
-        color: Color(0XFF000000),
+        color: const Color(0XFF000000),
         fontWeight: FontWeight.w700,
       );
   static get labelLargeffffffff => theme.textTheme.labelLarge!.copyWith(
-        color: Color(0XFFFFFFFF),
+        color: const Color(0XFFFFFFFF),
         fontWeight: FontWeight.w700,
       );
   // Montserrat text style
