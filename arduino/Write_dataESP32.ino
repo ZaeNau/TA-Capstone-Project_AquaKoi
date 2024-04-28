@@ -7,6 +7,8 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
 #include <MQ135.h>
+#include <DFRobot_PH.h>
+
 
 #define WIFI_SSID "Kos34D_Lt2_plus"
 #define WIFI_PASSWORD "Eric2010"
@@ -17,8 +19,10 @@
 #include "addons/RTDBHelper.h"
 
 // Sensor pins
-#define ONE_WIRE_BUS 2
-#define MQ135_Pin 35
+#define ONE_WIRE_BUS 2 // Pin analog untuk sensor Temperature
+#define MQ135_Pin 35 // Pin analog untuk sensor MQ135
+#define TDS_Pin 34  // Pin analog untuk sensor TDS
+#define PH_SENSOR_PIN 32 // // Pin analog untuk sensor PH
 
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
@@ -37,15 +41,13 @@ FirebaseAuth auth;
 FirebaseConfig config;
 
 // jarak waktu data variable to send/store data ke firebase database.
-
 unsigned long sendDataPrevMillis = 0;
-const long sendDataIntervalMillis = 2000; //=> 2 detik 
+const long sendDataIntervalMillis = 1000; //=> 1 detik 
 
 // Boolean variable for sign in status.
 bool signupOK = false;
 
 void setup() {
-  
   Serial.begin(115200);
   Serial.println();
 
@@ -57,13 +59,10 @@ void setup() {
   Serial.println(WIFI_SSID);
   while (WiFi.status() != WL_CONNECTED){
     Serial.print(".");
-
   }
   Serial.println();
   Serial.print("Successfully connected to : ");
   Serial.println(WIFI_SSID);
-  //Serial.print("IP : ");
-  //Serial.println(WiFi.localIP());
   Serial.println("---------------");
 
   // CONFIGURATION the api key (required).
@@ -96,12 +95,13 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  
   if (Firebase.ready() && signupOK && (millis() - sendDataPrevMillis > sendDataIntervalMillis || sendDataPrevMillis == 0)){
     sendDataPrevMillis = millis();
 
     sendTemperatureData();
     sendGasAmoniaData();
+    sendTDSData();
+    sendPHData();
   }
 }
 
@@ -111,10 +111,30 @@ void sendTemperatureData() {
   Serial.print("Temperature: ");
   Serial.println(temperature);
 
+  // Kalibrasi suhu 
+  temperature = 1.0465 * temperature - 1.3365;
+
   if (Firebase.RTDB.setFloat(&fbdo, "Sensors/Temperature", temperature)) {
     Serial.println("Temperature data sent to Firebase");
   } else {
     Serial.println("Failed to send temperature data");
+    Serial.println("REASON: " + fbdo.errorReason());
+  }
+}
+
+void sendTDSData() {
+  int sensorValue = analogRead(TDS_Pin); // Membaca nilai sensor TDS
+  Serial.print("TDS Value: ");
+  Serial.println(sensorValue);
+
+  // kalibrasi TDS
+  float tdsValue = 0.2977 * sensorValue + 108.97;
+
+  // Mengirimkan nilai TDS yang sudah dikalibrasi ke Firebase
+  if (Firebase.RTDB.setFloat(&fbdo, "Sensors/TDS", tdsValue)) {
+    Serial.println("TDS data sent to Firebase");
+  } else {
+    Serial.println("Failed to send TDS data");
     Serial.println("REASON: " + fbdo.errorReason());
   }
 }
@@ -130,7 +150,30 @@ void sendGasAmoniaData() {
   } else {
     Serial.println("Failed to send gas ammonia data");
     Serial.println("REASON: " + fbdo.errorReason());
-
-    Serial.println("---------------");
   }
+}
+
+void sendPHData() {
+  float pHValue = readPHValue();
+  Serial.print("pH Value: ");
+  Serial.println(pHValue);
+  
+  // Kirim nilai pH ke Firebase
+  if (Firebase.RTDB.setFloat(&fbdo, "Sensors/pH", pHValue)) {
+    Serial.println("pH data sent to Firebase");
+  } else {
+    Serial.println("Failed to send pH data");
+    Serial.println("REASON: " + fbdo.errorReason());
+  }
+}
+
+float readPHValue() {
+  // Baca nilai analog dari sensor pH
+  int sensorValue = analogRead(PH_SENSOR_PIN);
+  
+  // Konversi nilai analog menjadi nilai pH
+  // Sesuaikan dengan karakteristik sensor pH Anda
+  float pH = map(sensorValue, 0, 1023, 0, 14); // Misalnya, konversi linier dari nilai analog ke pH (0-14)
+  
+  return pH;
 }
