@@ -68,7 +68,7 @@ void loop() {
   Serial.println(sensorValue);
 
   // Kalibrasi nilai TDS
-  float tdsValue = 0.2977 * sensorValue + 108.97;
+  float tdsValue = (0.6656 * sensorValue) + 69.604;
 
 
   // Baca tegangan dari sensor pH
@@ -87,7 +87,7 @@ void loop() {
   // Lakukan kalibrasi pH
   ph.calibration(voltage, temperature);
 
-  delay(2000); // Tunda selama 2 detik sebelum membaca sensor lagi
+  delay(3000); // Tunda selama 2 detik sebelum membaca sensor lagi
 }
 
 float readTemperature() {}
