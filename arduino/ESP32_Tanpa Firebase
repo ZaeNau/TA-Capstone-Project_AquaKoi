@@ -87,7 +87,7 @@ void loop() {
   // Lakukan kalibrasi pH
   ph.calibration(voltage, temperature);
 
-  delay(10000); // Tunda selama 10 detik sebelum membaca sensor lagi
+  delay(10000); // Tunda selama 2 detik sebelum membaca sensor lagi
 }
 
 float readTemperature() {}
