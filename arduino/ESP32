@@ -1,0 +1,93 @@
+#include <OneWire.h>
+#include <DallasTemperature.h>
+#include <MQ135.h>
+#include <DFRobot_PH.h>
+#include "DFRobot_ESP_PH.h"
+
+// Definisikan pin yang digunakan untuk koneksi ke sensor suhu
+#define ONE_WIRE_BUS 2 
+#define MQ_sensor 33
+#define TDS_Pin 32
+#define PH_PIN 34
+
+#define RL 47 // Nilai resistor RL adalah 47K 
+#define m -0.243 // Masukkan Kemiringan yang dihitung  
+#define b 0.32 // Masukkan intersep yang dihitung 
+#define Ro 1.72 // Masukkan nilai Ro yang ditemukan
+#define ESPADC 4096.0 // Nilai konversi Analog ke Digital pada ESP
+#define ESPVOLTAGE 3300 // Nilai tegangan yang digunakan oleh ESP (dalam mV)
+
+OneWire oneWire(ONE_WIRE_BUS); // Inisialisasi instance OneWire untuk komunikasi dengan sensor suhu
+DallasTemperature sensors(&oneWire); // Inisialisasi instance DallasTemperature untuk membaca suhu dari sensor
+MQ135 gasSensor(MQ_sensor); // Inisialisasi instance MQ135 untuk membaca kualitas udara
+DFRobot_ESP_PH ph;
+
+float temperature; // Variabel untuk menyimpan nilai suhu
+float voltage; // Variabel untuk menyimpan nilai tegangan
+
+void setup() {
+  Serial.begin(9600); // Mulai komunikasi serial untuk debugging
+  sensors.begin();    // Mulai komunikasi dengan sensor suhu
+}
+
+void loop() {
+
+  // Baca suhu dari sensor
+  sensors.requestTemperatures(); // Permintaan pembacaan suhu
+  temperature = sensors.getTempCByIndex(0); // Baca suhu dan simpan dalam variabel temperature
+   
+  // Periksa apakah pembacaan suhu valid
+  if (temperature != DEVICE_DISCONNECTED_C) {
+    // Lakukan kalibrasi suhu
+    temperature = 1.0465 * temperature - 1.3365;
+    
+    // Tampilkan suhu ke Serial Monitor
+    Serial.print("Suhu: ");
+    Serial.print(temperature);
+    Serial.println(" °C");
+
+  } else {
+    // Tampilkan pesan kesalahan jika pembacaan tidak valid
+    Serial.println("Error: Tidak dapat membaca suhu!");
+  }
+
+  // Baca kualitas udara dari sensor MQ135
+  float VRL = analogRead(MQ_sensor) * (3.3 / 1023.0); // Voltage drop across the MQ sensor
+  float Rs = ((3.3 * RL) / VRL) - RL; // Sensor resistance at gas concentration 
+  float ratio = Rs / Ro; // find ratio Rs/Ro
+  float ppm = pow(10, ((log10(ratio) - b) / m)); // Use formula to calculate ppm
+  
+  // Tampilkan kualitas udara (NH3) ke Serial Monitor
+  Serial.print("NH3 (ppm) = ");
+  Serial.println(ppm);
+
+
+  // Baca nilai sensor TDS
+  int sensorValue = analogRead(TDS_Pin);
+  Serial.print("TDS Value: ");
+  Serial.println(sensorValue);
+
+  // Kalibrasi nilai TDS
+  float tdsValue = 0.2977 * sensorValue + 108.97;
+
+
+  // Baca tegangan dari sensor pH
+  voltage = analogRead(PH_PIN) / ESPADC * ESPVOLTAGE; // Baca tegangan
+
+  // Baca nilai pH dengan kompensasi suhu
+  float phValue = ph.readPH(voltage, temperature); 
+
+  // Koreksi nilai pH menggunakan regresi linear
+  float corrected_pH = (-0.4869 * phValue) + 9.5045;
+
+  // Tampilkan nilai pH ke Serial Monitor
+  Serial.print("pH:");
+  Serial.println(phValue, 4);
+
+  // Lakukan kalibrasi pH
+  ph.calibration(voltage, temperature);
+
+  delay(2000); // Tunda selama 2 detik sebelum membaca sensor lagi
+}
+
+float readTemperature() {}
