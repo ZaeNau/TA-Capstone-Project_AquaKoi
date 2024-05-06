@@ -10,10 +10,10 @@
 #define TDS_Pin 32
 #define PH_PIN 34
 
-#define RL 47 // Nilai resistor RL adalah 47K 
-#define m -0.243 // Masukkan Kemiringan yang dihitung  
-#define b 0.32 // Masukkan intersep yang dihitung 
-#define Ro 1.72 // Masukkan nilai Ro yang ditemukan
+#define RL 10 // Nilai resistor RL 
+#define m -0.417 // Masukkan Kemiringan yang dihitung  
+#define b 0.425 // Masukkan intersep yang dihitung 
+#define Ro 13 // Masukkan nilai Ro yang ditemukan
 #define ESPADC 4096.0 // Nilai konversi Analog ke Digital pada ESP
 #define ESPVOLTAGE 3300 // Nilai tegangan yang digunakan oleh ESP (dalam mV)
 
@@ -52,15 +52,24 @@ void loop() {
   }
 
   // Baca kualitas udara dari sensor MQ135
-  float VRL = analogRead(MQ_sensor) * (3.3 / 1023.0); // Voltage drop across the MQ sensor
-  float Rs = ((3.3 * RL) / VRL) - RL; // Sensor resistance at gas concentration 
+  float VRL = analogRead(MQ_sensor) * (3.3 / 4095.0); // Voltage drop across the MQ sensor
+  float RS = (3.3 / VRL - 1) * 10; // Sensor resistance at gas concentration 
   float ratio = Rs / Ro; // find ratio Rs/Ro
   float ppm = pow(10, ((log10(ratio) - b) / m)); // Use formula to calculate ppm
   
-  // Tampilkan kualitas udara (NH3) ke Serial Monitor
-  Serial.print("NH3 (ppm) = ");
-  Serial.println(ppm);
+  total = total - readings[readIndex];
+  readings[readIndex] = ppm;
+  total = total + readings[readIndex];
+  readIndex = readIndex + 1;
 
+  if (readIndex >= numReadings) {
+    readIndex = 0;
+  }
+
+  average = total / numReadings;
+
+  Serial.print("Amonia ppm: ");
+  Serial.println(average); // Menampilkan nilai rata-rata ppm ke Serial Monitor
 
   // Baca nilai sensor TDS
   int sensorValue = analogRead(TDS_Pin);
