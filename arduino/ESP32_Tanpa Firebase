@@ -10,7 +10,7 @@
 #define TDS_Pin 32
 #define PH_PIN 34
 
-#define RL 1 // Nilai resistor RL adalah 47K 
+#define RL 47 // Nilai resistor RL adalah 47K 
 #define m -0.243 // Masukkan Kemiringan yang dihitung  
 #define b 0.32 // Masukkan intersep yang dihitung 
 #define Ro 1.72 // Masukkan nilai Ro yang ditemukan
