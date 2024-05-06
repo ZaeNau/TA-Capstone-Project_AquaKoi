@@ -10,7 +10,7 @@
 #define TDS_Pin 32
 #define PH_PIN 34
 
-#define RL 10 // Nilai resistor RL 
+#define RL 10 // Nilai resistor RL adalah 47K 
 #define m -0.417 // Masukkan Kemiringan yang dihitung  
 #define b 0.425 // Masukkan intersep yang dihitung 
 #define Ro 13 // Masukkan nilai Ro yang ditemukan
@@ -22,6 +22,11 @@ DallasTemperature sensors(&oneWire); // Inisialisasi instance DallasTemperature 
 MQ135 gasSensor(MQ_sensor); // Inisialisasi instance MQ135 untuk membaca kualitas udara
 DFRobot_ESP_PH ph;
 
+const int numReadings = 5; // Nilai pembacaan sample sebesar 5 kali
+float readings[numReadings];      
+int readIndex = 0;              
+float total = 0;                  
+float average = 0;
 float temperature; // Variabel untuk menyimpan nilai suhu
 float voltage; // Variabel untuk menyimpan nilai tegangan
 
@@ -54,7 +59,7 @@ void loop() {
   // Baca kualitas udara dari sensor MQ135
   float VRL = analogRead(MQ_sensor) * (3.3 / 4095.0); // Voltage drop across the MQ sensor
   float RS = (3.3 / VRL - 1) * 10; // Sensor resistance at gas concentration 
-  float ratio = Rs / Ro; // find ratio Rs/Ro
+  float ratio = RS / Ro; // find ratio Rs/Ro
   float ppm = pow(10, ((log10(ratio) - b) / m)); // Use formula to calculate ppm
   
   total = total - readings[readIndex];
@@ -96,7 +101,7 @@ void loop() {
   // Lakukan kalibrasi pH
   ph.calibration(voltage, temperature);
 
-  delay(10000); // Tunda selama 2 detik sebelum membaca sensor lagi
+  delay(10000); // Tunda selama 10 detik sebelum membaca sensor lagi
 }
 
 float readTemperature() {}
