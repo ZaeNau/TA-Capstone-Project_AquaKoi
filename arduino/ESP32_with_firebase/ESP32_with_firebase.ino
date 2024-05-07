@@ -101,6 +101,7 @@ void loop() {
 
     // Kalibrasi nilai TDS
     float tdsValue = (0.6656 * sensorValue) + 69.604;
+    uploadTds(tdsValue);
 
     // Baca tegangan dari sensor pH
     voltage = analogRead(PH_PIN) / ESPADC * ESPVOLTAGE;
@@ -155,6 +156,14 @@ void uploadAmonia(float ppm) {
     Serial.println("Amonia ppm uploaded to Firebase");
   } else {
     Serial.println("Error uploading amonia ppm");
+  }
+}
+
+void uploadTds(float TDS) {
+  if (Firebase.setFloat(firebaseData, "sensorData/TDS", TDS)) {
+    Serial.println("TDS Value uploaded to Firebase");
+  } else {
+    Serial.println("Error uploading TDS Value");
   }
 }
 
