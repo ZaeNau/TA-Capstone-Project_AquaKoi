@@ -44,7 +44,6 @@ float voltage; // Variabel untuk menyimpan nilai tegangan
 
 void setup() {
   Serial.begin(9600); // Mulai komunikasi serial untuk debugging
-  sensors.begin(); // Mulai komunikasi dengan sensors
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD); // Mulai menkoneksikan dengan WiFi
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
@@ -53,6 +52,7 @@ void setup() {
   Serial.println("Connected to Wi-Fi");
   Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH);
   signInUser("test@email.com", "TA123456"); // Sign in Authenticated users
+  sensors.begin(); // Mulai komunikasi dengan sensors 
 }
 //Proses Send/Read antara ESP32 dan Firebase
 void loop() {
@@ -138,7 +138,7 @@ void signInUser(const char* email, const char* password) {
 
 //Upload data ke Firebase
 void uploadTemperature(float temp) {
-  if (Firebase.setFloat(firebaseData, "temperature", temp)) {
+  if (Firebase.setFloat(firebaseData, "sensorData/temperature", temp)) {
     Serial.println("Temperature uploaded to Firebase");
   } else {
     Serial.println("Error uploading temperature");
@@ -146,7 +146,7 @@ void uploadTemperature(float temp) {
 }
 
 void uploadAmonia(float ppm) {
-  if (Firebase.setFloat(firebaseData, "amonia_ppm", ppm)) {
+  if (Firebase.setFloat(firebaseData, "sensorData/amonia_ppm", ppm)) {
     Serial.println("Amonia ppm uploaded to Firebase");
   } else {
     Serial.println("Error uploading amonia ppm");
@@ -154,9 +154,9 @@ void uploadAmonia(float ppm) {
 }
 
 void uploadPH(float pH) {
-  if (Firebase.setFloat(firebaseData, "ph_value", pH)) {
+  if (Firebase.setFloat(firebaseData, "sensorData/pH", pH)) {
     Serial.println("pH value uploaded to Firebase");
   } else {
-    Serial.println("Error uploading pH value");
+    Serial.println("Error uploading pH");
   }
 }
