@@ -8,7 +8,7 @@
 
 // Definisikan Firebase Database authentication
 #define FIREBASE_HOST "https://ta-capstone-22597-default-rtdb.asia-southeast1.firebasedatabase.app/"
-#define FIREBASE_AUTH ""// isi dengan auth token yang ada di serial monitor
+#define FIREBASE_AUTH "--Auth_token_Here--"// isi dengan auth token yang ada di serial monitor
 // Definisikan Wifi yang terkoneksi
 #define WIFI_SSID "Kos34D_Lt2_plus"
 #define WIFI_PASSWORD "Eric2010"
