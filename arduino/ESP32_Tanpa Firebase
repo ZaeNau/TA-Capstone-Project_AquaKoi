@@ -48,14 +48,10 @@ void loop() {
 void readTemperature() {
   sensors.requestTemperatures(); // Meminta pembacaan suhu dari sensor
   temperature = sensors.getTempCByIndex(0); // Mendapatkan nilai suhu dari sensor
-  if (temperature != DEVICE_DISCONNECTED_C) { // Mengecek keberhasilan pembacaan suhu
-    temperature = 1.0465 * temperature - 1.3365; // Melakukan kalibrasi suhu
-    Serial.print("Suhu: "); // Output ke Serial Monitor
-    Serial.print(temperature); // Output nilai suhu
-    Serial.println(" °C"); // Output satuan suhu
-  } else {
-    Serial.println("Error: Tidak dapat membaca suhu!"); // Output pesan kesalahan jika pembacaan gagal
-  }
+  temperature = 1.0465 * temperature - 1.3365; // Melakukan kalibrasi Regresi Linear suhu
+  Serial.print("Suhu: "); // Output ke Serial Monitor
+  Serial.print(temperature); // Output nilai suhu
+  Serial.println(" °C"); // Output satuan suhu
 }
 
 void readAirQuality() {
@@ -77,9 +73,9 @@ void readAirQuality() {
 
 void readTDS() {
   int sensorValue = analogRead(TDS_Pin); // Membaca nilai analog dari sensor TDS
+  float tdsValue = (0.6656 * sensorValue) + 69.604; // Melakukan kalibrasi nilai TDS
   Serial.print("TDS Value: "); // Output ke Serial Monitor
   Serial.println(sensorValue); // Output nilai TDS
-  float tdsValue = (0.6656 * sensorValue) + 69.604; // Melakukan kalibrasi nilai TDS
 }
 
 void readPH() {
