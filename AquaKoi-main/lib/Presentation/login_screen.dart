@@ -14,7 +14,12 @@ class LoginScreen extends StatelessWidget {
 
   bool rememberme = false;
 
+<<<<<<< Updated upstream
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+=======
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  
+>>>>>>> Stashed changes
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +39,7 @@ class LoginScreen extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   SizedBox(height: 1.v),
+                                  
                                   Text("Log in",
                                       style:
                                           CustomTextStyles.titleLargePrimary22),
@@ -45,10 +51,12 @@ class LoginScreen extends StatelessWidget {
                                       width: 220.h,
                                       controller: emailController,
                                       hintText: "ikankoiku@gmail.com",
-                                      hintStyle:
-                                          CustomTextStyles.bodyMediumInter,
                                       textInputType:
-                                          TextInputType.emailAddress),
+                                          TextInputType.emailAddress,
+                                      textStyle:  CustomTextStyles.bodyMediumInter.copyWith(
+                                        color: Color(0XFF000000),
+                                      ),
+                                          ),
                                   SizedBox(height: 16.v),
                                   Text("Password",
                                       style: theme.textTheme.bodyMedium),

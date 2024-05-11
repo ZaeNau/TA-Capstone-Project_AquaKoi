@@ -1,10 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:koiaqua/Presentation/login_screen.dart';
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // Schedule navigation after build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Future.delayed(Duration(seconds: 1), () {
+        Navigator.pushReplacement(
+          context,
+          PageRouteBuilder(
+            transitionDuration: Duration(milliseconds: 650),
+            pageBuilder: (_, __, ___) => LoginScreen(),
+            transitionsBuilder: (_, animation, __, child) {
+              return FadeTransition(
+                opacity: animation,
+                child: child,
+              );
+            },
+          ),
+        );
+      });
+    });
+
     // Get the screen size for responsive design
     Size screenSize = MediaQuery.of(context).size;
 

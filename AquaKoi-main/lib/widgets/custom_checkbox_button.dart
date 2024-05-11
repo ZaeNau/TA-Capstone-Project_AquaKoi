@@ -98,7 +98,7 @@ class CustomCheckboxButton extends StatelessWidget {
             horizontal: -4,
           ),
           value: value ?? false,
-          checkColor: appTheme.gray40001,
+          checkColor: appTheme.gray400,
           onChanged: (value) {
             onChange(value!);
           },

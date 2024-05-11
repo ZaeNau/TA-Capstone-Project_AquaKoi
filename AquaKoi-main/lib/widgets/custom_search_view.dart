@@ -102,7 +102,7 @@ class CustomSearchView extends StatelessWidget {
         hintStyle: hintStyle ?? CustomTextStyles.bodySmallGray80003,
         prefixIcon: Padding(
           padding: EdgeInsets.all(
-            15.h,
+            5.h,
           ),
           child: Icon(
             Icons.search,
@@ -116,7 +116,7 @@ class CustomSearchView extends StatelessWidget {
         suffixIcon: suffix ??
             Padding(
               padding: EdgeInsets.only(
-                right: 15.h,
+                right: 1.h,
               ),
               child: IconButton(
                 onPressed: () => controller!.clear(),
@@ -131,12 +131,12 @@ class CustomSearchView extends StatelessWidget {
               maxHeight: 32.v,
             ),
         isDense: true,
-        contentPadding: contentPadding ?? EdgeInsets.all(9.h),
+        contentPadding: contentPadding ?? EdgeInsets.all(5.h),
         fillColor: fillColor ?? theme.colorScheme.onSecondaryContainer,
         filled: filled,
         border: borderDecoration ??
             OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16.h),
+              borderRadius: BorderRadius.circular(10.h),
               borderSide: BorderSide(
                 color: appTheme.gray400,
                 width: 1,
@@ -144,7 +144,7 @@ class CustomSearchView extends StatelessWidget {
             ),
         enabledBorder: borderDecoration ??
             OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16.h),
+              borderRadius: BorderRadius.circular(10.h),
               borderSide: BorderSide(
                 color: appTheme.gray400,
                 width: 1,
@@ -152,10 +152,10 @@ class CustomSearchView extends StatelessWidget {
             ),
         focusedBorder: borderDecoration ??
             OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16.h),
+              borderRadius: BorderRadius.circular(10.h),
               borderSide: BorderSide(
-                color: appTheme.gray400,
-                width: 1,
+                color: appTheme.gray300,
+                width: 0.5,
               ),
             ),
       );

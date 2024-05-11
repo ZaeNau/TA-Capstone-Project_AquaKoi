@@ -13,8 +13,9 @@ class AppDecoration {
         color: theme.colorScheme.onSecondaryContainer,
       );
 
-  // Gradient decorations
+  // Gradient decoration examples
   static BoxDecoration get gradientGrayToBlueGray => BoxDecoration(
+<<<<<<< Updated upstream
         gradient: LinearGradient(
           begin: const Alignment(0, 0.5),
           end: const Alignment(1, 0.5),
@@ -34,6 +35,32 @@ class AppDecoration {
           ],
         ),
       );
+=======
+       borderRadius: BorderRadius.circular(20),  // Rounded edges for the button
+    gradient: LinearGradient(
+      begin: Alignment.centerLeft,
+      end: Alignment.centerRight,
+      colors: [
+        Colors.grey[600]!, // Start of gradient
+        Colors.grey[900]!, // End of gradient
+      ],
+    ),
+  );
+
+  static BoxDecoration get gradientLightBlueToBlueA => BoxDecoration(
+    borderRadius: BorderRadius.circular(20),  // Rounded edges for the button
+    gradient: LinearGradient(
+      begin: Alignment.centerLeft,
+      end: Alignment.centerRight,
+      colors: [
+        Colors.blue[700]!, // Start of gradient
+        Colors.lightBlue[400]!, // End of gradient
+      ],
+    ),
+  );
+
+
+>>>>>>> Stashed changes
 
   // Outline decorations
   static BoxDecoration get outlineBlueGray => BoxDecoration(
@@ -52,19 +79,19 @@ class BorderRadiusStyle {
 
   // Rounded borders
   static BorderRadius get roundedBorder11 => BorderRadius.circular(
-        11.h,
+        12.h,
       );
   static BorderRadius get roundedBorder15 => BorderRadius.circular(
-        15.h,
+        12.h,
       );
   static BorderRadius get roundedBorder18 => BorderRadius.circular(
-        18.h,
+        12.h,
       );
   static BorderRadius get roundedBorder68 => BorderRadius.circular(
-        68.h,
+        12.h,
       );
   static BorderRadius get roundedBorder8 => BorderRadius.circular(
-        8.h,
+        12.h,
       );
 }
 

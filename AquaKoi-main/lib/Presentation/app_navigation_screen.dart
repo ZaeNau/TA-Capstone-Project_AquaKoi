@@ -24,6 +24,10 @@ class AppNavigationScreen extends StatelessWidget {
                       children: [
                         _buildScreenTitle(
                           context,
+                          screenTitle: "Welcome Page",
+                        ),
+                        _buildScreenTitle(
+                          context,
                           screenTitle: "Login",
                         ),
                         _buildScreenTitle(
@@ -33,6 +37,10 @@ class AppNavigationScreen extends StatelessWidget {
                         _buildScreenTitle(
                           context,
                           screenTitle: "Dashboard",
+                        ),
+                         _buildScreenTitle(
+                          context,
+                          screenTitle: "Profile",
                         ),
                         _buildScreenTitle(
                           context,

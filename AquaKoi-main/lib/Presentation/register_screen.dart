@@ -1,9 +1,12 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
+import 'package:koiaqua/Presentation/login_screen.dart';
 import '../widgets/custom_outlined_button.dart';
 import '../widgets/custom_text_form_field.dart';
 import '../core/app_export.dart';
+import 'package:flutter/gestures.dart';
+
 
 class RegisterScreen extends StatelessWidget {
   RegisterScreen({super.key});
@@ -85,6 +88,13 @@ class RegisterScreen extends StatelessWidget {
                           TextSpan(
                             text: "Log in",
                             style: CustomTextStyles.labelLargeffffffff,
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => LoginScreen()),
+                                );
+                              },
                           ),
                         ],
                       ),
@@ -147,9 +157,16 @@ class RegisterScreen extends StatelessWidget {
 
   /// Section Widget
   Widget _buildSignUp(BuildContext context) {
-    return CustomOutlinedButton(
-      width: 220.h,
-      text: "Sign up",
-    );
-  }
+  return CustomOutlinedButton(
+    width: 220.h,
+    text: "Sign up",
+    onPressed: () {
+      // Navigate to the LoginScreen when the button is pressed
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => LoginScreen())
+      );
+    },
+  );
+}
 }

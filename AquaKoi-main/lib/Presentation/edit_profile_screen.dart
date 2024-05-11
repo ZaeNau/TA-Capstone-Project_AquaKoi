@@ -1,3 +1,5 @@
+import 'package:koiaqua/Presentation/dashboard_screen.dart';
+
 import '../widgets/app_bar/custom_app_bar.dart';
 import '../widgets/app_bar/appbar_title.dart';
 import '../widgets/custom_text_form_field.dart';
@@ -213,28 +215,62 @@ class EditProfileScreen extends StatelessWidget {
   }
 
   /// Section Widget
-  Widget _buildBottomBar(BuildContext context) {
+    Widget _buildBottomBar(BuildContext context) {
     return Container(
-        margin: EdgeInsets.only(left: 26.h, right: 30.h),
-        child: SizedBox(
-            height: 45.v,
-            width: 304.h,
-            child: Stack(alignment: Alignment.centerRight, children: [
-              Align(
-                  alignment: Alignment.center,
-                  child: Container(
-                      height: 45.v,
-                      width: 304.h,
-                      decoration: BoxDecoration(
-                          color: appTheme.blueA400,
-                          borderRadius: BorderRadius.circular(15.h)))),
-              CustomImageView(
-                  imagePath: ImageConstant.imgGroup36708,
-                  height: 23.v,
-                  alignment: Alignment.centerRight,
-                  margin: EdgeInsets.only(right: 34.h))
-            ])));
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05), // Very light opacit 
+            spreadRadius: 0,
+            blurRadius: 1, // Adjust blur radius to control the shadow spread
+            offset: Offset(0, -1), // Changes position of shadow
+          ),
+        ],
+        border: Border(
+          top: BorderSide(color: Colors.white, width: 1.5), // White line as a top border
+        ),
+      ),
+      child: BottomNavigationBar(
+        currentIndex: 1, // Set currentIndex to 1 for "edit profile"
+        selectedItemColor: Colors.blue,  // Adjust as needed
+        unselectedItemColor: Colors.grey,  // Adjust as needed
+        backgroundColor: Color(0xFFDFEAF5),  // Use the hex color for the background
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Beranda',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profil',
+          ),
+        ],
+        onTap: (index) {
+          switch (index) {
+            case 0:
+              // Navigate to DashboardScreen when "Beranda" is tapped
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DashboardScreen(),
+                ),
+              );
+              break;
+            case 1:
+              // Navigate to EditProfileScreen when "Profil" is tapped
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EditProfileScreen(),
+                ),
+              );
+              break;
+          }
+        },
+      ),
+    );
   }
+
 
   /// Navigates to the dashboardScreen when the action is triggered.
   onTapEight(BuildContext context) {

@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
           theme: theme,
           title: 'aquakoi',
           debugShowCheckedModeBanner: false,
-          initialRoute: AppRoutes.loginScreen,
+          initialRoute: AppRoutes.welcomepage,
           routes: AppRoutes.routes,
         );
       },
