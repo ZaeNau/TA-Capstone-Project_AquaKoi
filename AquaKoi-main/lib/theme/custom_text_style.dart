@@ -50,8 +50,8 @@ class CustomTextStyles {
         fontWeight: FontWeight.w700,
       ).googleSans;
   static get googleSansPrimaryContainer => TextStyle(
-        color: theme.colorScheme.primaryContainer.withOpacity(0.54),
-        fontSize: 6.fSize,
+        color: theme.colorScheme.primaryContainer,
+        fontSize: 10.fSize,
         fontWeight: FontWeight.w400,
       ).googleSans;
   static get googleSansSecondaryContainer => TextStyle(

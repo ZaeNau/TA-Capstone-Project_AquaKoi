@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:koiaqua/Presentation/edit_profile_screen.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 
 import '../widgets/app_bar/custom_app_bar.dart';
 import '../widgets/app_bar/appbar_title_searchview.dart';
@@ -342,51 +343,36 @@ PreferredSizeWidget _buildAppBar(BuildContext context) {
                                   ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(left: 5.h),
+                                  padding: EdgeInsets.symmetric(horizontal: 1, vertical: 3),
                                   child: Container(
-                                    height: 16.v,
-                                    width: 132.h,
-                                    decoration: BoxDecoration(
-                                      color: appTheme.blueGray100,
-                                      borderRadius: BorderRadius.circular(
-                                        8.h,
-                                      ),
-                                    ),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(
-                                        8.h,
-                                      ),
-                                      child: LinearProgressIndicator(
-                                        value: 0.77,
-                                        backgroundColor: appTheme.blueGray100,
-                                        valueColor:
-                                            AlwaysStoppedAnimation<Color>(
-                                          appTheme.greenA700,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(height: 2.v),
-                                Padding(
-                                  padding: EdgeInsets.only(left: 5.h),
-                                  child: Text(
-                                    "Level accuracy",
-                                    style: CustomTextStyles
+                                    height: 15.v,
+                                    
+        
+                                    child: LinearPercentIndicator(
+                                      width: 177,
+                                      lineHeight: 30,
+                                      backgroundColor: appTheme.blueGray100,
+                                      progressColor: appTheme.greenA700,
+                                      percent: 0.7,
+                                      center: Text(
+                                        "70%",
+                                        style: CustomTextStyles
                                         .googleSansPrimaryContainer,
+                                      ),
+                                      animation: true,
+                                      animationDuration: 1000,
+                                      barRadius: Radius.circular(20),
+                                    
+                                    ),
                                   ),
                                 ),
+                                SizedBox(height: 10.v),
+                           
                               ],
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsets.only(right: 24.h),
-                          child: _buildFifteen(
-                            context,
-                            twentyFive: "75%",
-                          ),
-                        ),
+                       
                       ],
                     ),
                   ),
