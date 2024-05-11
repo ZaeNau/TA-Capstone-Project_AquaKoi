@@ -60,7 +60,7 @@ class _ToggleButtonState extends State<ToggleButton> {
                 width: 25,
                 height: 25,
                 decoration: BoxDecoration(
-                  color: isOn ? Color.fromARGB(255, 0, 0, 0) : Color.fromARGB(255, 0, 0, 0), // Toggle button color
+                  color: isOn ? const Color.fromARGB(255, 255, 255, 255) : const Color.fromARGB(255, 255, 255, 255), // Toggle button color
                   shape: BoxShape.circle,
                   border: Border.all(
                     color: isOn ? Colors.blue : Colors.grey, // Border color
