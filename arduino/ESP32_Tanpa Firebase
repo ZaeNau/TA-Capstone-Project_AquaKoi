@@ -75,15 +75,15 @@ void readTDS() {
   int sensorValue = analogRead(TDS_Pin); // Membaca nilai analog dari sensor TDS
   float tdsValue = (0.6656 * sensorValue) + 69.604; // Melakukan kalibrasi nilai TDS
   Serial.print("TDS Value: "); // Output ke Serial Monitor
-  Serial.println(sensorValue); // Output nilai TDS
+  Serial.println(tdsValue); // Output nilai TDS
 }
 
 void readPH() {
   voltage = analogRead(PH_PIN) / ESPADC * ESPVOLTAGE; // Membaca tegangan dari sensor pH
   float phValue = ph.readPH(voltage, temperature); // Mendapatkan nilai pH dari sensor
   float corrected_pH = (-0.4869 * phValue) + 9.5045; // Koreksi nilai pH
-  Serial.print("pH:"); // Output ke Serial Monitor
-  Serial.println(phValue, 4); // Output nilai pH
+  Serial.print("pH: "); // Output ke Serial Monitor
+  Serial.println(corrected_pH); // Output nilai pH
   ph.calibration(voltage, temperature); // Melakukan kalibrasi pH
 }
 
@@ -94,7 +94,7 @@ void readTurbidity() {
   total = total + readings[currentIndex]; // Mengupdate total pembacaan
   currentIndex = (currentIndex + 1) % numReadings; // Pindah ke indeks berikutnya, atur kembali ke 0 jika sudah mencapai batas
   int average = total / numReadings; // Menghitung rata-rata pembacaan sensor
-  int kekeruhan = map(average, 0, 700, 100, 0); // Konversi nilai sensor ke nilai kekeruhan dalam rentang 0-100
+  float kekeruhan = map(average, 0, 700, 100, 0); // Konversi nilai sensor ke nilai kekeruhan dalam rentang 0-100
   Serial.print("Kekeruhan Air : "); // Output ke Serial Monitor
   Serial.println(kekeruhan); // Output nilai kekeruhan air
 }
