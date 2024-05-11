@@ -1,5 +1,5 @@
 #include <WiFi.h>
-#include <Firebase_ESP32.h>
+#include <FirebaseESP32.h>
 #include <OneWire.h>
 #include <DallasTemperature.h>
 #include <MQ135.h>
@@ -24,8 +24,8 @@ DallasTemperature sensors(&oneWire); // Inisialisasi DallasTemperature untuk pem
 MQ135 gasSensor(MQ_sensor); // Inisialisasi MQ135 untuk pembacaan kualitas udara
 DFRobot_ESP_PH ph; // Inisialisasi DFRobot_ESP_PH untuk pembacaan pH
 
-const char *ssid = "nama_wifi"; // Nama WiFi
-const char *password = "password_wifi"; // Kata sandi WiFi
+const char *ssid = "Kos34D_Lt2_plus"; // Nama WiFi
+const char *password = "Eric2010"; // Kata sandi WiFi
 
 const char *firebaseHost = "https://ta-capstone-22597-default-rtdb.asia-southeast1.firebasedatabase.app/"; // URL Firebase Realtime Database
 const char *authToken = "AIzaSyBN2McacTs5kKbfS2Lc5umzutLqZkHuQso"; // Token API Firebase
@@ -41,7 +41,7 @@ float temperature; // Variabel untuk menyimpan nilai suhu
 float voltage; // Variabel untuk menyimpan nilai tegangan
 int currentIndex = 0; // Indeks saat ini untuk pembacaan sensor kekeruhan
 
-FirebaseData firebaseData; // Deklarasi objek FirebaseData untuk koneksi Firebase
+FirebaseData fbdo; // Deklarasi objek FirebaseObject untuk koneksi Firebase
 
 void setup() {
   Serial.begin(9600); // Memulai komunikasi serial untuk debugging
@@ -57,14 +57,6 @@ void setup() {
 
   // Inisialisasi koneksi Firebase
   Firebase.begin(firebaseHost, authToken, email, passwordFirebase);
-
-  // Autentikasi pengguna dengan Firebase
-  FirebaseAuthData data = Firebase.authWithPassword(email, passwordFirebase);
-  if (data.success) {
-    Serial.println("Authentication success");
-  } else {
-    Serial.println("Authentication failed");
-  }
 }
 
 void loop() {
@@ -102,7 +94,7 @@ void readAirQuality() {
   Serial.println(average); // Output nilai rata-rata ppm
 
   // Setelah mendapatkan nilai average, simpan ke Firebase
-  Firebase.setInt(firebaseData, "/amonium_ppm", average);
+  Firebase.setInt(fbdo, "/amonium_ppm", average);
 }
 
 void readTDS() {
@@ -112,7 +104,7 @@ void readTDS() {
   Serial.println(sensorValue); // Output nilai TDS
 
   // Setelah mendapatkan nilai sensorValue, simpan ke Firebase
-  Firebase.setInt(firebaseData, "/tds_value", sensorValue);
+  Firebase.setInt(fbdo, "/tds_value", sensorValue);
 }
 
 void readPH() {
@@ -123,7 +115,7 @@ void readPH() {
   Serial.println(phValue, 4); // Output nilai pH
 
   // Setelah mendapatkan nilai phValue, simpan ke Firebase
-  Firebase.setFloat(firebaseData, "/ph_value", phValue);
+  Firebase.setFloat(fbdo, "/ph_value", phValue);
 }
 
 void readTurbidity() {
@@ -138,5 +130,5 @@ void readTurbidity() {
   Serial.println(kekeruhan); // Output nilai kekeruhan air
 
   // Setelah mendapatkan nilai kekeruhan, simpan ke Firebase
-  Firebase.setInt(firebaseData, "/turbidity", kekeruhan);
+  Firebase.setInt(fbdo, "/turbidity", kekeruhan);
 }
