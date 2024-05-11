@@ -11,11 +11,6 @@ import '../widgets/app_bar/appbar_title_searchview.dart';
 import 'package:flutter/material.dart';
 import '../core/app_export.dart';
 
-<<<<<<< Updated upstream
-class DashboardScreen extends StatelessWidget {
-  DashboardScreen({super.key});
-=======
->>>>>>> Stashed changes
 
 
 class ToggleButton extends StatefulWidget {
@@ -220,18 +215,6 @@ PreferredSizeWidget _buildAppBar(BuildContext context) {
               ),
             ],
           ),
-<<<<<<< Updated upstream
-          SizedBox(height: 10.v),
-          const SizedBox(
-            width: double.maxFinite,
-            child: Divider(),
-          ),
-        ],
-      ),
-      styleType: Style.bgFill,
-    );
-  }
-=======
         ),
         SizedBox(height: 1), // Space between the search bar and the divider
         Divider(), // A dividing line
@@ -242,7 +225,6 @@ PreferredSizeWidget _buildAppBar(BuildContext context) {
   );
 }
 
->>>>>>> Stashed changes
 
   /// Section Widget
   Widget _buildFortyFour(BuildContext context) {
@@ -737,78 +719,6 @@ Widget _buildTwo(BuildContext context) {
                 ),
             ],
           ),
-<<<<<<< Updated upstream
-          const Spacer(),
-          Padding(
-            padding: EdgeInsets.only(
-              top: 12.v,
-              right: 4.h,
-              bottom: 12.v,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Heater",
-                  style: CustomTextStyles.bodySmallPrimaryContainer_1,
-                ),
-                SizedBox(height: 3.v),
-                Container(
-                  width: 41.h,
-                  padding: EdgeInsets.all(1.h),
-                  decoration: AppDecoration.gradientLightBlueToBlueA.copyWith(
-                    borderRadius: BorderRadiusStyle.roundedBorder8,
-                  ),
-                  child: Container(
-                    width: 14.adaptSize,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 2.h,
-                      vertical: 3.v,
-                    ),
-                    decoration: AppDecoration.fillOnSecondaryContainer.copyWith(
-                      borderRadius: BorderRadiusStyle.roundedBorder8,
-                    ),
-                    child: Text(
-                      "ON",
-                      style: CustomTextStyles.montserratBlueA400,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 3.v),
-                Text(
-                  "Cooler",
-                  style: CustomTextStyles.bodySmallPrimaryContainer_1,
-                ),
-                SizedBox(height: 3.v),
-                Container(
-                  width: 41.h,
-                  padding: EdgeInsets.all(1.h),
-                  decoration: AppDecoration.gradientGrayToBlueGray.copyWith(
-                    borderRadius: BorderRadiusStyle.roundedBorder8,
-                  ),
-                  child: Container(
-                    width: 14.adaptSize,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 1.h,
-                      vertical: 3.v,
-                    ),
-                    decoration: AppDecoration.fillOnSecondaryContainer.copyWith(
-                      borderRadius: BorderRadiusStyle.roundedBorder8,
-                    ),
-                    child: Text(
-                      "OFF",
-                      style: CustomTextStyles.montserratGray300,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-=======
         ),
         SizedBox(height: 24.v),
         Padding(
@@ -854,7 +764,6 @@ Widget _buildTwo(BuildContext context) {
   
 }
 
->>>>>>> Stashed changes
 
   /// Section Widget
   Widget _buildThirtyFive(BuildContext context) {

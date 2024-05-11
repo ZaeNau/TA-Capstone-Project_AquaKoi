@@ -14,12 +14,8 @@ class LoginScreen extends StatelessWidget {
 
   bool rememberme = false;
 
-<<<<<<< Updated upstream
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-=======
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   
->>>>>>> Stashed changes
 
   @override
   Widget build(BuildContext context) {

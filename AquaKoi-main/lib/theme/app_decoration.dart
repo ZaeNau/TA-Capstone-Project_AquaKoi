@@ -15,27 +15,6 @@ class AppDecoration {
 
   // Gradient decoration examples
   static BoxDecoration get gradientGrayToBlueGray => BoxDecoration(
-<<<<<<< Updated upstream
-        gradient: LinearGradient(
-          begin: const Alignment(0, 0.5),
-          end: const Alignment(1, 0.5),
-          colors: [
-            appTheme.gray80003,
-            appTheme.blueGray400,
-          ],
-        ),
-      );
-  static BoxDecoration get gradientLightBlueToBlueA => BoxDecoration(
-        gradient: LinearGradient(
-          begin: const Alignment(0, 0.5),
-          end: const Alignment(1, 0.5),
-          colors: [
-            appTheme.lightBlue400,
-            appTheme.blueA400,
-          ],
-        ),
-      );
-=======
        borderRadius: BorderRadius.circular(20),  // Rounded edges for the button
     gradient: LinearGradient(
       begin: Alignment.centerLeft,
@@ -60,7 +39,6 @@ class AppDecoration {
   );
 
 
->>>>>>> Stashed changes
 
   // Outline decorations
   static BoxDecoration get outlineBlueGray => BoxDecoration(
