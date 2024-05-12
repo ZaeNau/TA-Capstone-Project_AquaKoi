@@ -216,6 +216,9 @@ class PrimaryColors {
 
   // Purple
   Color get purpleA200 => const Color(0XFFFB36F4);
+
+  //red
+  Color get Red1 => const Color(0XFFE64646);
 }
 
 PrimaryColors get appTheme => ThemeHelper().themeColor();

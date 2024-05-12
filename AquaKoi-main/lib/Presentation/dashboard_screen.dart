@@ -494,49 +494,31 @@ PreferredSizeWidget _buildAppBar(BuildContext context) {
                                   ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(left: 5.h),
+                                  padding: EdgeInsets.symmetric(horizontal: 1, vertical: 3),
                                   child: Container(
-                                    height: 16.v,
-                                    width: 132.h,
-                                    decoration: BoxDecoration(
-                                      color: appTheme.blueGray100,
-                                      borderRadius: BorderRadius.circular(
-                                        8.h,
-                                      ),
-                                    ),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(
-                                        8.h,
-                                      ),
-                                      child: LinearProgressIndicator(
-                                        value: 0.25,
-                                        backgroundColor: appTheme.blueGray100,
-                                        valueColor:
-                                            AlwaysStoppedAnimation<Color>(
-                                          theme.colorScheme.onPrimaryContainer,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(height: 2.v),
-                                Padding(
-                                  padding: EdgeInsets.only(left: 5.h),
-                                  child: Text(
-                                    "Level accuracy",
-                                    style: CustomTextStyles
+                                    height: 15.v,
+                                    child: LinearPercentIndicator(
+                                      width: 177,
+                                      lineHeight: 30,
+                                      backgroundColor: appTheme.blueGray100,
+                                      progressColor: appTheme.Red1,
+                                      percent: 0.25,
+                                      center: Text(
+                                        "25%",
+                                        style: CustomTextStyles
                                         .googleSansPrimaryContainer,
+                                      ),
+                                      animation: true,
+                                      animationDuration: 1000,
+                                      barRadius: Radius.circular(20),
+                                    
+                                    ),
                                   ),
                                 ),
+                                SizedBox(height: 10.v),
+                                
                               ],
                             ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 38.h),
-                          child: _buildFifteen(
-                            context,
-                            twentyFive: "25%",
                           ),
                         ),
                       ],
@@ -636,9 +618,11 @@ Widget _buildTwo(BuildContext context) {
         ), ),
         
         SizedBox(height: 15.v),
-        Container(
+        Align(alignment: Alignment.center,
+        child: Container(
+          
           height: 60.v,
-            width: 300.h,
+          width: 250.h,
           
           child: Stack(
             alignment: Alignment.topLeft,
@@ -656,7 +640,7 @@ Widget _buildTwo(BuildContext context) {
                     children: [
                       SizedBox(height: 6.v),
                       Padding(
-                        padding: EdgeInsets.only(left: 5.h),
+                        padding: EdgeInsets.only(left: 8.h),
                         child: _buildFortyEight(
                           context,
                           bad: "bad",
@@ -664,48 +648,37 @@ Widget _buildTwo(BuildContext context) {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(left: 5.h),
+                        padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                         child: Container(
-                          height: 20.v,
-                          width: 150.h,
-                          decoration: BoxDecoration(
-                            color: appTheme.blueGray100,
-                            borderRadius: BorderRadius.circular(8.h),
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(8.h),
-                            child: LinearProgressIndicator(
-                              value: 0.25,
-                              backgroundColor: appTheme.blueGray100,
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                theme.colorScheme.onPrimaryContainer,
-                              ),
+                          height: 15.v,
+                          child: LinearPercentIndicator(
+                            
+                            width: 330,
+                            lineHeight: 30,
+                            backgroundColor: appTheme.blueGray100,
+                            progressColor: appTheme.Red1,
+                            percent: 0.25,
+                            center: Text(
+                              "25%",
+                              style: CustomTextStyles
+                              .googleSansPrimaryContainer,
                             ),
+                            animation: true,
+                            animationDuration: 1000,
+                            barRadius: Radius.circular(20),
+                          
                           ),
                         ),
                       ),
-                      SizedBox(height: 2.v),
-                      Padding(
-                        padding: EdgeInsets.only(left: 5.h),
-                        child: Text(
-                          "Level accuracy",
-                          style: CustomTextStyles.googleSansPrimaryContainer,
-                        ),
-                      ),
+                      SizedBox(height: 10.v),
                     ],
                   ),
                 ),
               ),
-                Padding(
-                  padding: EdgeInsets.only(left: 75.h),
-                  child: _buildFifteen(
-                    context,
-                    twentyFive: "25%",
-                  ),
-                ),
             ],
           ),
         ),
+      ),
         SizedBox(height: 24.v),
         Padding(
   padding: EdgeInsets.only(right: 4.h), // Apply right padding
@@ -862,53 +835,34 @@ Widget _buildTwo(BuildContext context) {
                                     good: "good",
                                   ),
                                 ),
-                                Padding(
-                                  padding: EdgeInsets.only(left: 5.h),
+                              Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 1, vertical: 3),
                                   child: Container(
-                                    height: 16.v,
-                                    width: 132.h,
-                                    decoration: BoxDecoration(
-                                      color: appTheme.blueGray100,
-                                      borderRadius: BorderRadius.circular(
-                                        8.h,
-                                      ),
-                                    ),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(
-                                        8.h,
-                                      ),
-                                      child: LinearProgressIndicator(
-                                        value: 0.77,
-                                        backgroundColor: appTheme.blueGray100,
-                                        valueColor:
-                                            AlwaysStoppedAnimation<Color>(
-                                          appTheme.greenA700,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(height: 2.v),
-                                Padding(
-                                  padding: EdgeInsets.only(left: 5.h),
-                                  child: Text(
-                                    "Level accuracy",
-                                    style: CustomTextStyles
+                                    height: 15.v,
+                                    child: LinearPercentIndicator(
+                                      width: 177,
+                                      lineHeight: 30,
+                                      backgroundColor: appTheme.blueGray100,
+                                      progressColor: appTheme.greenA700,
+                                      percent: 0.75,
+                                      center: Text(
+                                        "75%",
+                                        style: CustomTextStyles
                                         .googleSansPrimaryContainer,
+                                      ),
+                                      animation: true,
+                                      animationDuration: 1000,
+                                      barRadius: Radius.circular(20),
+                                    
+                                    ),
                                   ),
                                 ),
-                                
+                                SizedBox(height: 10.v),     
                               ],
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsets.only(right: 25.h),
-                          child: _buildFifteen(
-                            context,
-                            twentyFive: "75%",
-                          ),
-                        ),
+                        
                       ],
                     ),
                   ),
@@ -1058,50 +1012,31 @@ Widget _buildTwo(BuildContext context) {
                                       ),
                                     ),
                                     Padding(
-                                      padding: EdgeInsets.only(left: 5.h),
-                                      child: Container(
-                                        height: 16.v,
-                                        width: 132.h,
-                                        decoration: BoxDecoration(
-                                          color: appTheme.blueGray100,
-                                          borderRadius: BorderRadius.circular(
-                                            8.h,
-                                          ),
-                                        ),
-                                        child: ClipRRect(
-                                          borderRadius: BorderRadius.circular(
-                                            8.h,
-                                          ),
-                                          child: LinearProgressIndicator(
-                                            value: 0.55,
-                                            backgroundColor:
-                                                appTheme.blueGray100,
-                                            valueColor:
-                                                AlwaysStoppedAnimation<Color>(
-                                              appTheme.amber700,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(height: 2.v),
-                                    Padding(
-                                      padding: EdgeInsets.only(left: 5.h),
-                                      child: Text(
-                                        "Level accuracy",
+                                  padding: EdgeInsets.symmetric(horizontal: 1, vertical: 3),
+                                  child: Container(
+                                    height: 15.v,
+                                    child: LinearPercentIndicator(
+                                      width: 177,
+                                      lineHeight: 30,
+                                      backgroundColor: appTheme.blueGray100,
+                                      progressColor: appTheme.amber700,
+                                      percent: 0.50,
+                                      center: Text(
+                                        "50%",
                                         style: CustomTextStyles
-                                            .googleSansPrimaryContainer,
+                                        .googleSansPrimaryContainer,
                                       ),
+                                      animation: true,
+                                      animationDuration: 1000,
+                                      barRadius: Radius.circular(20),
+                                    
                                     ),
+                                  ),
+                                ),
+                                SizedBox(height: 10.v),
+                                    
                                   ],
                                 ),
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(right: 52.h),
-                              child: _buildFifteen(
-                                context,
-                                twentyFive: "50%",
                               ),
                             ),
                           ],
