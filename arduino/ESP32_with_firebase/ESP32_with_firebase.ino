@@ -4,7 +4,6 @@
 #include <DallasTemperature.h>
 #include <MQ135.h>
 #include <DFRobot_PH.h>
-#include <DFRobot_ESP_PH.h>
 
 #include "addons/TokenHelper.h"
 #include "addons/RTDBHelper.h"
@@ -14,6 +13,9 @@
 
 #define API_KEY "AIzaSyBN2McacTs5kKbfS2Lc5umzutLqZkHuQso"
 #define DATABASE_URL "https://ta-capstone-22597-default-rtdb.asia-southeast1.firebasedatabase.app/"
+
+#define USER_EMAIL "test@tester.com"
+#define USER_PASSWORD "password123"
 
 #define ONE_WIRE_BUS 2
 #define MQ_sensor 33
@@ -31,7 +33,7 @@
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
 MQ135 gasSensor(MQ_sensor);
-DFRobot_ESP_PH ph;
+DFRobot_PH ph;
 
 const int numReadings = 5;
 float readings[numReadings];
@@ -45,10 +47,38 @@ int currentIndex = 0;
 FirebaseData fbdo;
 FirebaseAuth auth;
 FirebaseConfig config;
+String uid;
+String databasePath;
+
+String tempPath = "/temperature";
+String amoPath = "/amonia";
+String tdsPath = "/tds";
+String phPath = "/ph";
+String turbPath = "/turbidity";
+String timePath = "/timestamp";
+String parentPath;
+
+int timestamp;
+
+FirebaseJson json;
+const char* ntpServer = "pool.ntp.org";
 
 unsigned long sendDataPrevMillis = 0;
+unsigned long timerDelay = 180000;
 
 bool signInOK = false;
+
+// Initialize WiFi
+void initWiFi() {
+  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+  Serial.print("Connecting to WiFi ..");
+  while (WiFi.status() != WL_CONNECTED) {
+    Serial.print('.');
+    delay(1000);
+  }
+  Serial.println(WiFi.localIP());
+  Serial.println();
+}
 
 // Function declarations
 void readTemperature();
@@ -57,46 +87,82 @@ void readTDS();
 void readPH();
 void readTurbidity();
 
+// Function that gets current epoch time
+unsigned long getTime() {
+  time_t now;
+  struct tm timeinfo;
+  if (!getLocalTime(&timeinfo)) {
+    //Serial.println("Failed to obtain time");
+    return(0);
+  }
+  time(&now);
+  return now;
+}
+
 void setup() {
   Serial.begin(9600);
   sensors.begin();
-  
-  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(1000);
-    Serial.println("Connecting to WiFi..");
-  }
-  Serial.println("Connected to WiFi");
-
+  initWiFi();
+  configTime(0, 0, ntpServer);
   config.api_key = API_KEY;
   config.database_url = DATABASE_URL;
-
-  // Autentikasi pengguna Firebase
-  if (Firebase.signInWithEmailAndPassword(&config, &auth, "user@gmail.com", "password123")) {
-    Serial.println("Sign in successful");
-    signInOK = true;
-  } else {
-    Serial.println("Sign in failed");
-  }
-  config.token_status_callback = tokenStatusCallback;
+  auth.user.email = USER_EMAIL;
+  auth.user.password = USER_PASSWORD;
+  // Assign the callback function for the long running token generation task
+  config.token_status_callback = tokenStatusCallback; //see addons/TokenHelper.h
+  // Assign the maximum retry of token generation
+  config.max_token_generation_retry = 5;
+  // Initialize the library with the Firebase authen and config
   Firebase.begin(&config, &auth);
-  Firebase.reconnectWiFi(true);
+  // Getting the user UID might take a few seconds
+  Serial.println("Getting User UID");
+  while ((auth.token.uid) == "") {
+  Serial.print('.');
+  delay(1000);
+  }
+  uid = auth.token.uid.c_str();
+  Serial.print("User UID: ");
+  Serial.print(uid);
+  // Update database path
+  databasePath = "/UsersData/" + uid + "/readings";
 }
 
 void loop() {
-  if (Firebase.ready() && signInOK && (millis() - sendDataPrevMillis > 15000 || sendDataPrevMillis == 0)) {
+  if (Firebase.ready() && (millis() - sendDataPrevMillis > timerDelay || sendDataPrevMillis == 0)) {
     sendDataPrevMillis = millis();
-
+    timestamp = getTime();
+    parentPath = databasePath + "/" + String(timestamp);
+    
     readTemperature();
+    json.set(tempPath.c_str(), String(temperature)); // Assuming temperature is a float or int
+    
     readAirQuality();
-    readTDS();
-    readPH();
-    readTurbidity();
+    json.set(amoPath.c_str(), String(average)); // Assuming average is a float or int
+    
+    // Declare and initialize sensorValue, phValue, and kekeruhan variables
+    int sensorValue = analogRead(TDS_Pin);
+    float phValue = analogRead(PH_PIN) / ESPADC * ESPVOLTAGE;
+    int kekeruhan = analogRead(sensorPin);
+
+    // Now you can use these variables in your json.set() calls
+    json.set(tdsPath.c_str(), String(sensorValue)); // Assuming sensorValue is an int or float
+    json.set(phPath.c_str(), String(phValue)); // Assuming phValue is a float
+    json.set(turbPath.c_str(), String(kekeruhan)); // Assuming kekeruhan is an int
+    
+    json.set(timePath, String(timestamp));
+    
+    String jsonData;
+    json.toString(jsonData); // Convert JSON object to string
+    Serial.println("JSON Data: " + jsonData); // Print JSON data for debugging
+    
+    Serial.printf("Set json... %s\n", Firebase.RTDB.setJSON(&fbdo, parentPath.c_str(), &json) ? "ok" : fbdo.errorReason().c_str());
+    
     delay(10000);
   }
 }
 
-void readTemperature() {
+
+void readTemperature(){
   sensors.requestTemperatures(); // Meminta pembacaan suhu dari sensor
   temperature = sensors.getTempCByIndex(0); // Mendapatkan nilai suhu dari sensor
   temperature = 1.0465 * temperature - 1.3365; // Melakukan kalibrasi Regresi Linear suhu
@@ -113,7 +179,7 @@ void readTemperature() {
   }
 }
 
-void readAirQuality() {
+void readAirQuality(){
   float VRL = analogRead(MQ_sensor) * (3.3 / 4095.0); // Membaca tegangan dari sensor MQ
   float RS = (3.3 / VRL - 1) * 10; // Menghitung resistansi sensor
   float ratio = RS / Ro; // Menghitung rasio Rs/Ro
@@ -138,7 +204,7 @@ void readAirQuality() {
   }
 }
 
-void readTDS() {
+void readTDS(){
   int sensorValue = analogRead(TDS_Pin); // Membaca nilai analog dari sensor TDS
   float tdsValue = (0.6656 * sensorValue) + 69.604; // Melakukan kalibrasi nilai TDS
   Serial.print("TDS Value: "); // Output ke Serial Monitor
@@ -153,7 +219,7 @@ void readTDS() {
   }
 }
 
-void readPH() {
+void readPH(){
   voltage = analogRead(PH_PIN) / ESPADC * ESPVOLTAGE; // Membaca tegangan dari sensor pH
   float phValue = ph.readPH(voltage, temperature); // Mendapatkan nilai pH dari sensor
   float corrected_pH = (-0.4869 * phValue) + 9.5045; // Koreksi nilai pH
@@ -169,7 +235,7 @@ void readPH() {
   }
 }
 
-void readTurbidity() {
+void readTurbidity(){
   int Turbidity = analogRead(sensorPin); // Membaca nilai dari sensor kekeruhan air
   total = total - readings[currentIndex]; // Mengupdate total pembacaan
   readings[currentIndex] = Turbidity; // Menyimpan pembacaan sensor ke dalam array
