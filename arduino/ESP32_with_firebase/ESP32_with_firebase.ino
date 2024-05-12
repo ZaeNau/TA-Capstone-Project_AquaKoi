@@ -1,16 +1,25 @@
 #include <WiFi.h>
-#include <FirebaseESP32.h>
+#include <Firebase_ESP_Client.h>
 #include <OneWire.h>
 #include <DallasTemperature.h>
 #include <MQ135.h>
 #include <DFRobot_PH.h>
 #include <DFRobot_ESP_PH.h>
 
-#define ONE_WIRE_BUS 2  // Pin untuk sensor Temparture
-#define MQ_sensor 33    // Pin untuk sensor Gas Amonis
-#define TDS_Pin 32      // Pin untuk sensor TDS
-#define PH_PIN 34       // Pin untuk sensor PH
-#define sensorPin A0    // Pin untuk sensor kekeruhan
+#include "addons/TokenHelper.h"
+#include "addons/RTDBHelper.h"
+
+#define WIFI_SSID "POCO F4"
+#define WIFI_PASSWORD "123nau123"
+
+#define API_KEY "AIzaSyBN2McacTs5kKbfS2Lc5umzutLqZkHuQso"
+#define DATABASE_URL "https://ta-capstone-22597-default-rtdb.asia-southeast1.firebasedatabase.app/"
+
+#define ONE_WIRE_BUS 2
+#define MQ_sensor 33
+#define TDS_Pin 32
+#define PH_PIN 34
+#define sensorPin A0
 
 #define RL 10
 #define m -0.417
@@ -19,53 +28,72 @@
 #define ESPADC 4096.0
 #define ESPVOLTAGE 3300
 
-OneWire oneWire(ONE_WIRE_BUS); // Inisialisasi OneWire untuk sensor suhu
-DallasTemperature sensors(&oneWire); // Inisialisasi DallasTemperature untuk pembacaan suhu
-MQ135 gasSensor(MQ_sensor); // Inisialisasi MQ135 untuk pembacaan kualitas udara
-DFRobot_ESP_PH ph; // Inisialisasi DFRobot_ESP_PH untuk pembacaan pH
+OneWire oneWire(ONE_WIRE_BUS);
+DallasTemperature sensors(&oneWire);
+MQ135 gasSensor(MQ_sensor);
+DFRobot_ESP_PH ph;
 
-const char *ssid = "Kos34D_Lt2_plus"; // Nama WiFi
-const char *password = "Eric2010"; // Kata sandi WiFi
+const int numReadings = 5;
+float readings[numReadings];
+int readIndex = 0;
+float total = 0;
+float average = 0;
+float temperature;
+float voltage;
+int currentIndex = 0;
 
-const char *firebaseHost = "https://ta-capstone-22597-default-rtdb.asia-southeast1.firebasedatabase.app/"; // URL Firebase Realtime Database
-const char *authToken = "AIzaSyBN2McacTs5kKbfS2Lc5umzutLqZkHuQso"; // Token API Firebase
-const char *email = "user@gmail.com"; // Email pengguna Firebase
-const char *passwordFirebase = "password123"; // Kata sandi pengguna Firebase
+FirebaseData fbdo;
+FirebaseAuth auth;
+FirebaseConfig config;
 
-const int numReadings = 5; // Jumlah pembacaan untuk perhitungan rata-rata
-float readings[numReadings]; // Array untuk menyimpan pembacaan sensor
-int readIndex = 0; // Indeks pembacaan saat ini
-float total = 0; // Total pembacaan untuk perhitungan rata-rata
-float average = 0; // Nilai rata-rata pembacaan
-float temperature; // Variabel untuk menyimpan nilai suhu
-float voltage; // Variabel untuk menyimpan nilai tegangan
-int currentIndex = 0; // Indeks saat ini untuk pembacaan sensor kekeruhan
+unsigned long sendDataPrevMillis = 0;
 
-FirebaseData fbdo; // Deklarasi objek FirebaseObject untuk koneksi Firebase
+bool signInOK = false;
+
+// Function declarations
+void readTemperature();
+void readAirQuality();
+void readTDS();
+void readPH();
+void readTurbidity();
 
 void setup() {
-  Serial.begin(9600); // Memulai komunikasi serial untuk debugging
-  sensors.begin(); // Memulai komunikasi dengan sensor suhu
+  Serial.begin(9600);
+  sensors.begin();
   
-  // Inisialisasi koneksi WiFi
-  WiFi.begin(ssid, password);
+  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
   while (WiFi.status() != WL_CONNECTED) {
     delay(1000);
     Serial.println("Connecting to WiFi..");
   }
   Serial.println("Connected to WiFi");
 
-  // Inisialisasi koneksi Firebase
-  Firebase.begin(firebaseHost, authToken, email, passwordFirebase);
+  config.api_key = API_KEY;
+  config.database_url = DATABASE_URL;
+
+  // Autentikasi pengguna Firebase
+  if (Firebase.signInWithEmailAndPassword(&config, &auth, "user@gmail.com", "password123")) {
+    Serial.println("Sign in successful");
+    signInOK = true;
+  } else {
+    Serial.println("Sign in failed");
+  }
+  config.token_status_callback = tokenStatusCallback;
+  Firebase.begin(&config, &auth);
+  Firebase.reconnectWiFi(true);
 }
 
 void loop() {
-  readTemperature(); // Memanggil fungsi untuk membaca suhu
-  readAirQuality(); // Memanggil fungsi untuk membaca kualitas udara
-  readTDS(); // Memanggil fungsi untuk membaca nilai TDS
-  readPH(); // Memanggil fungsi untuk membaca nilai pH
-  readTurbidity(); // Memanggil fungsi untuk membaca kekeruhan air
-  delay(10000); // Tunggu 10 detik sebelum membaca sensor lagi
+  if (Firebase.ready() && signInOK && (millis() - sendDataPrevMillis > 15000 || sendDataPrevMillis == 0)) {
+    sendDataPrevMillis = millis();
+
+    readTemperature();
+    readAirQuality();
+    readTDS();
+    readPH();
+    readTurbidity();
+    delay(10000);
+  }
 }
 
 void readTemperature() {
@@ -75,6 +103,14 @@ void readTemperature() {
   Serial.print("Suhu: "); // Output ke Serial Monitor
   Serial.print(temperature); // Output nilai suhu
   Serial.println(" °C"); // Output satuan suhu
+
+  if(Firebase.RTDB.setFloat(&fbdo, "Sensors/Suhu",temperature)){
+    Serial.println();Serial.print(temperature);
+    Serial.print("- successfully saved to: " + fbdo.dataPath());
+    Serial.println(" (" +fbdo.dataType() + ")");
+  } else {
+    Serial.println("FAILED" +fbdo.errorReason());
+  }
 }
 
 void readAirQuality() {
@@ -93,8 +129,13 @@ void readAirQuality() {
   Serial.print("Amonia ppm: "); // Output ke Serial Monitor
   Serial.println(average); // Output nilai rata-rata ppm
 
-  // Setelah mendapatkan nilai average, simpan ke Firebase
-  Firebase.setInt(fbdo, "/amonium_ppm", average);
+  if(Firebase.RTDB.setFloat(&fbdo, "Sensors/Amonia",average)){
+    Serial.println();Serial.print(average);
+    Serial.print("- successfully saved to: " + fbdo.dataPath() + "ppm");
+    Serial.println(" (" +fbdo.dataType() + ")");
+  } else {
+    Serial.println("FAILED" +fbdo.errorReason());
+  }
 }
 
 void readTDS() {
@@ -103,8 +144,13 @@ void readTDS() {
   Serial.print("TDS Value: "); // Output ke Serial Monitor
   Serial.println(sensorValue); // Output nilai TDS
 
-  // Setelah mendapatkan nilai sensorValue, simpan ke Firebase
-  Firebase.setInt(fbdo, "/tds_value", sensorValue);
+  if(Firebase.RTDB.setFloat(&fbdo, "Sensors/TDS",sensorValue)){
+    Serial.println();Serial.print(sensorValue);
+    Serial.print("- successfully saved to: " + fbdo.dataPath());
+    Serial.println(" (" +fbdo.dataType() + ")");
+  } else {
+    Serial.println("FAILED" +fbdo.errorReason());
+  }
 }
 
 void readPH() {
@@ -114,8 +160,13 @@ void readPH() {
   Serial.print("pH:"); // Output ke Serial Monitor
   Serial.println(phValue, 4); // Output nilai pH
 
-  // Setelah mendapatkan nilai phValue, simpan ke Firebase
-  Firebase.setFloat(fbdo, "/ph_value", phValue);
+  if(Firebase.RTDB.setFloat(&fbdo, "Sensors/Ph",phValue)){
+    Serial.println();Serial.print(phValue);
+    Serial.print("- successfully saved to: " + fbdo.dataPath());
+    Serial.println(" (" +fbdo.dataType() + ")");
+  } else {
+    Serial.println("FAILED" +fbdo.errorReason());
+  }
 }
 
 void readTurbidity() {
@@ -129,6 +180,11 @@ void readTurbidity() {
   Serial.print("Kekeruhan Air : "); // Output ke Serial Monitor
   Serial.println(kekeruhan); // Output nilai kekeruhan air
 
-  // Setelah mendapatkan nilai kekeruhan, simpan ke Firebase
-  Firebase.setInt(fbdo, "/turbidity", kekeruhan);
+  if(Firebase.RTDB.setFloat(&fbdo, "Sensors/Turbidity",kekeruhan)){
+    Serial.println();Serial.print(kekeruhan);
+    Serial.print("- successfully saved to: " + fbdo.dataPath());
+    Serial.println(" (" +fbdo.dataType() + ")");
+  } else {
+    Serial.println("FAILED" +fbdo.errorReason());
+  }
 }
