@@ -32,13 +32,7 @@
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
 MQ135 gasSensor(MQ_sensor);
-DFRobot_ESP_PH ph;
 DFRobot_PH ph;
-
-OneWire oneWire(ONE_WIRE_BUS);
-DallasTemperature sensors(&oneWire);
-MQ135 gasSensor(MQ_sensor);
-DFRobot_ADC_PH ph;
 
 const int numReadings = 5;
 float readings[numReadings];
@@ -125,10 +119,10 @@ void loop() {
     parentPath = databasePath + "/";
     
     readTemperature();
-    json.set(tempPath.c_str(), String(temperature)); // Assuming temperature is a float or int
+    json.set(tempPath.c_str(), String(temperature + " °C")); // Assuming temperature is a float or int
     
     readAirQuality();
-    json.set(amoPath.c_str(), String(average)); // Assuming average is a float or int
+    json.set(amoPath.c_str(), String(average + " ppm")); // Assuming average is a float or int
     // Now you can use these variables in your json.set() calls
     readTDS();
     json.set(tdsPath.c_str(), String(sensorValue)); // Assuming sensorValue is an int or float
@@ -172,13 +166,6 @@ void readAirQuality(){
   average = total / numReadings; // Menghitung nilai rata-rata ppm
   Serial.print("Amonia ppm: "); // Output ke Serial Monitor
   Serial.println(average); // Output nilai rata-rata ppm
-  if(Firebase.RTDB.setFloat(&fbdo, "Sensors/Amonia",average)){
-    Serial.println();Serial.print(average);
-    Serial.print("- successfully saved to: " + fbdo.dataPath() + "ppm");
-    Serial.println(" (" +fbdo.dataType() + ")");
-  } else {
-    Serial.println("FAILED" +fbdo.errorReason());
-  }
 }
 
 void readTDS(){
