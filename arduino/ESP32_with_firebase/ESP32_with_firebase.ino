@@ -7,24 +7,6 @@
 
 #include "addons/TokenHelper.h"
 #include "addons/RTDBHelper.h"
-<<<<<<< Updated upstream
-=======
-
-#define WIFI_SSID "POCO F4"
-#define WIFI_PASSWORD "123nau123"
-
-#define API_KEY "AIzaSyBN2McacTs5kKbfS2Lc5umzutLqZkHuQso"
-#define DATABASE_URL "https://ta-capstone-22597-default-rtdb.asia-southeast1.firebasedatabase.app/"
-
-#define USER_EMAIL "test@tester.com"
-#define USER_PASSWORD "password123"
-
-#define ONE_WIRE_BUS 2
-#define MQ_sensor 33
-#define TDS_Pin 32
-#define PH_PIN 34
-#define sensorPin A0
->>>>>>> Stashed changes
 
 #define WIFI_SSID "kos34D_Lt2_plus"
 #define WIFI_PASSWORD "Eric2010"
@@ -46,6 +28,7 @@
 #define Ro 13
 #define ESPADC 4096.0
 #define ESPVOLTAGE 3300
+
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
 MQ135 gasSensor(MQ_sensor);
@@ -139,7 +122,6 @@ void setup() {
 void loop() {
   if (Firebase.ready() && (millis() - sendDataPrevMillis > timerDelay || sendDataPrevMillis == 0)) {
     sendDataPrevMillis = millis();
-    timestamp = getTime();
     parentPath = databasePath + "/";
     
     readTemperature();
