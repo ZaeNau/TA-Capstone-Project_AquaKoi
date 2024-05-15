@@ -8,8 +8,8 @@
 #include "addons/TokenHelper.h"
 #include "addons/RTDBHelper.h"
 
-#define WIFI_SSID "Kos34D"
-#define WIFI_PASSWORD "Eric2010"
+#define WIFI_SSID "SamsungA8+"
+#define WIFI_PASSWORD "12345678901"
 
 #define API_KEY "AIzaSyBN2McacTs5kKbfS2Lc5umzutLqZkHuQso"
 #define DATABASE_URL "https://ta-capstone-22597-default-rtdb.asia-southeast1.firebasedatabase.app/"
@@ -17,11 +17,15 @@
 #define USER_EMAIL "user@gmail.com"
 #define USER_PASSWORD "password123"
 
-#define ONE_WIRE_BUS 2
-#define MQ_sensor 33
-#define TDS_Pin 32
-#define PH_PIN 34
-#define sensorPin A0
+#define ONE_WIRE_BUS 2  // Pin untuk sensor Temparture
+#define MQ_sensor 33    // Pin untuk sensor Gas Amonis
+#define TDS_Pin 32      // Pin untuk sensor TDS
+#define PH_PIN 34       // Pin untuk sensor PH
+#define sensorPin A0    // Pin untuk sensor kekeruhan
+
+const int Heater = 5; // Deklarasi dan inisialisasi pin relay
+const int chiller = 4; // Deklarasi dan inisialisasi pin relay
+const int waterpump = 18; // Deklarasi dan inisialisasi pin relay
 
 #define RL 10
 #define m -0.417
@@ -30,16 +34,17 @@
 #define ESPADC 4096.0
 #define ESPVOLTAGE 3300
 
+// Inisialisasi Sensor untuk pembacaan
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
 MQ135 gasSensor(MQ_sensor);
 DFRobot_PH ph;
 
-const int numReadings = 5;
-float readings[numReadings];
-int readIndex = 0;
-float total = 0;
-float average = 0;
+const int numReadings = 5; // Jumlah pembacaan untuk perhitungan rata-rata
+float readings[numReadings]; // Array untuk menyimpan pembacaan sensor
+int readIndex = 0; // Indeks pembacaan saat ini
+float total = 0; // Total pembacaan untuk perhitungan rata-rata
+float average = 0; // Nilai rata-rata pembacaan
 
 float temperature;
 float Suhu;
@@ -93,6 +98,11 @@ void readTurbidity();
 void setup() {
   Serial.begin(115200);
   sensors.begin();
+
+  pinMode(Heater, OUTPUT); // Set pin relay sebagai output
+  pinMode(chiller, OUTPUT); // Set pin chiller sebagai output
+  pinMode(waterpump, OUTPUT); // Set pin chiller sebagai output
+  
   initWiFi();
   config.api_key = API_KEY;
   config.database_url = DATABASE_URL;
@@ -151,6 +161,18 @@ void readTemperature(){
   Serial.print("Suhu: "); // Output ke Serial Monitor
   Serial.print(Suhu); // Output nilai suhu
   Serial.println(" °C"); // Output satuan suhu
+     if (Suhu > 28.00) {
+    digitalWrite(chiller, HIGH); // Nyalakan chiller
+    Serial.println("ON ");
+  } else if (Suhu < 20.00) {
+    digitalWrite(Heater, HIGH); // Nyalakan heater
+    Serial.println("ON ");
+  } else {
+    digitalWrite(chiller, LOW); // Matikan chiller
+    digitalWrite(Heater, LOW); // Matikan heater
+    Serial.println("Chiller OFF");
+    Serial.println("Heater OFF");
+  }
 }
 
 void readAirQuality(){
@@ -175,6 +197,13 @@ void readTDS(){
   tdsValue = (0.6656 * sensorValue) + 69.604; // Melakukan kalibrasi nilai TDS
   Serial.print("TDS Value: "); // Output ke Serial Monitor
   Serial.println(tdsValue); // Output nilai TDS
+      if (tdsValue > 150) {
+    digitalWrite(waterpump, HIGH); // Nyalakan chiller
+    Serial.println("ON ");
+  } else {
+    digitalWrite(waterpump, LOW); // Matikan chiller
+    Serial.println("OFF");
+  }
 }
 
 void readPH(){
