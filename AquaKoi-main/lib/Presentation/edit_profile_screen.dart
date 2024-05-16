@@ -1,5 +1,7 @@
 
 
+import 'package:koiaqua/Presentation/profil_screen.dart';
+
 import '../widgets/app_bar/custom_app_bar.dart';
 import '../widgets/app_bar/appbar_title.dart';
 import '../widgets/custom_text_form_field.dart';
@@ -28,6 +30,7 @@ class EditProfileScreen extends StatelessWidget {
         child: Scaffold(
             resizeToAvoidBottomInset: false,
             appBar: _buildAppBar(context),
+
             body: SizedBox(
                 width: SizeUtils.width,
                 child: SingleChildScrollView(
@@ -184,7 +187,17 @@ class EditProfileScreen extends StatelessWidget {
     return CustomAppBar(
         height: 45.v,
         centerTitle: true,
-        title: AppbarTitle(text: "Edit Profile"));
+        title: AppbarTitle(text: "Edit Profile"),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+           onPressed: () {
+    Navigator.pushNamed(context, '/profile_screen');  // Ensure that '/profile_screen' is defined in your route settings
+  },
+        ),
+        );
   }
 
   /// Section Widget
