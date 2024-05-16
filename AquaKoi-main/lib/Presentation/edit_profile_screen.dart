@@ -1,7 +1,5 @@
 
 
-import 'package:koiaqua/Presentation/profil_screen.dart';
-
 import '../widgets/app_bar/custom_app_bar.dart';
 import '../widgets/app_bar/appbar_title.dart';
 import '../widgets/custom_text_form_field.dart';
@@ -182,23 +180,27 @@ class EditProfileScreen extends StatelessWidget {
             ));
   }
 
-  /// Section Widget
   PreferredSizeWidget _buildAppBar(BuildContext context) {
-    return CustomAppBar(
-        height: 45.v,
-        centerTitle: true,
-        title: AppbarTitle(text: "Edit Profile"),
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.white,
-          ),
-           onPressed: () {
-    Navigator.pushNamed(context, '/profile_screen');  // Ensure that '/profile_screen' is defined in your route settings
-  },
+  return CustomAppBar(
+    height: 47.v,
+    centerTitle: true,
+    title: AppbarTitle(text: "Edit Profile"),
+    leading: Padding(
+      padding: EdgeInsets.all(8.0),  // Increase the area for a better touch experience
+      child: GestureDetector(
+        onTap: () {
+          onTapEight(context);
+        },
+        child: Icon(
+          Icons.arrow_back,
+          color: Colors.black,
         ),
-        );
-  }
+      ),
+    ),
+  );
+}
+
+
 
   /// Section Widget
   Widget _buildName(BuildContext context) {
@@ -240,6 +242,8 @@ class EditProfileScreen extends StatelessWidget {
         textInputType: TextInputType.visiblePassword,
         obscureText: true);
   }
+
+
 
 
 
