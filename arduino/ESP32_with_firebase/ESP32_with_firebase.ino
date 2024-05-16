@@ -8,8 +8,8 @@
 #include "addons/TokenHelper.h"
 #include "addons/RTDBHelper.h"
 
-#define WIFI_SSID "SamsungA8+"
-#define WIFI_PASSWORD "12345678901"
+#define WIFI_SSID "P0C0 F4"
+#define WIFI_PASSWORD "123nau123"
 
 #define API_KEY "AIzaSyBN2McacTs5kKbfS2Lc5umzutLqZkHuQso"
 #define DATABASE_URL "https://ta-capstone-22597-default-rtdb.asia-southeast1.firebasedatabase.app/"
@@ -63,8 +63,11 @@ String uid;
 String databasePath;
 
 String tempPath = "/Suhu";
+String coolPath = "/Cooler";
+String heatPath = "/Heater";
 String amoPath = "/Amonia";
 String tdsPath = "/Tds";
+String pumpPath = "/Pump";
 String phPath = "/ph";
 String turbPath = "/turbidity";
 String parentPath;
@@ -72,7 +75,7 @@ String parentPath;
 FirebaseJson json;
 
 unsigned long sendDataPrevMillis = 0;
-unsigned long timerDelay = 60000;
+unsigned long timerDelay = 5000;
 
 bool signInOK = false;
 
@@ -134,10 +137,13 @@ void loop() {
     
     readTemperature();
     json.set(tempPath.c_str(), String(Suhu)); // Assuming temperature is a float or int
+    json.set(coolPath.c_str(), String(chiller));
+    json.set(heatPath.c_str(), String(Heater));
     readAirQuality();
     json.set(amoPath.c_str(), String(Amonia)); // Assuming average is a float or int
     readTDS();
     json.set(tdsPath.c_str(), String(tdsValue)); // Assuming sensorValue is an int or float
+    json.set(pumpPath.c_str(), String(waterpump));
     readPH();
     json.set(phPath.c_str(), String(corrected_pH)); // Assuming phValue is a float
     readTurbidity();
