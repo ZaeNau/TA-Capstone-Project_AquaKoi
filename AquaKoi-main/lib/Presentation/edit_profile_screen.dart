@@ -1,4 +1,4 @@
-import 'package:koiaqua/Presentation/dashboard_screen.dart';
+
 
 import '../widgets/app_bar/custom_app_bar.dart';
 import '../widgets/app_bar/appbar_title.dart';
@@ -41,7 +41,7 @@ class EditProfileScreen extends StatelessWidget {
                             child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  SizedBox(height: 15.v),
+                                  SizedBox(height: 25.v),
                                   Align(
                                       alignment: Alignment.center,
                                       child: SizedBox(
@@ -131,44 +131,58 @@ class EditProfileScreen extends StatelessWidget {
                                           CustomTextStyles.bodyMediumGray80002),
                                   SizedBox(height: 4.v),
                                   _buildConfirmpassword(context),
-                                  SizedBox(height: 24.v),
+                                  
                                   Align(
-                                      alignment: Alignment.center,
-                                      child: GestureDetector(
-                                          onTap: () {
-                                            onTapEight(context);
-                                          },
-                                          child: Container(
-                                              margin: EdgeInsets.symmetric(
-                                                  horizontal: 48.h),
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 27.h,
-                                                  vertical: 6.v),
-                                              decoration: AppDecoration
-                                                  .fillBlueA
-                                                  .copyWith(
-                                                      borderRadius:
-                                                          BorderRadiusStyle
-                                                              .roundedBorder11),
-                                              child: Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    SizedBox(height: 1.v),
-                                                    Text("Save edit",
-                                                        style: theme.textTheme
-                                                            .titleSmall)
-                                                  ]))))
+  alignment: Alignment.center,
+  child: Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      GestureDetector(
+        onTap: () {
+          onTapEight(context);
+           // Assuming you just want to close the current screen
+        },
+        child: Container(
+          margin: EdgeInsets.symmetric(vertical: 20.v),  // Adjusted for symmetry
+          padding: EdgeInsets.symmetric(horizontal: 27.h, vertical: 6.v),
+          decoration: AppDecoration.fillGreyA.copyWith(
+            borderRadius: BorderRadiusStyle.roundedBorder11,
+          ),
+          child: Text("Cancel",
+            style: theme.textTheme.titleSmall,
+            
+          ),
+        ),
+      ),
+      SizedBox(width: 20),  // Space between buttons
+      GestureDetector(
+        onTap: () {
+          onTapEight(context);
+        },
+        child: Container(
+          margin: EdgeInsets.symmetric(vertical: 20.v),  // Adjusted for symmetry
+          padding: EdgeInsets.symmetric(horizontal: 27.h, vertical: 6.v),
+          decoration: AppDecoration.fillBlueA.copyWith(
+            borderRadius: BorderRadiusStyle.roundedBorder11,
+          ),
+          child: Text("Save edit",
+            style: theme.textTheme.titleSmall,
+          ),
+        ),
+      ),
+    ],
+  ),
+)
+
+                                                
                                 ]))))),
-            bottomNavigationBar: _buildBottomBar(context)));
+            ));
   }
 
   /// Section Widget
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
-        height: 35.v,
+        height: 45.v,
         centerTitle: true,
         title: AppbarTitle(text: "Edit Profile"));
   }
@@ -214,66 +228,11 @@ class EditProfileScreen extends StatelessWidget {
         obscureText: true);
   }
 
-  /// Section Widget
-    Widget _buildBottomBar(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05), // Very light opacit 
-            spreadRadius: 0,
-            blurRadius: 1, // Adjust blur radius to control the shadow spread
-            offset: Offset(0, -1), // Changes position of shadow
-          ),
-        ],
-        border: Border(
-          top: BorderSide(color: Colors.white, width: 1.5), // White line as a top border
-        ),
-      ),
-      child: BottomNavigationBar(
-        currentIndex: 1, // Set currentIndex to 1 for "edit profile"
-        selectedItemColor: Colors.blue,  // Adjust as needed
-        unselectedItemColor: Colors.grey,  // Adjust as needed
-        backgroundColor: Color(0xFFDFEAF5),  // Use the hex color for the background
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Beranda',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profil',
-          ),
-        ],
-        onTap: (index) {
-          switch (index) {
-            case 0:
-              // Navigate to DashboardScreen when "Beranda" is tapped
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => DashboardScreen(),
-                ),
-              );
-              break;
-            case 1:
-              // Navigate to EditProfileScreen when "Profil" is tapped
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => EditProfileScreen(),
-                ),
-              );
-              break;
-          }
-        },
-      ),
-    );
-  }
+
 
 
   /// Navigates to the dashboardScreen when the action is triggered.
   onTapEight(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.dashboardScreen);
+    Navigator.pushNamed(context, AppRoutes.profileScreen);
   }
 }

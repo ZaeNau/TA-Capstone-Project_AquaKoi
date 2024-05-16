@@ -6,6 +6,11 @@ class AppDecoration {
   static BoxDecoration get fillBlueA => BoxDecoration(
         color: appTheme.blueA400,
       );
+  
+  static BoxDecoration get fillGreyA => BoxDecoration(
+        color: appTheme.blueGray100,
+      );
+
   static BoxDecoration get fillOnError => BoxDecoration(
         color: theme.colorScheme.onError,
       );

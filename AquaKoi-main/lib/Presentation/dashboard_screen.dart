@@ -3,7 +3,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:koiaqua/Presentation/edit_profile_screen.dart';
+
+import 'package:koiaqua/Presentation/profil_screen.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
 import '../widgets/app_bar/custom_app_bar.dart';
@@ -451,10 +452,10 @@ PreferredSizeWidget _buildAppBar(BuildContext context) {
                           ),
                         ),
                         Align(
-                          alignment: Alignment.topLeft,
-                          child: Padding(padding: EdgeInsets.only(left: 12.5.h),
+                          alignment: Alignment.center,
+                          child: Padding(padding: EdgeInsets.only(),
                             child: Text(
-                            "0.2 mg",
+                            "0.2 PPM",
                             style: theme.textTheme.titleLarge,
                           ),
                           )
@@ -933,7 +934,7 @@ Widget _buildTwo(BuildContext context) {
                                 left: 3.h,
                               ),
                               child: Text(
-                                "Dissolved oxygen",
+                                "Turbidity",
                                 style:
                                     CustomTextStyles.bodySmallPrimaryContainer,
                               ),
@@ -970,9 +971,9 @@ Widget _buildTwo(BuildContext context) {
                               ),
                             ),
                             Align(
-                              alignment: Alignment.topLeft,
+                              alignment: Alignment.center,
                               child: Text(
-                                "2.5 mg/L",
+                                "60 NTU",
                                 style: theme.textTheme.titleLarge,
                               ),
                             ),
@@ -1134,7 +1135,7 @@ Widget _buildTwo(BuildContext context) {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => EditProfileScreen(),
+                  builder: (context) => ProfileScreen(),
                 ),
               );
               break;

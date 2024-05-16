@@ -115,8 +115,8 @@ class RegisterScreen extends StatelessWidget {
     return CustomTextFormField(
       width: 220.h,
       controller: nameController,
-      hintText: "nailiik@gmail.com",
-      textInputType: TextInputType.emailAddress,
+      hintText: "Ikan Koi",
+      textInputType: TextInputType.name,
     );
   }
 
