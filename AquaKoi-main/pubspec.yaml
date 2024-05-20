@@ -10,7 +10,7 @@ dependencies:
   cached_network_image: ^3.3.0
   cupertino_icons: ^1.0.6
   percent_indicator: ^4.0.0
-  firebase_core: any
+  firebase_core: ^2.31.0
   firebase_database: ^10.4.11
   firebase_auth: ^4.18.0
   fluttertoast: ^8.2.4
