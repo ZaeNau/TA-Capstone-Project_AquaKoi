@@ -90,4 +90,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'ta-capstone-22597.appspot.com',
     measurementId: 'G-N0SXRE2R4K',
   );
+
 }
