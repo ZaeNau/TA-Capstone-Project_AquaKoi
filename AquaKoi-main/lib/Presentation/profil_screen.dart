@@ -1,79 +1,163 @@
-import 'package:koiaqua/Presentation/dashboard_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:koiaqua/Presentation/dashboard_screen.dart';
+import '../../core/app_export.dart';
+import '../../theme/custom_button_style.dart';
+import '../../widgets/app_bar/appbar_title.dart';
+import '../../widgets/app_bar/custom_app_bar.dart';
+import '../../widgets/custom_elevated_button.dart';
+import '../../widgets/custom_text_form_field.dart';
 
-
+// ignore: must_be_immutable
 class ProfileScreen extends StatelessWidget {
-  final TextEditingController searchController = TextEditingController();
+  ProfileScreen({Key? key})
+      : super(
+          key: key,
+        );
+
+  TextEditingController nameController = TextEditingController();
+
+  TextEditingController emailController = TextEditingController();
+
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Profile"),
-        backgroundColor: Colors.blue,
-        centerTitle: true,
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            SizedBox(height: 30),
-            CircleAvatar(
-              radius: 50,
-              backgroundColor: Colors.blueGrey,
-              child: Icon(Icons.person, size: 50, color: Colors.white),
+    return SafeArea(
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: _buildAppBar(context),
+        body: Center(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
             ),
-            SizedBox(height: 20),
-            Text('Pembudidaya Ikan', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-            SizedBox(height: 10),
-            Text('example@gmail.com', style: TextStyle(fontSize: 16, color: Colors.grey)),
-            SizedBox(height: 20),
-            MaterialButton(
-              color: Colors.blue,
-              onPressed: () {
-                Navigator.pushNamed(context, '/edit_profile_screen');
-              },
-              child: Text("Edit Profile", style: TextStyle(color: Colors.white)),
-              
+            child: Form(
+              key: _formKey,
+              child: SizedBox(
+                width: double.maxFinite,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Card(
+                      clipBehavior: Clip.antiAlias,
+                      elevation: 0,
+                      margin: EdgeInsets.all(0),
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(
+                          color: appTheme.blueA400,
+                          width: 1.h,
+                        ),
+                        borderRadius: BorderRadiusStyle.roundedBorder44,
+                      ),
+                      child: Container(
+                        height: 89.v,
+                        width: 87.h,
+                        padding: EdgeInsets.all(1.h),
+                        decoration: AppDecoration.outlineBlueA.copyWith(
+                          borderRadius: BorderRadiusStyle.roundedBorder44,
+                        ),
+                        child: Stack(
+                          alignment: Alignment.bottomRight,
+                          children: [
+                            CustomImageView(
+                              imagePath: ImageConstant.imgEllipse2,
+                              height: 86.v,
+                              width: 84.h,
+                              radius: BorderRadius.circular(
+                                42.h,
+                              ),
+                              alignment: Alignment.center,
+                            ),
+                            CustomImageView(
+                              imagePath: ImageConstant.imgSolarCameraMi,
+                              height: 16.adaptSize,
+                              width: 16.adaptSize,
+                              alignment: Alignment.bottomRight,
+                              margin: EdgeInsets.only(right: 4.h),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 22.v),
+                    _buildInputName(context),
+                    SizedBox(height: 14.v),
+                    _buildInputEmail(context),
+                    SizedBox(height: 87.v),
+                    CustomElevatedButton(
+                      width: 124.h,
+                      text: "Edit profile",
+                    ),
+                    SizedBox(height: 9.v),
+                    CustomElevatedButton(
+                      width: 124.h,
+                      text: "Log Out",
+                      buttonStyle: CustomButtonStyles.fillGray,
+                    ),
+                    SizedBox(height: 5.v)
+                  ],
+                ),
+              ),
             ),
-            MaterialButton(
-              color: Colors.red,
-              onPressed: () {
-                // Logic to log out
-              },
-              child: Text("Log Out", style: TextStyle(color: Colors.white)),
-            ),
-          ],
+          ),
         ),
       ),
-      bottomNavigationBar: _buildBottomBar(context),
     );
   }
 
-Widget _buildBottomBar(BuildContext context) {
-  return Container(
-    decoration: BoxDecoration(
-      boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), spreadRadius: 0, blurRadius: 1, offset: Offset(0, -1))],
-      border: Border(top: BorderSide(color: Colors.white, width: 1.5)),
-    ),
-    child: BottomNavigationBar(
-      currentIndex: 1,
-      selectedItemColor: Colors.blue,
-      unselectedItemColor: Colors.grey,
-      backgroundColor: Color(0xFFDFEAF5),
-      items: [
-        BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Beranda'),
-        BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
-      ],
-      onTap: (index) {
-        if (index == 0) {
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DashboardScreen()));
-        } else if (index == 1) {
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ProfileScreen()));
-        }
-      },
-    ),
-  );
-}
+  /// Section Widget
+  PreferredSizeWidget _buildAppBar(BuildContext context) {
+    return CustomAppBar(
+      centerTitle: true,
+      title: AppbarTitle(
+        text: "Profile",
+      ),
+    );
+  }
 
+  /// Section Widget
+  Widget _buildInputName(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(right: 2.h),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Name",
+            style: theme.textTheme.bodyMedium,
+          ),
+          SizedBox(height: 6.v),
+          CustomTextFormField(
+            width: 220.h,
+            controller: nameController,
+            hintText: "Pembudidaya Ikan",
+          )
+        ],
+      ),
+    );
+  }
 
+  /// Section Widget
+  Widget _buildInputEmail(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(right: 2.h),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Email",
+            style: theme.textTheme.bodyMedium,
+          ),
+          SizedBox(height: 6.v),
+          CustomTextFormField(
+            width: 220.h,
+            controller: emailController,
+            hintText: "example@gmail.com",
+            textInputAction: TextInputAction.done,
+            textInputType: TextInputType.emailAddress,
+          )
+        ],
+      ),
+    );
+  }
 }
