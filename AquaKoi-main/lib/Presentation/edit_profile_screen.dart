@@ -191,10 +191,6 @@ class EditProfileScreen extends StatelessWidget {
         onTap: () {
           onTapEight(context);
         },
-        child: Icon(
-          Icons.arrow_back,
-          color: Colors.black,
-        ),
       ),
     ),
   );
