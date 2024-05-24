@@ -205,13 +205,13 @@ class EditProfileScreen extends StatelessWidget {
   /// Section Widget
   Widget _buildName(BuildContext context) {
     return CustomTextFormField(
-        controller: nameController, hintText: "Pembudidaya Ikan");
+        controller: nameController, hintText: "Pembudidaya Ikan", onFieldSubmitted: (_) {  },);
   }
 
   /// Section Widget
   Widget _buildLocation(BuildContext context) {
     return CustomTextFormField(
-        controller: locationController, hintText: "Lembang, Jawa Barat");
+        controller: locationController, hintText: "Lembang, Jawa Barat", onFieldSubmitted: (_) {  },);
   }
 
   /// Section Widget
@@ -219,7 +219,7 @@ class EditProfileScreen extends StatelessWidget {
     return CustomTextFormField(
         controller: emailController,
         hintText: "example@gmail.com",
-        textInputType: TextInputType.emailAddress);
+        textInputType: TextInputType.emailAddress, onFieldSubmitted: (_) {  },);
   }
 
   /// Section Widget
@@ -229,7 +229,7 @@ class EditProfileScreen extends StatelessWidget {
         hintText: "must be 8 characters",
         hintStyle: CustomTextStyles.bodyMediumInterPrimary,
         textInputType: TextInputType.visiblePassword,
-        obscureText: true);
+        obscureText: true, onFieldSubmitted: (_) {  },);
   }
 
   /// Section Widget
@@ -240,7 +240,7 @@ class EditProfileScreen extends StatelessWidget {
         hintStyle: CustomTextStyles.bodyMediumInterPrimary,
         textInputAction: TextInputAction.done,
         textInputType: TextInputType.visiblePassword,
-        obscureText: true);
+        obscureText: true, onFieldSubmitted: (_) {  },);
   }
 
 
