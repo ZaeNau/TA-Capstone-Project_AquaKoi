@@ -1,24 +1,18 @@
-// ignore_for_file: must_be_immutable
-
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:koiaqua/Presentation/login_screen.dart';
 import '../widgets/custom_outlined_button.dart';
 import '../widgets/custom_text_form_field.dart';
 import '../core/app_export.dart';
 import 'package:flutter/gestures.dart';
 
-
 class RegisterScreen extends StatelessWidget {
   RegisterScreen({super.key});
 
-  TextEditingController nameController = TextEditingController();
-
-  TextEditingController emailController = TextEditingController();
-
-  TextEditingController passwordController = TextEditingController();
-
-  TextEditingController confirmpasswordController = TextEditingController();
-
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmpasswordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
@@ -116,7 +110,7 @@ class RegisterScreen extends StatelessWidget {
       width: 220.h,
       controller: nameController,
       hintText: "Ikan Koi",
-      textInputType: TextInputType.name,
+      textInputType: TextInputType.name, onFieldSubmitted: (_) {  },
     );
   }
 
@@ -126,7 +120,7 @@ class RegisterScreen extends StatelessWidget {
       width: 220.h,
       controller: emailController,
       hintText: "example@gmail.com",
-      textInputType: TextInputType.emailAddress,
+      textInputType: TextInputType.emailAddress, onFieldSubmitted: (_) {  },
     );
   }
 
@@ -138,7 +132,7 @@ class RegisterScreen extends StatelessWidget {
       hintText: "must be 8 characters",
       hintStyle: CustomTextStyles.bodyMediumInterPrimary,
       textInputType: TextInputType.visiblePassword,
-      obscureText: true,
+      obscureText: true, onFieldSubmitted: (_) {  },
     );
   }
 
@@ -151,22 +145,49 @@ class RegisterScreen extends StatelessWidget {
       hintStyle: CustomTextStyles.bodyMediumInterPrimary,
       textInputAction: TextInputAction.done,
       textInputType: TextInputType.visiblePassword,
-      obscureText: true,
+      obscureText: true, onFieldSubmitted: (_) {  },
     );
   }
 
   /// Section Widget
   Widget _buildSignUp(BuildContext context) {
-  return CustomOutlinedButton(
-    width: 220.h,
-    text: "Sign up",
-    onPressed: () {
-      // Navigate to the LoginScreen when the button is pressed
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => LoginScreen())
-      );
-    },
-  );
-}
+    return CustomOutlinedButton(
+      width: 220.h,
+      text: "Sign up",
+      onPressed: () {
+        onTapSignUp(context);
+      },
+    );
+  }
+
+  /// Handles registration action with Firebase Authentication.
+  void onTapSignUp(BuildContext context) async {
+    if (_formKey.currentState!.validate()) {
+      if (passwordController.text == confirmpasswordController.text) {
+        try {
+          UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: emailController.text,
+            password: passwordController.text,
+          );
+          // Navigate to login screen upon successful registration
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => LoginScreen()),
+          );
+        } on FirebaseAuthException catch (e) {
+          String message;
+          if (e.code == 'weak-password') {
+            message = 'The password provided is too weak.';
+          } else if (e.code == 'email-already-in-use') {
+            message = 'The account already exists for that email.';
+          } else {
+            message = 'An error occurred. Please try again.';
+          }
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Passwords do not match.')));
+      }
+    }
+  }
 }
