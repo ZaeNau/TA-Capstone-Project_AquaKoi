@@ -244,7 +244,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: theme.colorScheme.onError,
-        
+        appBar: _buildAppBar(context),
         body: SingleChildScrollView(
           child: Container(
             width: MediaQuery.of(context).size.width,
@@ -312,7 +312,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget _buildTemperature(BuildContext context) {
+ Widget _buildTemperature(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 5.0),
       child: Container(
@@ -379,7 +379,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     child: Padding(
                       padding: EdgeInsets.only(left: 15.h),
                       child: Text(
-                        "${_temperatureValue.toStringAsFixed(2)} C",
+                        "${_temperatureValue.toStringAsFixed(2)} C", // Ubah teks untuk menampilkan nilai suhu
                         style: theme.textTheme.titleLarge,
                       ),
                     ),
@@ -425,7 +425,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   lineHeight: 30,
                                   backgroundColor: appTheme.blueGray100,
                                   progressColor: appTheme.Red1,
-                                  percent: 0.25,
+                                  percent: 0.25, // Persentase bisa diubah sesuai data aktual
                                   center: Text(
                                     "25%",
                                     style: CustomTextStyles.googleSansPrimaryContainer,
@@ -459,7 +459,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                     SizedBox(height: 3.v),
                     ToggleButton(
-                      initialState: true,
+                      initialState: true, // Kontrol ini bisa diatur berdasarkan data aktual
                       onToggle: (bool value) {
                         print("Heater is now: $value");
                       },
@@ -471,7 +471,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                     SizedBox(height: 3.v),
                     ToggleButton(
-                      initialState: false,
+                      initialState: false, // Kontrol ini bisa diatur berdasarkan data aktual
                       onToggle: (bool value) {
                         print("Cooler is now: $value");
                       },
@@ -485,6 +485,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
     );
   }
+
 
   Widget _buildRowWithTDSAndTurbidity(BuildContext context) {
     return Padding(
