@@ -47,14 +47,14 @@ class ProfileScreen extends StatelessWidget {
                           color: appTheme.blueA400,
                           width: 1.h,
                         ),
-                        borderRadius: BorderRadiusStyle.roundedBorder44,
+                        borderRadius: BorderRadiusStyle.roundedBorder11,
                       ),
                       child: Container(
                         height: 89.v,
                         width: 87.h,
                         padding: EdgeInsets.all(1.h),
-                        decoration: AppDecoration.outlineBlueA.copyWith(
-                          borderRadius: BorderRadiusStyle.roundedBorder44,
+                        decoration: AppDecoration.outlineBlueGray.copyWith(
+                          borderRadius: BorderRadiusStyle.roundedBorder11,
                         ),
                         child: Stack(
                           alignment: Alignment.bottomRight,
@@ -92,7 +92,9 @@ class ProfileScreen extends StatelessWidget {
                     CustomElevatedButton(
                       width: 124.h,
                       text: "Log Out",
-                      buttonStyle: CustomButtonStyles.fillGray,
+                      decoration: AppDecoration.fillBlueA.copyWith(
+            borderRadius: BorderRadiusStyle.roundedBorder11,
+          ),
                     ),
                     SizedBox(height: 5.v)
                   ],
@@ -131,33 +133,44 @@ class ProfileScreen extends StatelessWidget {
             width: 220.h,
             controller: nameController,
             hintText: "Pembudidaya Ikan",
+            onFieldSubmitted: (value) {
+              // Handle the submission, for example:
+              print("Name entered: $value");
+              // You can also add logic here to move focus to another field or perform other actions
+            },
           )
         ],
       ),
     );
   }
 
+
   /// Section Widget
-  Widget _buildInputEmail(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(right: 2.h),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "Email",
-            style: theme.textTheme.bodyMedium,
-          ),
-          SizedBox(height: 6.v),
-          CustomTextFormField(
-            width: 220.h,
-            controller: emailController,
-            hintText: "example@gmail.com",
-            textInputAction: TextInputAction.done,
-            textInputType: TextInputType.emailAddress,
-          )
-        ],
-      ),
-    );
-  }
+Widget _buildInputEmail(BuildContext context) {
+  return Padding(
+    padding: EdgeInsets.only(right: 2.h),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Email",
+          style: theme.textTheme.bodyMedium,
+        ),
+        SizedBox(height: 6.v),
+        CustomTextFormField(
+          width: 220.h,
+          controller: emailController,
+          hintText: "example@gmail.com",
+          textInputAction: TextInputAction.done, // Ensures keyboard has a 'done' button
+          textInputType: TextInputType.emailAddress,
+          onFieldSubmitted: (value) {
+            // Optional: Handle what happens after the user submits the email
+            print("Email submitted: $value");
+          },
+        )
+      ],
+    ),
+  );
+}
+
 }
