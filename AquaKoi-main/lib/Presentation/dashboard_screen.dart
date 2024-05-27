@@ -1,7 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:koiaqua/Presentation/profil_screen.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import '../widgets/app_bar/custom_app_bar.dart';
@@ -13,9 +11,10 @@ class ToggleButton extends StatefulWidget {
   final bool initialState;
   final Function(bool) onToggle;
 
-  ToggleButton({required this.initialState, required this.onToggle});
+  const ToggleButton({super.key, required this.initialState, required this.onToggle});
 
   @override
+  // ignore: library_private_types_in_public_api
   _ToggleButtonState createState() => _ToggleButtonState();
 }
 
@@ -157,88 +156,30 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  final DatabaseReference _ammoniaRef = FirebaseDatabase.instance.ref().child('UserData').child('cSFGHidGb4gzLBalujMaowdFDGG2').child('Sensors').child('Amonia');
-  final DatabaseReference _phRef = FirebaseDatabase.instance.ref().child('UserData').child('cSFGHidGb4gzLBalujMaowdFDGG2').child('Sensors').child('ph');
-  final DatabaseReference _temperatureRef = FirebaseDatabase.instance.ref().child('UserData').child('cSFGHidGb4gzLBalujMaowdFDGG2').child('Sensors').child('Suhu');
-  final DatabaseReference _tdsRef = FirebaseDatabase.instance.ref().child('UserData').child('cSFGHidGb4gzLBalujMaowdFDGG2').child('Sensors').child('Tds');
-  final DatabaseReference _turbidityRef = FirebaseDatabase.instance.ref().child('UserData').child('cSFGHidGb4gzLBalujMaowdFDGG2').child('Sensors').child('turbidity');
-
-  double _ammoniaValue = 0.0;
-  double _phValue = 0.0;
-  double _temperatureValue = 0.0;
-  double _tdsValue = 0.0;
-  double _turbidityValue = 0.0;
+final DatabaseReference _databaseReference = FirebaseDatabase.instance.ref().child('UsersData').child('cSFGHidGb4gzLBalujMaowdFDGG2').child('Sensors');
+  Map<String, dynamic> sensorData = {};
 
   @override
   void initState() {
-    super.initState();
-    _subscribeToAmmonia();
-    _subscribeToPh();
-    _subscribeToTemperature();
-    _subscribeToTDS();
-    _subscribeToTurbidity();
+  super.initState();
+    if (FirebaseAuth.instance.currentUser != null) {
+      _databaseReference.onValue.listen((event) {
+        final data = event.snapshot.value;
+        if (data != null && data is Map) {
+          setState(() {
+            sensorData = Map<String, dynamic>.from(data);
+          });
+        } else {
+          setState(() {
+            sensorData = {};
+          });
+        }
+      });
+    } else {
+      // Redirect to login if not authenticated
+      Navigator.pushNamed(context, AppRoutes.loginScreen);
+    }
   }
-
-  void _subscribeToAmmonia() {
-    _ammoniaRef.onValue.listen((event) {
-      if (event.snapshot.value != null) {
-        setState(() {
-          _ammoniaValue = double.parse(event.snapshot.value.toString());
-        });
-      } else {
-        print('Data Ammonia not found');
-      }
-    });
-  }
-
-  void _subscribeToPh() {
-    _phRef.onValue.listen((event) {
-      if (event.snapshot.value != null) {
-        setState(() {
-          _phValue = double.parse(event.snapshot.value.toString());
-        });
-      } else {
-        print('Data pH not found');
-      }
-    });
-  }
-
-  void _subscribeToTemperature() {
-    _temperatureRef.onValue.listen((event) {
-      if (event.snapshot.value != null) {
-        setState(() {
-          _temperatureValue = double.parse(event.snapshot.value.toString());
-        });
-      } else {
-        print('Data temp not found');
-      }
-    });
-  }
-
-  void _subscribeToTDS() {
-    _tdsRef.onValue.listen((event) {
-      if (event.snapshot.value != null) {
-        setState(() {
-          _tdsValue = double.parse(event.snapshot.value.toString());
-        });
-      } else {
-        print('Data TDS not found');
-      }
-    });
-  }
-
-  void _subscribeToTurbidity() {
-    _turbidityRef.onValue.listen((event) {
-      if (event.snapshot.value != null) {
-        setState(() {
-          _turbidityValue = double.parse(event.snapshot.value.toString());
-        });
-      } else {
-        print('Data Turbidity not found');
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -379,7 +320,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     child: Padding(
                       padding: EdgeInsets.only(left: 15.h),
                       child: Text(
-                        "${_temperatureValue.toStringAsFixed(2)} C", // Ubah teks untuk menampilkan nilai suhu
+                        "${sensorData['Suhu']+' C' ?? 'youre not authenticated'}", // Ubah teks untuk menampilkan nilai suhu
                         style: theme.textTheme.titleLarge,
                       ),
                     ),
@@ -563,7 +504,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   child: Padding(
                     padding: EdgeInsets.only(left: 22.h),
                     child: Text(
-                      "${_phValue.toStringAsFixed(2)}",
+                      "${sensorData['ph'] ?? 'youre not authenticated'}",
                       style: theme.textTheme.titleLarge,
                     ),
                   ),
@@ -694,7 +635,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   child: Padding(
                     padding: EdgeInsets.only(),
                     child: Text(
-                      "${_ammoniaValue.toStringAsFixed(2)} PPM",
+                      "${sensorData['Amonia']+'PPM' ?? 'youre not authenticated'}",
                       style: theme.textTheme.titleLarge,
                     ),
                   ),
@@ -825,7 +766,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   child: Padding(
                     padding: EdgeInsets.only(left: 22.h),
                     child: Text(
-                      "${_tdsValue.toString()} ppm",
+                      "${sensorData['Tds']+'PPM' ?? 'youre not authenticated'}",
                       style: theme.textTheme.titleLarge,
                     ),
                   ),
@@ -982,7 +923,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 Align(
                   alignment: Alignment.center,
                   child: Text(
-                    "${_turbidityValue.toString()} NTU",
+                    "${sensorData['turbidity']+'NTU' ?? 'youre not authenticated'}",
                     style: theme.textTheme.titleLarge,
                   ),
                 ),

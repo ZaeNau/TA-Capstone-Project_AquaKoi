@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../core/app_export.dart';
 import '../widgets/custom_text_form_field.dart';
 import '../widgets/custom_outlined_button.dart';
 

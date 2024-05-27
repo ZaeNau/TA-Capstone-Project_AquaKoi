@@ -11,7 +11,7 @@ import '../Presentation/app_navigation_screen.dart';
 class AppRoutes {
 
   static const String welcomepage = '/welcome_page';
-
+//actual code
   static const String loginScreen = '/login_screen';
 
   static const String registerScreen = '/register_screen';
@@ -28,6 +28,7 @@ class AppRoutes {
 
   static Map<String, WidgetBuilder> routes = {
     welcomepage: (context) => const WelcomePage(),
+    //actual code
     loginScreen: (context) => LoginScreen(),
     registerScreen: (context) => RegisterScreen(),
     dashboardScreen: (context) => DashboardScreen(),
