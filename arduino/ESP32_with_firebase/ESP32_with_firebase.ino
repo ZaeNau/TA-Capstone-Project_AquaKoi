@@ -8,8 +8,8 @@
 #include "addons/TokenHelper.h"
 #include "addons/RTDBHelper.h"
 
-#define WIFI_SSID "P0C0 F4"
-#define WIFI_PASSWORD "123nau123"
+#define WIFI_SSID "Kos34D"
+#define WIFI_PASSWORD "Kos34D2024"
 
 #define API_KEY "AIzaSyBN2McacTs5kKbfS2Lc5umzutLqZkHuQso"
 #define DATABASE_URL "https://ta-capstone-22597-default-rtdb.asia-southeast1.firebasedatabase.app/"
@@ -33,6 +33,18 @@ const int waterpump = 18; // Deklarasi dan inisialisasi pin relay
 #define Ro 13
 #define ESPADC 4096.0
 #define ESPVOLTAGE 3300
+
+#define MIN_TEMPERATURE 20
+#define MAX_TEMPERATURE 26
+#define MIN_AMONIA 0 // Ubah nilainya sesuai rentang yang diharapkan
+#define MAX_AMONIA 0.2 // Ubah nilainya sesuai rentang yang diharapkan
+#define MIN_TDS 0 // Ubah nilainya sesuai rentang yang diharapkan
+#define MAX_TDS 150 // Ubah nilainya sesuai rentang yang diharapkan
+#define MIN_PH 0 // Ubah nilainya sesuai rentang yang diharapkan
+#define MAX_PH 14 // Ubah nilainya sesuai rentang yang diharapkan
+#define MIN_TURBIDITY 0 // Ubah nilainya sesuai rentang yang diharapkan
+#define MAX_TURBIDITY 10 // Ubah nilainya sesuai rentang yang diharapkan
+
 
 // Inisialisasi Sensor untuk pembacaan
 OneWire oneWire(ONE_WIRE_BUS);
@@ -63,11 +75,8 @@ String uid;
 String databasePath;
 
 String tempPath = "/Suhu";
-String coolPath = "/Cooler";
-String heatPath = "/Heater";
 String amoPath = "/Amonia";
 String tdsPath = "/Tds";
-String pumpPath = "/Pump";
 String phPath = "/ph";
 String turbPath = "/turbidity";
 String parentPath;
@@ -137,13 +146,10 @@ void loop() {
     
     readTemperature();
     json.set(tempPath.c_str(), String(Suhu)); // Assuming temperature is a float or int
-    json.set(coolPath.c_str(), String(chiller));
-    json.set(heatPath.c_str(), String(Heater));
     readAirQuality();
     json.set(amoPath.c_str(), String(Amonia)); // Assuming average is a float or int
     readTDS();
     json.set(tdsPath.c_str(), String(tdsValue)); // Assuming sensorValue is an int or float
-    json.set(pumpPath.c_str(), String(waterpump));
     readPH();
     json.set(phPath.c_str(), String(corrected_pH)); // Assuming phValue is a float
     readTurbidity();
@@ -161,73 +167,103 @@ void loop() {
 
 
 void readTemperature(){
-  sensors.requestTemperatures(); // Meminta pembacaan suhu dari sensor
-  float temperature = sensors.getTempCByIndex(0); // Mendapatkan nilai suhu dari sensor
-  Suhu = 1.0465 * temperature - 1.3365; // Melakukan kalibrasi Regresi Linear suhu
-  Serial.print("Suhu: "); // Output ke Serial Monitor
-  Serial.print(Suhu); // Output nilai suhu
-  Serial.println(" °C"); // Output satuan suhu
-     if (Suhu > 28.00) {
-    digitalWrite(chiller, HIGH); // Nyalakan chiller
+  sensors.requestTemperatures();
+  float temperature = sensors.getTempCByIndex(0);
+  Suhu = 1.0465 * temperature - 1.3365;
+  Serial.print("Suhu: ");
+  Serial.print(Suhu);
+  Serial.println(" °C");
+  // Calculate percentage
+  float temperaturePercentage = map(Suhu, MIN_TEMPERATURE, MAX_TEMPERATURE, 0, 100);
+  Serial.print("Suhu (Persentase): ");
+  Serial.print(temperaturePercentage);
+  Serial.println("%");
+  if (Suhu > 28.00) {
+    digitalWrite(chiller, HIGH);
     Serial.println("ON ");
   } else if (Suhu < 20.00) {
-    digitalWrite(Heater, HIGH); // Nyalakan heater
+    digitalWrite(Heater, HIGH);
     Serial.println("ON ");
   } else {
-    digitalWrite(chiller, LOW); // Matikan chiller
-    digitalWrite(Heater, LOW); // Matikan heater
+    digitalWrite(chiller, LOW);
+    digitalWrite(Heater, LOW);
     Serial.println("Chiller OFF");
     Serial.println("Heater OFF");
   }
 }
 
-void readAirQuality(){
-  float VRL = analogRead(MQ_sensor) * (3.3 / 4095.0); // Membaca tegangan dari sensor MQ
-  float RS = (3.3 / VRL - 1) * 10; // Menghitung resistansi sensor
-  float ratio = RS / Ro; // Menghitung rasio Rs/Ro
-  float ppm = pow(10, ((log10(ratio) - b) / m)); // Menghitung ppm berdasarkan rasio
-  total = total - readings[readIndex]; // Mengupdate total pembacaan
-  readings[readIndex] = ppm; // Menyimpan pembacaan ppm ke dalam array
-  total = total + readings[readIndex]; // Mengupdate total pembacaan
-  readIndex = readIndex + 1; // Mengupdate indeks pembacaan
-  if (readIndex >= numReadings) { // Memastikan indeks pembacaan tetap dalam rentang array
-    readIndex = 0; // Kembali ke indeks awal jika melebihi jumlah pembacaan
+// Custom mapping function for float values
+float mapFloat(float x, float in_min, float in_max, float out_min, float out_max) {
+  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
+
+void readAirQuality() {
+  float VRL = analogRead(MQ_sensor) * (3.3 / 4095.0);
+  float RS = (3.3 / VRL - 1) * 10;
+  float ratio = RS / Ro;
+  float ppm = pow(10, ((log10(ratio) - b) / m));
+  total = total - readings[readIndex];
+  readings[readIndex] = ppm;
+  total = total + readings[readIndex];
+  readIndex = readIndex + 1;
+  if (readIndex >= numReadings) {
+    readIndex = 0;
   }
-  Amonia = total / numReadings; // Menghitung nilai rata-rata ppm
-  Serial.print("Amonia ppm: "); // Output ke Serial Monitor
-  Serial.println(Amonia); // Output nilai rata-rata ppm
+  Amonia = total / numReadings;
+  Serial.print("Amonia ppm: ");
+  Serial.println(Amonia);
+  // Calculate percentage using the custom mapFloat function
+  float amoniaPercentage = mapFloat(Amonia, MIN_AMONIA, MAX_AMONIA, 0, 100);
+  Serial.print("Amonia (Persentase): ");
+  Serial.print(amoniaPercentage);
+  Serial.println("%");
 }
 
 void readTDS(){
-  int sensorValue = analogRead(TDS_Pin); // Membaca nilai analog dari sensor TDS
-  tdsValue = (0.6656 * sensorValue) + 69.604; // Melakukan kalibrasi nilai TDS
-  Serial.print("TDS Value: "); // Output ke Serial Monitor
-  Serial.println(tdsValue); // Output nilai TDS
-      if (tdsValue > 150) {
-    digitalWrite(waterpump, HIGH); // Nyalakan chiller
+  int sensorValue = analogRead(TDS_Pin);
+  tdsValue = (0.6656 * sensorValue) + 69.604;
+  Serial.print("TDS Value: ");
+  Serial.println(tdsValue);
+  // Calculate percentage
+  float tdsPercentage = map(tdsValue, MIN_TDS, MAX_TDS, 0, 100);
+  Serial.print("TDS (Persentase): ");
+  Serial.print(tdsPercentage);
+  Serial.println("%");
+  if (tdsValue > 150) {
+    digitalWrite(waterpump, HIGH);
     Serial.println("ON ");
   } else {
-    digitalWrite(waterpump, LOW); // Matikan chiller
+    digitalWrite(waterpump, LOW);
     Serial.println("OFF");
   }
 }
 
 void readPH(){
-  voltage = analogRead(PH_PIN) / ESPADC * ESPVOLTAGE; // Membaca tegangan dari sensor pH
-  float phValue = ph.readPH(voltage, temperature); // Mendapatkan nilai pH dari sensor
-  corrected_pH = (-0.4869 * phValue) + 9.5045; // Koreksi nilai pH
-  Serial.print("pH:"); // Output ke Serial Monitor
-  Serial.println(corrected_pH, 4); // Output nilai pH
+  voltage = analogRead(PH_PIN) / ESPADC * ESPVOLTAGE;
+  float phValue = ph.readPH(voltage, temperature);
+  corrected_pH = (-0.4869 * phValue) + 9.5045;
+  Serial.print("pH:");
+  Serial.println(corrected_pH, 4);
+  // Calculate percentage
+  float phPercentage = map(corrected_pH, MIN_PH, MAX_PH, 0, 100);
+  Serial.print("pH (Persentase): ");
+  Serial.print(phPercentage);
+  Serial.println("%");
 }
 
 void readTurbidity(){
-  int Turbidity = analogRead(sensorPin); // Membaca nilai dari sensor kekeruhan air
-  total = total - readings[currentIndex]; // Mengupdate total pembacaan
-  readings[currentIndex] = Turbidity; // Menyimpan pembacaan sensor ke dalam array
-  total = total + readings[currentIndex]; // Mengupdate total pembacaan
-  currentIndex = (currentIndex + 1) % numReadings; // Pindah ke indeks berikutnya, atur kembali ke 0 jika sudah mencapai batas
-  int average = total / numReadings; // Menghitung rata-rata pembacaan sensor
-  kekeruhan = map(average, 0, 700, 100, 0); // Konversi nilai sensor ke nilai kekeruhan dalam rentang 0-100
-  Serial.print("Kekeruhan Air : "); // Output ke Serial Monitor
-  Serial.println(kekeruhan); // Output nilai kekeruhan air
+  int Turbidity = analogRead(sensorPin);
+  total = total - readings[currentIndex];
+  readings[currentIndex] = Turbidity;
+  total = total + readings[currentIndex];
+  currentIndex = (currentIndex + 1) % numReadings;
+  int average = total / numReadings;
+  kekeruhan = map(average, 0, 700, 10, 0);
+  Serial.print("Kekeruhan Air : ");
+  Serial.println(kekeruhan);
+  // Calculate percentage
+  float turbidityPercentage = map(kekeruhan, MIN_TURBIDITY, MAX_TURBIDITY, 0, 100);
+  Serial.print("Kekeruhan Air (Persentase): ");
+  Serial.print(turbidityPercentage);
+  Serial.println("%");
 }
