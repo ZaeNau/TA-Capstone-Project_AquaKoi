@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:koiaqua/Presentation/profil_screen.dart';
-import 'package:percent_indicator/linear_percent_indicator.dart';
 import '../widgets/app_bar/custom_app_bar.dart';
 import '../widgets/app_bar/appbar_title_searchview.dart';
 import 'package:flutter/material.dart';
