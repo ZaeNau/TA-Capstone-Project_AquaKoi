@@ -21,94 +21,112 @@ class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: theme.colorScheme.onError,
-        resizeToAvoidBottomInset: false,
-        body: Center(
-          child: SingleChildScrollView(
-            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-            child: Form(
-              key: _formKey,
-              child: SizedBox(
-                width: double.maxFinite,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(height: 1.v),
-                    Text("Log in", style: CustomTextStyles.titleLargePrimary22),
-                    SizedBox(height: 60.v),
-                    Text("Email address", style: theme.textTheme.bodyMedium),
-                    SizedBox(height: 6.v),
-                    CustomTextFormField(
+Widget build(BuildContext context) {
+  return SafeArea(
+    child: Scaffold(
+      backgroundColor: theme.colorScheme.onError,
+      resizeToAvoidBottomInset: false,
+      body: Center(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: Form(
+            key: _formKey,
+            child: SizedBox(
+              width: double.maxFinite,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(height: 1.v),
+                  Text("Log in", style: CustomTextStyles.titleLargePrimary22),
+                  SizedBox(height: 60.v),
+                  Text("Email address", style: theme.textTheme.bodyMedium),
+                  SizedBox(height: 6.v),
+                  Container(
+                    width: 450, // Set the width to your desired value
+                    child: CustomTextFormField(
                       controller: emailController,
                       hintText: "ikankoiku@gmail.com",
                       textInputType: TextInputType.emailAddress,
+                      textStyle:  CustomTextStyles.bodyMediumInter.copyWith(
+                                        color: Color(0XFF000000),
+                                      ),
                       onFieldSubmitted: (_) => _focusNextField(context, passwordFocusNode),
                     ),
-                    SizedBox(height: 16.v),
-                    Text("Password", style: theme.textTheme.bodyMedium),
-                    SizedBox(height: 6.v),
-                    CustomTextFormField(
+                  ),
+                  SizedBox(height: 16.v),
+                  Text("Password", style: theme.textTheme.bodyMedium),
+                  SizedBox(height: 6.v),
+                  Container(
+                    width: 450, // Set the width to your desired value
+                    child: CustomTextFormField(
                       controller: passwordController,
+                      hintText: "password",
                       textInputAction: TextInputAction.done,
+                      textStyle:  CustomTextStyles.bodyMediumInter.copyWith(
+                                        color: Color(0XFF000000),
+                                      ),
                       focusNode: passwordFocusNode,
                       onFieldSubmitted: (_) => onTapLogIn(context),
                       obscureText: true,
                     ),
-                    SizedBox(height: 6.v),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        _buildRememberme(context),
-                        SizedBox(width: 20), // Margin antara remember me dan forgot password
-                        GestureDetector(
-                          onTap: () {
-                            onTapForgetPassword(context);
-                          },
-                          child: Text("Forgot password?", style: theme.textTheme.bodySmall),
+                  ),
+                  SizedBox(height: 10.v),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _buildRememberme(context),
+                      SizedBox(width: 230), // Margin antara remember me dan forgot password
+                      GestureDetector(
+                        onTap: () {
+                          onTapForgetPassword(context);
+                        },
+                        child: Text(
+                          "Forgot password?",
+                          style: theme.textTheme.bodySmall?.copyWith(fontSize: 11), // Specify the desired font size here
                         ),
-                      ],
-                    ),
-                    SizedBox(height: 61.v),
-                    CustomOutlinedButton(
-                      width: 220.h,
-                      text: "Log in",
-                      onPressed: () {
-                        onTapLogIn(context);
-                      },
-                    ),
-                    SizedBox(height: 63.v),
-                    GestureDetector(
-                      onTap: () {
-                        onTapTxtDonthaveanaccount(context);
-                      },
-                      child: RichText(
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                              text: "Don’t have an account? ",
-                              style: CustomTextStyles.bodyMediumff000000,
-                            ),
-                            TextSpan(
-                              text: "Sign up",
-                              style: CustomTextStyles.labelLargeff000000,
-                            ),
-                          ],
-                        ),
-                        textAlign: TextAlign.left,
                       ),
+                    ],
+                  ),
+
+                  SizedBox(height: 61.v),
+                  CustomOutlinedButton(
+                    width: 270.h,
+                    text: "Log in",
+                    onPressed: () {
+                      onTapLogIn(context);
+                    },
+                  ),
+                  SizedBox(height: 63.v),
+                  GestureDetector(
+                    onTap: () {
+                      onTapTxtDonthaveanaccount(context);
+                    },
+                    child: RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: "Don’t have an account? ",
+                            style: CustomTextStyles.bodyMediumff000000,
+                          ),
+                          TextSpan(
+                            text: "Sign up",
+                            style: CustomTextStyles.labelLargeff000000,
+                          ),
+                        ],
+                      ),
+                      textAlign: TextAlign.left,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
+
 
   /// Section Widget
   Widget _buildRememberme(BuildContext context) {
@@ -116,6 +134,7 @@ class _LoginScreenState extends State<LoginScreen> {
       padding: EdgeInsets.only(bottom: 1.v),
       child: CustomCheckboxButton(
         text: "Remember me",
+        textStyle: theme.textTheme.bodySmall?.copyWith(fontSize: 11),
         value: rememberme,
         onChange: (value) {
           setState(() {
