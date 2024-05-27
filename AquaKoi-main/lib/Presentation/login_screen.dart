@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:koiaqua/widgets/custom_elevated_button.dart';
 import '../widgets/custom_text_form_field.dart';
 import '../widgets/custom_checkbox_button.dart';
 import '../widgets/custom_outlined_button.dart';
-import '../Presentation/forget_password_screen.dart';
 import '../core/app_export.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -19,6 +19,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final FocusNode passwordFocusNode = FocusNode();
   bool rememberme = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  
 
   @override
 Widget build(BuildContext context) {
@@ -89,9 +91,10 @@ Widget build(BuildContext context) {
                   ),
 
                   SizedBox(height: 61.v),
-                  CustomOutlinedButton(
+                  CustomElevatedButton(
                     width: 270.h,
                     text: "Log in",
+                    buttonTextStyle: CustomTextStyles.labelLargeff000000,
                     onPressed: () {
                       onTapLogIn(context);
                     },
@@ -153,6 +156,7 @@ Widget build(BuildContext context) {
         UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: emailController.text,
           password: passwordController.text,
+
         );
         // Navigate to dashboard if login is successful
         Navigator.pushNamed(context, AppRoutes.dashboardScreen);

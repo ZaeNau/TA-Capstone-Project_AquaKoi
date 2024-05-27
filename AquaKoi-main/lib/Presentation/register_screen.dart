@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:koiaqua/Presentation/login_screen.dart';
+import 'package:koiaqua/widgets/custom_elevated_button.dart';
 import '../widgets/custom_outlined_button.dart';
 import '../widgets/custom_text_form_field.dart';
 import '../core/app_export.dart';
@@ -77,11 +78,11 @@ class RegisterScreen extends StatelessWidget {
                         children: [
                           TextSpan(
                             text: "Already have an account? ",
-                            style: CustomTextStyles.bodyMediumffffffff,
+                            style: CustomTextStyles.bodyMediumff000000,
                           ),
                           TextSpan(
                             text: "Log in",
-                            style: CustomTextStyles.labelLargeffffffff,
+                            style: CustomTextStyles.labelLargeff000000,
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
                                 Navigator.push(
@@ -111,6 +112,9 @@ class RegisterScreen extends StatelessWidget {
       controller: nameController,
       hintText: "Ikan Koi",
       textInputType: TextInputType.name, onFieldSubmitted: (_) {  },
+      textStyle:  CustomTextStyles.bodyMediumInter.copyWith(
+                                        color: Color(0XFF000000),
+                                      ),
     );
   }
 
@@ -121,6 +125,9 @@ class RegisterScreen extends StatelessWidget {
       controller: emailController,
       hintText: "example@gmail.com",
       textInputType: TextInputType.emailAddress, onFieldSubmitted: (_) {  },
+      textStyle:  CustomTextStyles.bodyMediumInter.copyWith(
+                                        color: Color(0XFF000000),
+                                      ),
     );
   }
 
@@ -132,6 +139,9 @@ class RegisterScreen extends StatelessWidget {
       hintText: "must be 8 characters",
       hintStyle: CustomTextStyles.bodyMediumInterPrimary,
       textInputType: TextInputType.visiblePassword,
+      textStyle:  CustomTextStyles.bodyMediumInter.copyWith(
+                                        color: Color(0XFF000000),
+                                      ),
       obscureText: true, onFieldSubmitted: (_) {  },
     );
   }
@@ -145,15 +155,19 @@ class RegisterScreen extends StatelessWidget {
       hintStyle: CustomTextStyles.bodyMediumInterPrimary,
       textInputAction: TextInputAction.done,
       textInputType: TextInputType.visiblePassword,
+      textStyle:  CustomTextStyles.bodyMediumInter.copyWith(
+                                        color: Color(0XFF000000),
+                                      ),
       obscureText: true, onFieldSubmitted: (_) {  },
     );
   }
 
   /// Section Widget
   Widget _buildSignUp(BuildContext context) {
-    return CustomOutlinedButton(
+    return CustomElevatedButton(
       width: 220.h,
       text: "Sign up",
+      buttonTextStyle: CustomTextStyles.labelLargeff000000,
       onPressed: () {
         onTapSignUp(context);
       },

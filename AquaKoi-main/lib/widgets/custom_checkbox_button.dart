@@ -90,18 +90,27 @@ class CustomCheckboxButton extends StatelessWidget {
         style: textStyle ?? theme.textTheme.bodySmall,
       );
   Widget get checkboxWidget => SizedBox(
-        height: iconSize ?? 11.h,
-        width: iconSize ?? 11.h,
-        child: Checkbox(
-          visualDensity: const VisualDensity(
-            vertical: -4,
-            horizontal: -4,
-          ),
-          value: value ?? false,
-          checkColor: appTheme.gray400,
-          onChanged: (value) {
-            onChange(value!);
-          },
-        ),
-      );
+    height: iconSize ?? 11.h,
+    width: iconSize ?? 11.h,
+    child: Checkbox(
+      visualDensity: const VisualDensity(
+        vertical: -4,
+        horizontal: -4,
+      ),
+      value: value,
+      checkColor: appTheme.blueGray900,
+      activeColor: appTheme.gray100, // Set the active color to gray100
+      fillColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+        if (states.contains(MaterialState.selected)) {
+          return appTheme.gray100; // Color when selected
+        }
+        return appTheme.gray100; // Color when not selected
+      }),
+      side: BorderSide(color: appTheme.gray100), // Ensuring consistent border color
+      onChanged: (value) {
+        onChange(value!);
+      },
+    ),
+  );
 }
+
