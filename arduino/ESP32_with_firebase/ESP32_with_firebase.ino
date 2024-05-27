@@ -66,6 +66,12 @@ float tdsValue;
 float Amonia;
 float kekeruhan;
 
+float temperaturePercentage;
+float amoniaPercentage;
+float tdsPercentage;
+float phPercentage;
+float turbidityPercentage;
+
 int currentIndex = 0;
 
 FirebaseData fbdo;
@@ -79,6 +85,11 @@ String amoPath = "/Amonia";
 String tdsPath = "/Tds";
 String phPath = "/ph";
 String turbPath = "/turbidity";
+String tempPercPath = "/SuhuPercentage";
+String amoPercPath = "/AmoniaPercentage";
+String tdsPercPath = "/TdsPercentage";
+String phPercPath = "/phPercentage";
+String turbPercPath = "/turbidityPercentage";
 String parentPath;
 
 FirebaseJson json;
@@ -129,8 +140,8 @@ void setup() {
   // Getting the user UID might take a few seconds
   Serial.println("Getting User UID");
   while ((auth.token.uid) == "") {
-  Serial.print('.');
-  delay(500);
+    Serial.print('.');
+    delay(500);
   }
   uid = auth.token.uid.c_str();
   Serial.print("User UID: ");
@@ -146,14 +157,19 @@ void loop() {
     
     readTemperature();
     json.set(tempPath.c_str(), String(Suhu)); // Assuming temperature is a float or int
+    json.set(tempPercPath.c_str(), String(temperaturePercentage));
     readAirQuality();
     json.set(amoPath.c_str(), String(Amonia)); // Assuming average is a float or int
+    json.set(amoPercPath.c_str(), String(amoniaPercentage));
     readTDS();
     json.set(tdsPath.c_str(), String(tdsValue)); // Assuming sensorValue is an int or float
+    json.set(tdsPercPath.c_str(), String(tdsPercentage));
     readPH();
     json.set(phPath.c_str(), String(corrected_pH)); // Assuming phValue is a float
+    json.set(phPercPath.c_str(), String(phPercentage));
     readTurbidity();
     json.set(turbPath.c_str(), String(kekeruhan)); // Assuming kekeruhan is an int
+    json.set(turbPercPath.c_str(), String(turbidityPercentage));
 
     String jsonData;
     json.toString(jsonData); // Convert JSON object to string
@@ -174,7 +190,7 @@ void readTemperature(){
   Serial.print(Suhu);
   Serial.println(" °C");
   // Calculate percentage
-  float temperaturePercentage = map(Suhu, MIN_TEMPERATURE, MAX_TEMPERATURE, 0, 100);
+  temperaturePercentage = map(Suhu, MIN_TEMPERATURE, MAX_TEMPERATURE, 0, 100);
   Serial.print("Suhu (Persentase): ");
   Serial.print(temperaturePercentage);
   Serial.println("%");
@@ -213,7 +229,7 @@ void readAirQuality() {
   Serial.print("Amonia ppm: ");
   Serial.println(Amonia);
   // Calculate percentage using the custom mapFloat function
-  float amoniaPercentage = mapFloat(Amonia, MIN_AMONIA, MAX_AMONIA, 0, 100);
+  amoniaPercentage = mapFloat(Amonia, MIN_AMONIA, MAX_AMONIA, 0, 100);
   Serial.print("Amonia (Persentase): ");
   Serial.print(amoniaPercentage);
   Serial.println("%");
@@ -225,7 +241,7 @@ void readTDS(){
   Serial.print("TDS Value: ");
   Serial.println(tdsValue);
   // Calculate percentage
-  float tdsPercentage = map(tdsValue, MIN_TDS, MAX_TDS, 0, 100);
+  tdsPercentage = map(tdsValue, MIN_TDS, MAX_TDS, 0, 100);
   Serial.print("TDS (Persentase): ");
   Serial.print(tdsPercentage);
   Serial.println("%");
@@ -245,7 +261,7 @@ void readPH(){
   Serial.print("pH:");
   Serial.println(corrected_pH, 4);
   // Calculate percentage
-  float phPercentage = map(corrected_pH, MIN_PH, MAX_PH, 0, 100);
+  phPercentage = map(corrected_pH, MIN_PH, MAX_PH, 0, 100);
   Serial.print("pH (Persentase): ");
   Serial.print(phPercentage);
   Serial.println("%");
@@ -262,7 +278,7 @@ void readTurbidity(){
   Serial.print("Kekeruhan Air : ");
   Serial.println(kekeruhan);
   // Calculate percentage
-  float turbidityPercentage = map(kekeruhan, MIN_TURBIDITY, MAX_TURBIDITY, 0, 100);
+  turbidityPercentage = map(kekeruhan, MIN_TURBIDITY, MAX_TURBIDITY, 0, 100);
   Serial.print("Kekeruhan Air (Persentase): ");
   Serial.print(turbidityPercentage);
   Serial.println("%");
