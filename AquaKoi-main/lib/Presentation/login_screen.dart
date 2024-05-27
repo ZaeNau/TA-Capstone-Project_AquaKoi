@@ -147,28 +147,43 @@ Widget build(BuildContext context) {
   }
 
   /// Handles login action with Firebase Authentication.
-  void onTapLogIn(BuildContext context) async {
-    if (_formKey.currentState!.validate()) {
-      try {
-        UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: emailController.text,
-          password: passwordController.text,
-        );
-        // Navigate to dashboard if login is successful
-        Navigator.pushNamed(context, AppRoutes.dashboardScreen);
-      } on FirebaseAuthException catch (e) {
-        String message;
-        if (e.code == 'user-not-found') {
-          message = 'No user found for that email.';
-        } else if (e.code == 'wrong-password') {
-          message = 'Wrong password provided.';
-        } else {
-          message = 'An error occurred. Please try again.';
-        }
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+void onTapLogIn(BuildContext context) async {
+  if (_formKey.currentState!.validate()) {
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+      
+      // Use userCredential here
+      User? user = userCredential.user;
+      if (user != null) {
+        ('User ID: ${user.uid}');
+        ('User Email: ${user.email}');
       }
+
+      // Check if the widget is still mounted before using the context
+      if (!mounted) return;
+
+      // Navigate to dashboard if login is successful
+      Navigator.pushNamed(context, AppRoutes.dashboardScreen);
+    } on FirebaseAuthException catch (e) {
+      String message;
+      if (e.code == 'user-not-found') {
+        message = 'No user found for that email.';
+      } else if (e.code == 'wrong-password') {
+        message = 'Wrong password provided.';
+      } else {
+        message = 'An error occurred. Please try again.';
+      }
+
+      // Check if the widget is still mounted before using the context
+      if (!mounted) return;
+      
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
     }
   }
+}
 
   /// Navigates to the registerScreen when the action is triggered.
   void onTapTxtDonthaveanaccount(BuildContext context) {
