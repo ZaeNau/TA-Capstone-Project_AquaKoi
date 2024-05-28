@@ -15,6 +15,7 @@ dependencies:
   fluttertoast: ^8.2.4
   flutter_svg: ^2.0.9
   intl: ^0.18.0
+  getwidget: ^4.0.0
 
 dev_dependencies:
   flutter_test:

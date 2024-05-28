@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:getwidget/getwidget.dart';
 import 'package:koiaqua/Presentation/profil_screen.dart';
-import 'package:percent_indicator/linear_percent_indicator.dart';
 import '../widgets/app_bar/custom_app_bar.dart';
 import '../widgets/app_bar/appbar_title_searchview.dart';
 import 'package:flutter/material.dart';
@@ -253,180 +253,182 @@ final DatabaseReference _databaseReference = FirebaseDatabase.instance.ref().chi
     );
   }
 
- Widget _buildTemperature(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 5.0),
-      child: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: 10.h,
-          vertical: 15.v,
-        ),
-        decoration: AppDecoration.fillOnSecondaryContainer.copyWith(
-          borderRadius: BorderRadiusStyle.roundedBorder18,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                padding: EdgeInsets.only(left: 4.h),
-                child: Row(
-                  children: [
-                    CustomImageView(
-                      imagePath: ImageConstant.imgThumbsUp,
-                      height: 12.adaptSize,
-                      width: 12.adaptSize,
-                      margin: EdgeInsets.only(bottom: 3.v),
+Widget _buildTemperature(BuildContext context) {
+  double suhuPercentage = sensorData['SuhuPercentage'] != null
+      ? double.tryParse(sensorData['SuhuPercentage'])! / 100
+      : 0.0;
+
+  return Padding(
+    padding: EdgeInsets.symmetric(horizontal: 5.0),
+    child: Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: 10.h,
+        vertical: 15.v,
+      ),
+      decoration: AppDecoration.fillOnSecondaryContainer.copyWith(
+        borderRadius: BorderRadiusStyle.roundedBorder18,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: EdgeInsets.only(left: 4.h),
+              child: Row(
+                children: [
+                  CustomImageView(
+                    imagePath: ImageConstant.imgThumbsUp,
+                    height: 12.adaptSize,
+                    width: 12.adaptSize,
+                    margin: EdgeInsets.only(bottom: 3.v),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 3.h),
+                    child: Text(
+                      "Temperature",
+                      style: CustomTextStyles.bodySmallPrimaryContainer,
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 3.h),
-                      child: Text(
-                        "Temperature",
-                        style: CustomTextStyles.bodySmallPrimaryContainer,
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-            SizedBox(height: 24.v),
-            SizedBox(
-              height: 28.v,
-              width: 72.h,
+          ),
+          SizedBox(height: 24.v),
+          SizedBox(
+            height: 28.v,
+            width: 72.h,
+            child: Stack(
+              alignment: Alignment.topLeft,
+              children: [
+                Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                    height: 28.v,
+                    width: 72.h,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(6.h),
+                      gradient: LinearGradient(
+                        begin: Alignment(0.03, 0.13),
+                        end: Alignment(1, 1),
+                        colors: [
+                          appTheme.gray200,
+                          appTheme.gray100,
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 15.h),
+                    child: Text(
+                      "${sensorData['Suhu'] ?? 'N/A'} C",
+                      style: theme.textTheme.titleLarge,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 15.v),
+          Align(
+            alignment: Alignment.center,
+            child: Container(
+              height: 60.v,
+              width: 250.h,
               child: Stack(
                 alignment: Alignment.topLeft,
                 children: [
                   Align(
-                    alignment: Alignment.center,
+                    alignment: Alignment.bottomCenter,
                     child: Container(
-                      height: 28.v,
-                      width: 72.h,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(6.h),
-                        gradient: LinearGradient(
-                          begin: Alignment(0.03, 0.13),
-                          end: Alignment(1, 1),
-                          colors: [
-                            appTheme.gray200,
-                            appTheme.gray100,
-                          ],
-                        ),
+                      padding: EdgeInsets.symmetric(horizontal: 4.h, vertical: 1.v),
+                      decoration: AppDecoration.outlineBlueGray.copyWith(
+                        borderRadius: BorderRadiusStyle.roundedBorder15,
                       ),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 15.h),
-                      child: Text(
-                        "${sensorData['Suhu']+' C' ?? 'youre not authenticated'}", // Ubah teks untuk menampilkan nilai suhu
-                        style: theme.textTheme.titleLarge,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 6.v),
+                          Padding(
+                            padding: EdgeInsets.only(left: 8.h),
+                            child: _buildFortyEight(
+                              context,
+                              bad: "bad",
+                              good: "good",
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                            child: Container(
+                              height: 15.v,
+                              child: GFProgressBar(
+                                percentage: suhuPercentage.clamp(0.0, 1.0),
+                                lineHeight: 30,
+                                backgroundColor: appTheme.blueGray100,
+                                progressBarColor: appTheme.Red1,
+                                animation: true,
+                                animationDuration: 1000,
+                                radius: 20,
+                                child: Text(
+                                  "${(suhuPercentage * 100).toStringAsFixed(0)}%",
+                                  style: CustomTextStyles.googleSansPrimaryContainer,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 10.v),
+                        ],
                       ),
                     ),
                   ),
                 ],
               ),
             ),
-            SizedBox(height: 15.v),
-            Align(
-              alignment: Alignment.center,
-              child: Container(
-                height: 60.v,
-                width: 250.h,
-                child: Stack(
-                  alignment: Alignment.topLeft,
-                  children: [
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 4.h, vertical: 1.v),
-                        decoration: AppDecoration.outlineBlueGray.copyWith(
-                          borderRadius: BorderRadiusStyle.roundedBorder15,
-                        ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(height: 6.v),
-                            Padding(
-                              padding: EdgeInsets.only(left: 8.h),
-                              child: _buildFortyEight(
-                                context,
-                                bad: "bad",
-                                good: "good",
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                              child: Container(
-                                height: 15.v,
-                                child: LinearPercentIndicator(
-                                  width: 330,
-                                  lineHeight: 30,
-                                  backgroundColor: appTheme.blueGray100,
-                                  progressColor: appTheme.Red1,
-                                  percent: 0.25, // Persentase bisa diubah sesuai data aktual
-                                  center: Text(
-                                    "25%",
-                                    style: CustomTextStyles.googleSansPrimaryContainer,
-                                  ),
-                                  animation: true,
-                                  animationDuration: 1000,
-                                  barRadius: Radius.circular(20),
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 10.v),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+          ),
+          SizedBox(height: 24.v),
+          Padding(
+            padding: EdgeInsets.only(right: 4.h),
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Heater",
+                    style: CustomTextStyles.bodySmallPrimaryContainer_1,
+                  ),
+                  SizedBox(height: 3.v),
+                  ToggleButton(
+                    initialState: true, // Kontrol ini bisa diatur berdasarkan data aktual
+                    onToggle: (bool value) {
+                      print("Heater is now: $value");
+                    },
+                  ),
+                  SizedBox(height: 10.v),
+                  Text(
+                    "Cooler",
+                    style: CustomTextStyles.bodySmallPrimaryContainer_1,
+                  ),
+                  SizedBox(height: 3.v),
+                  ToggleButton(
+                    initialState: false, // Kontrol ini bisa diatur berdasarkan data aktual
+                    onToggle: (bool value) {
+                      print("Cooler is now: $value");
+                    },
+                  ),
+                ],
               ),
             ),
-            SizedBox(height: 24.v),
-            Padding(
-              padding: EdgeInsets.only(right: 4.h),
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Heater",
-                      style: CustomTextStyles.bodySmallPrimaryContainer_1,
-                    ),
-                    SizedBox(height: 3.v),
-                    ToggleButton(
-                      initialState: true, // Kontrol ini bisa diatur berdasarkan data aktual
-                      onToggle: (bool value) {
-                        print("Heater is now: $value");
-                      },
-                    ),
-                    SizedBox(height: 10.v),
-                    Text(
-                      "Cooler",
-                      style: CustomTextStyles.bodySmallPrimaryContainer_1,
-                    ),
-                    SizedBox(height: 3.v),
-                    ToggleButton(
-                      initialState: false, // Kontrol ini bisa diatur berdasarkan data aktual
-                      onToggle: (bool value) {
-                        print("Cooler is now: $value");
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
-    );
-  }
-
+    ),
+  );
+}
 
   Widget _buildRowWithTDSAndTurbidity(BuildContext context) {
     return Padding(
@@ -441,582 +443,626 @@ final DatabaseReference _databaseReference = FirebaseDatabase.instance.ref().chi
     );
   }
 
-  Widget _buildPH(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(right: 4.h),
-      padding: EdgeInsets.symmetric(horizontal: 10.h, vertical: 15.v),
-      decoration: AppDecoration.fillOnSecondaryContainer.copyWith(
-        borderRadius: BorderRadiusStyle.roundedBorder18,
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Padding(
-              padding: EdgeInsets.only(left: 4.h),
-              child: Row(
-                children: [
-                  CustomImageView(
-                    imagePath: ImageConstant.imgSettings,
-                    height: 12.adaptSize,
-                    width: 12.adaptSize,
-                    margin: EdgeInsets.only(bottom: 3.v),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 3.h),
-                    child: Text(
-                      "pH level",
-                      style: CustomTextStyles.bodySmallPrimaryContainer,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          SizedBox(height: 24.v),
-          SizedBox(
-            height: 28.v,
-            width: 72.h,
-            child: Stack(
-              alignment: Alignment.topLeft,
-              children: [
-                Align(
-                  alignment: Alignment.center,
-                  child: Container(
-                    height: 28.v,
-                    width: 72.h,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(6.h),
-                      gradient: LinearGradient(
-                        begin: const Alignment(0.03, 0.13),
-                        end: const Alignment(1, 1),
-                        colors: [
-                          appTheme.gray200,
-                          appTheme.gray100,
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 22.h),
-                    child: Text(
-                      "${sensorData['ph'] ?? 'youre not authenticated'}",
-                      style: theme.textTheme.titleLarge,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(height: 15.v),
-          SizedBox(
-            height: 55.v,
-            width: 147.h,
-            child: Stack(
-              alignment: Alignment.topRight,
-              children: [
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 4.h, vertical: 1.v),
-                    decoration: AppDecoration.outlineBlueGray.copyWith(
-                      borderRadius: BorderRadiusStyle.roundedBorder15,
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 6.v),
-                        Padding(
-                          padding: EdgeInsets.only(left: 5.h),
-                          child: _buildFortyEight(
-                            context,
-                            bad: "bad",
-                            good: "good",
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 1, vertical: 3),
-                          child: Container(
-                            height: 15.v,
-                            child: LinearPercentIndicator(
-                              width: 177,
-                              lineHeight: 30,
-                              backgroundColor: appTheme.blueGray100,
-                              progressColor: appTheme.greenA700,
-                              percent: 0.7,
-                              center: Text(
-                                "70%",
-                                style: CustomTextStyles.googleSansPrimaryContainer,
-                              ),
-                              animation: true,
-                              animationDuration: 1000,
-                              barRadius: Radius.circular(20),
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 10.v),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+Widget _buildPH(BuildContext context) {
+  double phPercentage = sensorData['phPercentage'] != null
+      ? double.tryParse(sensorData['phPercentage'])! / 100
+      : 0.0;
 
-  Widget _buildAmmonia(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(left: 4.h),
-      padding: EdgeInsets.symmetric(horizontal: 10.h, vertical: 15.v),
-      decoration: AppDecoration.fillOnSecondaryContainer.copyWith(
-        borderRadius: BorderRadiusStyle.roundedBorder18,
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Padding(
-              padding: EdgeInsets.only(left: 5.h),
-              child: Row(
-                children: [
-                  CustomImageView(
-                    imagePath: ImageConstant.imgVector,
-                    height: 12.adaptSize,
-                    width: 12.adaptSize,
-                    margin: EdgeInsets.only(bottom: 3.v),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 3.h),
-                    child: Text(
-                      "Ammonia level",
-                      style: CustomTextStyles.bodySmallPrimaryContainer,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          SizedBox(height: 24.v),
-          Container(
-            height: 28.v,
-            width: 72.h,
-            child: Stack(
-              alignment: Alignment.topLeft,
-              children: [
-                Align(
-                  alignment: Alignment.center,
-                  child: Container(
-                    height: 28.v,
-                    width: 72.h,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(6.h),
-                      gradient: LinearGradient(
-                        begin: const Alignment(0.03, 0.13),
-                        end: const Alignment(1, 1),
-                        colors: [
-                          appTheme.gray200,
-                          appTheme.gray100,
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.center,
-                  child: Padding(
-                    padding: EdgeInsets.only(),
-                    child: Text(
-                      "${sensorData['Amonia']+'PPM' ?? 'youre not authenticated'}",
-                      style: theme.textTheme.titleLarge,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(height: 15.v),
-          SizedBox(
-            height: 55.v,
-            width: 147.h,
-            child: Stack(
-              alignment: Alignment.topRight,
-              children: [
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 4.h, vertical: 1.v),
-                    decoration: AppDecoration.outlineBlueGray.copyWith(
-                      borderRadius: BorderRadiusStyle.roundedBorder15,
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 6.v),
-                        Padding(
-                          padding: EdgeInsets.only(left: 5.h),
-                          child: _buildFortyEight(
-                            context,
-                            bad: "bad",
-                            good: "good",
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 1, vertical: 3),
-                          child: Container(
-                            height: 15.v,
-                            child: LinearPercentIndicator(
-                              width: 177,
-                              lineHeight: 30,
-                              backgroundColor: appTheme.blueGray100,
-                              progressColor: appTheme.Red1,
-                              percent: 0.25,
-                              center: Text(
-                                "25%",
-                                style: CustomTextStyles.googleSansPrimaryContainer,
-                              ),
-                              animation: true,
-                              animationDuration: 1000,
-                              barRadius: Radius.circular(20),
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 10.v),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  // Display the correct percentage, even if it exceeds 100%
+  String phPercentageDisplay = (phPercentage * 100).toStringAsFixed(0) + "%";
+  
+  // Clamp the percentage for the GFProgressBar display
+  double phPercentageClamped = phPercentage.clamp(0.0, 1.0);
 
-  Widget _buildTDS(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(right: 4.h),
-      padding: EdgeInsets.symmetric(horizontal: 10.h, vertical: 15.v),
-      decoration: AppDecoration.fillOnSecondaryContainer.copyWith(
-        borderRadius: BorderRadiusStyle.roundedBorder18,
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Padding(
-              padding: EdgeInsets.only(left: 4.h),
-              child: Row(
-                children: [
-                  CustomImageView(
-                    imagePath: ImageConstant.imgFavoritePrimarycontainer,
-                    height: 12.adaptSize,
-                    width: 12.adaptSize,
-                    margin: EdgeInsets.only(bottom: 3.v),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 3.h),
-                    child: Text(
-                      "Total dissolved water",
-                      style: CustomTextStyles.bodySmallPrimaryContainer,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          SizedBox(height: 24.v),
-          SizedBox(
-            height: 28.v,
-            width: 72.h,
-            child: Stack(
-              alignment: Alignment.topLeft,
+  return Container(
+    margin: EdgeInsets.only(right: 4.h),
+    padding: EdgeInsets.symmetric(horizontal: 10.h, vertical: 15.v),
+    decoration: AppDecoration.fillOnSecondaryContainer.copyWith(
+      borderRadius: BorderRadiusStyle.roundedBorder18,
+    ),
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Padding(
+            padding: EdgeInsets.only(left: 4.h),
+            child: Row(
               children: [
-                Align(
-                  alignment: Alignment.center,
-                  child: Container(
-                    height: 28.v,
-                    width: 72.h,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(6.h),
-                      gradient: LinearGradient(
-                        begin: const Alignment(0.03, 0.13),
-                        end: const Alignment(1, 1),
-                        colors: [
-                          appTheme.gray200,
-                          appTheme.gray100,
-                        ],
-                      ),
-                    ),
-                  ),
+                CustomImageView(
+                  imagePath: ImageConstant.imgSettings,
+                  height: 12.adaptSize,
+                  width: 12.adaptSize,
+                  margin: EdgeInsets.only(bottom: 3.v),
                 ),
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 22.h),
-                    child: Text(
-                      "${sensorData['Tds']+'PPM' ?? 'youre not authenticated'}",
-                      style: theme.textTheme.titleLarge,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(height: 15.v),
-          SizedBox(
-            height: 55.v,
-            width: 147.h,
-            child: Stack(
-              alignment: Alignment.topRight,
-              children: [
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 4.h, vertical: 1.v),
-                    decoration: AppDecoration.outlineBlueGray.copyWith(
-                      borderRadius: BorderRadiusStyle.roundedBorder15,
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 6.v),
-                        Padding(
-                          padding: EdgeInsets.only(left: 5.h),
-                          child: _buildFortyEight(
-                            context,
-                            bad: "bad",
-                            good: "good",
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 1, vertical: 3),
-                          child: Container(
-                            height: 15.v,
-                            child: LinearPercentIndicator(
-                              width: 177,
-                              lineHeight: 30,
-                              backgroundColor: appTheme.blueGray100,
-                              progressColor: appTheme.greenA700,
-                              percent: 0.75,
-                              center: Text(
-                                "75%",
-                                style: CustomTextStyles.googleSansPrimaryContainer,
-                              ),
-                              animation: true,
-                              animationDuration: 1000,
-                              barRadius: Radius.circular(20),
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 10.v),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(height: 24.v),
-          Align(
-            alignment: Alignment.centerRight,
-            child: Padding(
-              padding: EdgeInsets.only(right: 4.h),
-              child: Text(
-                "Water pump",
-                style: CustomTextStyles.bodySmallPrimaryContainer_1,
-              ),
-            ),
-          ),
-          SizedBox(height: 3.v),
-          Align(
-            alignment: Alignment.centerRight,
-            child: Container(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ToggleButton(
-                    initialState: true,
-                    onToggle: (bool value) {
-                      print("ToggleButton is now: $value");
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTurbidity(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(left: 4.h),
-      padding: EdgeInsets.symmetric(horizontal: 10.h, vertical: 15.v),
-      decoration: AppDecoration.fillOnSecondaryContainer.copyWith(
-        borderRadius: BorderRadiusStyle.roundedBorder18,
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Padding(
-              padding: EdgeInsets.only(left: 5.h),
-              child: Row(
-                children: [
-                  CustomImageView(
-                    imagePath: ImageConstant.imgBrightness,
-                    height: 12.adaptSize,
-                    width: 12.adaptSize,
-                    margin: EdgeInsets.only(bottom: 3.v),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 3.h),
-                    child: Text(
-                      "Turbidity",
-                      style: CustomTextStyles.bodySmallPrimaryContainer,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          SizedBox(height: 24.v),
-          SizedBox(
-            height: 28.v,
-            width: 72.h,
-            child: Stack(
-              alignment: Alignment.topLeft,
-              children: [
-                Align(
-                  alignment: Alignment.center,
-                  child: Container(
-                    height: 28.v,
-                    width: 72.h,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(6.h),
-                      gradient: LinearGradient(
-                        begin: const Alignment(0.03, 0.13),
-                        end: const Alignment(1, 1),
-                        colors: [
-                          appTheme.gray200,
-                          appTheme.gray100,
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.center,
+                Padding(
+                  padding: EdgeInsets.only(left: 3.h),
                   child: Text(
-                    "${sensorData['turbidity']+'NTU' ?? 'youre not authenticated'}",
+                    "pH level",
+                    style: CustomTextStyles.bodySmallPrimaryContainer,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        SizedBox(height: 24.v),
+        SizedBox(
+          height: 28.v,
+          width: 72.h,
+          child: Stack(
+            alignment: Alignment.topLeft,
+            children: [
+              Align(
+                alignment: Alignment.center,
+                child: Container(
+                  height: 28.v,
+                  width: 72.h,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(6.h),
+                    gradient: LinearGradient(
+                      begin: const Alignment(0.03, 0.13),
+                      end: const Alignment(1, 1),
+                      colors: [
+                        appTheme.gray200,
+                        appTheme.gray100,
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.topLeft,
+                child: Padding(
+                  padding: EdgeInsets.only(left: 22.h),
+                  child: Text(
+                    "${sensorData['ph'] ?? 'N/A'}",
                     style: theme.textTheme.titleLarge,
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-          SizedBox(height: 15.v),
-          SizedBox(
-            height: 55.v,
-            width: 147.h,
-            child: Stack(
-              alignment: Alignment.topRight,
-              children: [
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 4.h, vertical: 1.v),
-                    decoration: AppDecoration.outlineBlueGray.copyWith(
-                      borderRadius: BorderRadiusStyle.roundedBorder15,
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 6.v),
-                        Padding(
-                          padding: EdgeInsets.only(left: 5.h),
-                          child: _buildFortyEight(
-                            context,
-                            bad: "bad",
-                            good: "good",
-                          ),
+        ),
+        SizedBox(height: 15.v),
+        SizedBox(
+          height: 55.v,
+          width: 147.h,
+          child: Stack(
+            alignment: Alignment.topRight,
+            children: [
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 4.h, vertical: 1.v),
+                  decoration: AppDecoration.outlineBlueGray.copyWith(
+                    borderRadius: BorderRadiusStyle.roundedBorder15,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 6.v),
+                      Padding(
+                        padding: EdgeInsets.only(left: 5.h),
+                        child: _buildFortyEight(
+                          context,
+                          bad: "bad",
+                          good: "good",
                         ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 1, vertical: 3),
-                          child: Container(
-                            height: 15.v,
-                            child: LinearPercentIndicator(
-                              width: 177,
-                              lineHeight: 30,
-                              backgroundColor: appTheme.blueGray100,
-                              progressColor: appTheme.amber700,
-                              percent: 0.50,
-                              center: Text(
-                                "50%",
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 1, vertical: 3),
+                        child: Container(
+                          height: 15.v,
+                          child: GFProgressBar(
+                            percentage: phPercentageClamped,
+                            lineHeight: 30,
+                            backgroundColor: appTheme.blueGray100,
+                            progressBarColor: appTheme.greenA700,
+                            animation: true,
+                            animationDuration: 1000,
+                            radius: 20, // Use double for radius
+                            child: Center(
+                              child: Text(
+                                phPercentageDisplay,
                                 style: CustomTextStyles.googleSansPrimaryContainer,
                               ),
-                              animation: true,
-                              animationDuration: 1000,
-                              barRadius: Radius.circular(20),
                             ),
                           ),
                         ),
-                        SizedBox(height: 10.v),
-                      ],
-                    ),
+                      ),
+                      SizedBox(height: 10.v),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget _buildAmmonia(BuildContext context) {
+  double ammoniaPercentage = sensorData['AmoniaPercentage'] != null
+      ? double.tryParse(sensorData['AmoniaPercentage'])! / 100.0
+      : 0.0;
+
+  // Display the correct percentage, even if it exceeds 100%
+  String ammoniaPercentageDisplay = (ammoniaPercentage * 100).toStringAsFixed(0) + "%";
+  
+  // Clamp the percentage for the GFProgressBar display
+  double ammoniaPercentageClamped = ammoniaPercentage.clamp(0.0, 1.0);
+
+  return Container(
+    margin: EdgeInsets.only(left: 4.h),
+    padding: EdgeInsets.symmetric(horizontal: 10.h, vertical: 15.v),
+    decoration: AppDecoration.fillOnSecondaryContainer.copyWith(
+      borderRadius: BorderRadiusStyle.roundedBorder18,
+    ),
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Padding(
+            padding: EdgeInsets.only(left: 5.h),
+            child: Row(
+              children: [
+                CustomImageView(
+                  imagePath: ImageConstant.imgVector,
+                  height: 12.adaptSize,
+                  width: 12.adaptSize,
+                  margin: EdgeInsets.only(bottom: 3.v),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 3.h),
+                  child: Text(
+                    "Ammonia level",
+                    style: CustomTextStyles.bodySmallPrimaryContainer,
                   ),
                 ),
               ],
             ),
           ),
-          SizedBox(height: 24.v),
-          Align(
-            alignment: Alignment.centerRight,
-            child: Padding(
-              padding: EdgeInsets.only(left: 4.h),
-              child: Text(
-                "Water pump",
-                style: CustomTextStyles.bodySmallPrimaryContainer_1,
-              ),
-            ),
-          ),
-          SizedBox(height: 3.v),
-          Align(
-            alignment: Alignment.centerRight,
-            child: Container(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ToggleButton(
-                    initialState: true,
-                    onToggle: (bool value) {
-                      print("ToggleButton is now: $value");
-                    },
+        ),
+        SizedBox(height: 24.v),
+        Container(
+          height: 28.v,
+          width: 72.h,
+          child: Stack(
+            alignment: Alignment.topLeft,
+            children: [
+              Align(
+                alignment: Alignment.center,
+                child: Container(
+                  height: 28.v,
+                  width: 72.h,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(6.h),
+                    gradient: LinearGradient(
+                      begin: const Alignment(0.03, 0.13),
+                      end: const Alignment(1, 1),
+                      colors: [
+                        appTheme.gray200,
+                        appTheme.gray100,
+                      ],
+                    ),
                   ),
-                ],
+                ),
               ),
+              Align(
+                alignment: Alignment.center,
+                child: Padding(
+                  padding: EdgeInsets.only(),
+                  child: Text(
+                    "${sensorData['Amonia'] ?? 'N/A'}",
+                    style: theme.textTheme.titleLarge,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(height: 15.v),
+        SizedBox(
+          height: 55.v,
+          width: 147.h,
+          child: Stack(
+            alignment: Alignment.topRight,
+            children: [
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 4.h, vertical: 1.v),
+                  decoration: AppDecoration.outlineBlueGray.copyWith(
+                    borderRadius: BorderRadiusStyle.roundedBorder15,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 6.v),
+                      Padding(
+                        padding: EdgeInsets.only(left: 5.h),
+                        child: _buildFortyEight(
+                          context,
+                          bad: "bad",
+                          good: "good",
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 1, vertical: 3),
+                        child: Container(
+                          height: 15.v,
+                          child: GFProgressBar(
+                            percentage: ammoniaPercentageClamped,
+                            lineHeight: 30,
+                            backgroundColor: appTheme.blueGray100,
+                            progressBarColor: appTheme.Red1,
+                            animation: true,
+                            animationDuration: 1000,
+                            radius: 20, // Use double for radius
+                            child: Center(
+                              child: Text(
+                                ammoniaPercentageDisplay,
+                                style: CustomTextStyles.googleSansPrimaryContainer,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10.v),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget _buildTDS(BuildContext context) {
+  double tdsPercentage = sensorData['TdsPercentage'] != null
+      ? double.tryParse(sensorData['TdsPercentage'])! / 100.0
+      : 0.0;
+
+  // Convert tdsPercentage to display as percentage
+  String tdsPercentageDisplay = (tdsPercentage * 100).toStringAsFixed(0) + "%";
+  
+  // Clamp the percentage for the GFProgressBar display
+  double tdsPercentageClamped = tdsPercentage.clamp(0.0, 1.0);
+
+  return Container(
+    margin: EdgeInsets.only(right: 4.h),
+    padding: EdgeInsets.symmetric(horizontal: 10.h, vertical: 15.v),
+    decoration: AppDecoration.fillOnSecondaryContainer.copyWith(
+      borderRadius: BorderRadiusStyle.roundedBorder18,
+    ),
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Padding(
+            padding: EdgeInsets.only(left: 4.h),
+            child: Row(
+              children: [
+                CustomImageView(
+                  imagePath: ImageConstant.imgFavoritePrimarycontainer,
+                  height: 12.adaptSize,
+                  width: 12.adaptSize,
+                  margin: EdgeInsets.only(bottom: 3.v),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 3.h),
+                  child: Text(
+                    "Total dissolved water",
+                    style: CustomTextStyles.bodySmallPrimaryContainer,
+                  ),
+                ),
+              ],
             ),
           ),
-        ],
-      ),
-    );
-  }
+        ),
+        SizedBox(height: 24.v),
+        Container(
+          height: 28.v,
+          width: 72.h,
+          child: Stack(
+            alignment: Alignment.topLeft,
+            children: [
+              Align(
+                alignment: Alignment.center,
+                child: Container(
+                  height: 28.v,
+                  width: 72.h,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(6.h),
+                    gradient: LinearGradient(
+                      begin: const Alignment(0.03, 0.13),
+                      end: const Alignment(1, 1),
+                      colors: [
+                        appTheme.gray200,
+                        appTheme.gray100,
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.center,
+                child: Padding(
+                  padding: EdgeInsets.only(),
+                  child: Text(
+                    "${sensorData['Tds'] ?? 'N/A'} PPM",
+                    style: theme.textTheme.titleLarge,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(height: 15.v),
+        SizedBox(
+          height: 55.v,
+          width: 147.h,
+          child: Stack(
+            alignment: Alignment.topRight,
+            children: [
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 4.h, vertical: 1.v),
+                  decoration: AppDecoration.outlineBlueGray.copyWith(
+                    borderRadius: BorderRadiusStyle.roundedBorder15,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 6.v),
+                      Padding(
+                        padding: EdgeInsets.only(left: 5.h),
+                        child: _buildFortyEight(
+                          context,
+                          bad: "bad",
+                          good: "good",
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 1, vertical: 3),
+                        child: Container(
+                          height: 15.v,
+                          child: GFProgressBar(
+                            percentage: tdsPercentageClamped,
+                            lineHeight: 30,
+                            backgroundColor: appTheme.blueGray100,
+                            progressBarColor: appTheme.greenA700,
+                            animation: true,
+                            animationDuration: 1000,
+                            radius: 20, // Use double for radius
+                            child: Center(
+                              child: Text(
+                                tdsPercentageDisplay,
+                                style: CustomTextStyles.googleSansPrimaryContainer,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10.v),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(height: 24.v),
+        Align(
+          alignment: Alignment.centerRight,
+          child: Padding(
+            padding: EdgeInsets.only(right: 4.h),
+            child: Text(
+              "Water pump",
+              style: CustomTextStyles.bodySmallPrimaryContainer_1,
+            ),
+          ),
+        ),
+        SizedBox(height: 3.v),
+        Align(
+          alignment: Alignment.centerRight,
+          child: Container(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ToggleButton(
+                  initialState: true,
+                  onToggle: (bool value) {
+                    print("ToggleButton is now: $value");
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget _buildTurbidity(BuildContext context) {
+  double turbidityPercentage = sensorData['turbidityPercentage'] != null
+      ? double.tryParse(sensorData['turbidityPercentage'])! / 100.0
+      : 0.0;
+
+  // Convert turbidityPercentage to display as percentage
+  String turbidityPercentageDisplay = (turbidityPercentage * 100).toStringAsFixed(0) + "%";
+  
+  // Clamp the percentage for the GFProgressBar display
+  double turbidityPercentageClamped = turbidityPercentage.clamp(0.0, 1.0);
+
+  return Container(
+    margin: EdgeInsets.only(left: 4.h),
+    padding: EdgeInsets.symmetric(horizontal: 10.h, vertical: 15.v),
+    decoration: AppDecoration.fillOnSecondaryContainer.copyWith(
+      borderRadius: BorderRadiusStyle.roundedBorder18,
+    ),
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Padding(
+            padding: EdgeInsets.only(left: 5.h),
+            child: Row(
+              children: [
+                CustomImageView(
+                  imagePath: ImageConstant.imgBrightness,
+                  height: 12.adaptSize,
+                  width: 12.adaptSize,
+                  margin: EdgeInsets.only(bottom: 3.v),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 3.h),
+                  child: Text(
+                    "Turbidity",
+                    style: CustomTextStyles.bodySmallPrimaryContainer,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        SizedBox(height: 24.v),
+        SizedBox(
+          height: 28.v,
+          width: 72.h,
+          child: Stack(
+            alignment: Alignment.topLeft,
+            children: [
+              Align(
+                alignment: Alignment.center,
+                child: Container(
+                  height: 28.v,
+                  width: 72.h,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(6.h),
+                    gradient: LinearGradient(
+                      begin: const Alignment(0.03, 0.13),
+                      end: const Alignment(1, 1),
+                      colors: [
+                        appTheme.gray200,
+                        appTheme.gray100,
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.center,
+                child: Text(
+                  "${sensorData['turbidity'] ?? 'N/A'} NTU",
+                  style: theme.textTheme.titleLarge,
+                ),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(height: 15.v),
+        SizedBox(
+          height: 55.v,
+          width: 147.h,
+          child: Stack(
+            alignment: Alignment.topRight,
+            children: [
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 4.h, vertical: 1.v),
+                  decoration: AppDecoration.outlineBlueGray.copyWith(
+                    borderRadius: BorderRadiusStyle.roundedBorder15,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 6.v),
+                      Padding(
+                        padding: EdgeInsets.only(left: 5.h),
+                        child: _buildFortyEight(
+                          context,
+                          bad: "bad",
+                          good: "good",
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 1, vertical: 3),
+                        child: Container(
+                          height: 15.v,
+                          child: GFProgressBar(
+                            percentage: turbidityPercentageClamped,
+                            lineHeight: 30,
+                            backgroundColor: appTheme.blueGray100,
+                            progressBarColor: appTheme.amber700,
+                            animation: true,
+                            animationDuration: 1000,
+                            radius: 20, // Use double for radius
+                            child: Center(
+                              child: Text(
+                                turbidityPercentageDisplay,
+                                style: CustomTextStyles.googleSansPrimaryContainer,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10.v),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(height: 24.v),
+        Align(
+          alignment: Alignment.centerRight,
+          child: Padding(
+            padding: EdgeInsets.only(left: 4.h),
+            child: Text(
+              "Water pump",
+              style: CustomTextStyles.bodySmallPrimaryContainer_1,
+            ),
+          ),
+        ),
+        SizedBox(height: 3.v),
+        Align(
+          alignment: Alignment.centerRight,
+          child: Container(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ToggleButton(
+                  initialState: true,
+                  onToggle: (bool value) {
+                    print("ToggleButton is now: $value");
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
 
   Widget _buildBottomBar(BuildContext context) {
     return Container(

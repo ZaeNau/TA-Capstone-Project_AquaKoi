@@ -8,13 +8,14 @@ import '../core/app_export.dart';
 import 'package:flutter/gestures.dart';
 
 class RegisterScreen extends StatelessWidget {
-  RegisterScreen({super.key});
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmpasswordController = TextEditingController();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  RegisterScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -105,33 +106,32 @@ class RegisterScreen extends StatelessWidget {
     );
   }
 
-  /// Section Widget
   Widget _buildName(BuildContext context) {
     return CustomTextFormField(
       width: 220.h,
       controller: nameController,
       hintText: "Ikan Koi",
-      textInputType: TextInputType.name, onFieldSubmitted: (_) {  },
-      textStyle:  CustomTextStyles.bodyMediumInter.copyWith(
-                                        color: Color(0XFF000000),
-                                      ),
+      textInputType: TextInputType.name,
+      onFieldSubmitted: (_) {},
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Please enter your name.';
+        }
+        return null;
+      },
     );
   }
 
-  /// Section Widget
   Widget _buildEmail(BuildContext context) {
     return CustomTextFormField(
       width: 220.h,
       controller: emailController,
       hintText: "example@gmail.com",
-      textInputType: TextInputType.emailAddress, onFieldSubmitted: (_) {  },
-      textStyle:  CustomTextStyles.bodyMediumInter.copyWith(
-                                        color: Color(0XFF000000),
-                                      ),
+      textInputType: TextInputType.emailAddress,
+      onFieldSubmitted: (_) {},
     );
   }
 
-  /// Section Widget
   Widget _buildPassword(BuildContext context) {
     return CustomTextFormField(
       width: 220.h,
@@ -139,14 +139,11 @@ class RegisterScreen extends StatelessWidget {
       hintText: "must be 8 characters",
       hintStyle: CustomTextStyles.bodyMediumInterPrimary,
       textInputType: TextInputType.visiblePassword,
-      textStyle:  CustomTextStyles.bodyMediumInter.copyWith(
-                                        color: Color(0XFF000000),
-                                      ),
-      obscureText: true, onFieldSubmitted: (_) {  },
+      obscureText: true,
+      onFieldSubmitted: (_) {},
     );
   }
 
-  /// Section Widget
   Widget _buildConfirmpassword(BuildContext context) {
     return CustomTextFormField(
       width: 220.h,
@@ -155,14 +152,11 @@ class RegisterScreen extends StatelessWidget {
       hintStyle: CustomTextStyles.bodyMediumInterPrimary,
       textInputAction: TextInputAction.done,
       textInputType: TextInputType.visiblePassword,
-      textStyle:  CustomTextStyles.bodyMediumInter.copyWith(
-                                        color: Color(0XFF000000),
-                                      ),
-      obscureText: true, onFieldSubmitted: (_) {  },
+      obscureText: true,
+      onFieldSubmitted: (_) {},
     );
   }
 
-  /// Section Widget
   Widget _buildSignUp(BuildContext context) {
     return CustomElevatedButton(
       width: 220.h,
@@ -174,16 +168,14 @@ class RegisterScreen extends StatelessWidget {
     );
   }
 
-  /// Handles registration action with Firebase Authentication.
   void onTapSignUp(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
       if (passwordController.text == confirmpasswordController.text) {
         try {
-          UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
             email: emailController.text,
             password: passwordController.text,
           );
-          // Navigate to login screen upon successful registration
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => LoginScreen()),
