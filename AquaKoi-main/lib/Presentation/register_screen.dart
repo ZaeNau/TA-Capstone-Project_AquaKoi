@@ -54,6 +54,8 @@ class RegisterScreen extends StatelessWidget {
                       "Email",
                       style: theme.textTheme.bodyMedium,
                     ),
+                    SizedBox(height: 6.v),
+                    _buildEmail(context),
                     SizedBox(height: 18.v),
                     Text(
                       "Create a password",
@@ -109,7 +111,6 @@ class RegisterScreen extends StatelessWidget {
       controller: nameController,
       hintText: "Ikan Koi",
       textInputType: TextInputType.name,
-       textStyle: TextStyle(color: Colors.black),
       onFieldSubmitted: (_) {},
       validator: (value) {
         if (value == null || value.isEmpty) {
@@ -120,7 +121,16 @@ class RegisterScreen extends StatelessWidget {
     );
   }
 
-
+  Widget _buildEmail(BuildContext context) {
+    return CustomTextFormField(
+      width: 220.h,
+      controller: emailController,
+      hintText: "example@gmail.com",
+      textInputType: TextInputType.emailAddress,
+       textStyle: TextStyle(color: Colors.black),
+      onFieldSubmitted: (_) {},
+    );
+  }
 
   Widget _buildPassword(BuildContext context) {
     return CustomTextFormField(
@@ -129,7 +139,6 @@ class RegisterScreen extends StatelessWidget {
       hintText: "must be 8 characters",
       hintStyle: CustomTextStyles.bodyMediumInterPrimary,
       textInputType: TextInputType.visiblePassword,
-      textStyle: TextStyle(color: Colors.black),
       obscureText: true,
       onFieldSubmitted: (_) {},
     );
@@ -143,7 +152,6 @@ class RegisterScreen extends StatelessWidget {
       hintStyle: CustomTextStyles.bodyMediumInterPrimary,
       textInputAction: TextInputAction.done,
       textInputType: TextInputType.visiblePassword,
-      textStyle: TextStyle(color: Colors.black),
       obscureText: true,
       onFieldSubmitted: (_) {},
     );
