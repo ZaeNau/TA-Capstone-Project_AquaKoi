@@ -16,6 +16,8 @@ dependencies:
   flutter_svg: ^2.0.9
   intl: ^0.18.0
   getwidget: ^4.0.0
+  image_picker: ^0.8.4+3
+  shared_preferences: ^2.0.6
 
 dev_dependencies:
   flutter_test:

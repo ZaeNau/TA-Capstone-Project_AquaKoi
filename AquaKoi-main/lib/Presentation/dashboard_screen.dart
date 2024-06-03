@@ -1081,7 +1081,7 @@ Widget _buildTurbidity(BuildContext context) {
       ),
       child: BottomNavigationBar(
         currentIndex: 0,
-        selectedItemColor: Colors.blue,
+        selectedItemColor: AppDecoration.fillBlueA.color,
         unselectedItemColor: Colors.grey,
         backgroundColor: Color(0xFFDFEAF5),
         items: [

@@ -1,251 +1,188 @@
-
-
-import '../widgets/app_bar/custom_app_bar.dart';
-import '../widgets/app_bar/appbar_title.dart';
-import '../widgets/custom_text_form_field.dart';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../core/app_export.dart';
+import '../widgets/app_bar/appbar_title.dart';
+import '../widgets/app_bar/custom_app_bar.dart';
+import '../widgets/custom_text_form_field.dart';
+import 'package:image_picker/image_picker.dart';
 
-// ignore_for_file: must_be_immutable
-class EditProfileScreen extends StatelessWidget {
-  EditProfileScreen({super.key});
+class EditProfileScreen extends StatefulWidget {
+  EditProfileScreen({Key? key}) : super(key: key);
 
+  @override
+  _EditProfileScreenState createState() => _EditProfileScreenState();
+}
+
+class _EditProfileScreenState extends State<EditProfileScreen> {
   TextEditingController nameController = TextEditingController();
-
-  TextEditingController locationController = TextEditingController();
-
-  TextEditingController emailController = TextEditingController();
-
   TextEditingController passwordController = TextEditingController();
-
   TextEditingController confirmpasswordController = TextEditingController();
-
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final ImagePicker _picker = ImagePicker();
+  XFile? _image;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProfileData();
+  }
+
+  Future<void> _loadProfileData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      nameController.text = prefs.getString('name') ?? '';
+    });
+  }
+
+  Future<void> _saveProfileData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('name', nameController.text);
+  }
+
+  Future<void> _pickImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      _image = pickedFile;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final containerWidth = screenWidth * 0.7;
+
     return SafeArea(
-        child: Scaffold(
-            resizeToAvoidBottomInset: false,
-            appBar: _buildAppBar(context),
-
-            body: SizedBox(
-                width: SizeUtils.width,
-                child: SingleChildScrollView(
-                    padding: EdgeInsets.only(
-                        bottom: MediaQuery.of(context).viewInsets.bottom),
-                    child: Form(
-                        key: _formKey,
-                        child: Container(
-                            width: double.maxFinite,
-                            padding: EdgeInsets.symmetric(horizontal: 70.h),
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(height: 25.v),
-                                  Align(
-                                      alignment: Alignment.center,
-                                      child: SizedBox(
-                                          height: 89.v,
-                                          width: 87.h,
-                                          child: Stack(
-                                              alignment: Alignment.center,
-                                              children: [
-                                                Align(
-                                                    alignment: Alignment.center,
-                                                    child: Container(
-                                                        height: 89.v,
-                                                        width: 87.h,
-                                                        decoration: BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        44.h),
-                                                            border: Border.all(
-                                                                color: appTheme
-                                                                    .blueA400,
-                                                                width: 1.h)))),
-                                                Align(
-                                                    alignment: Alignment.center,
-                                                    child: SizedBox(
-                                                        height: 86.v,
-                                                        width: 84.h,
-                                                        child: Stack(
-                                                            alignment: Alignment
-                                                                .bottomRight,
-                                                            children: [
-                                                              CustomImageView(
-                                                                  imagePath:
-                                                                      ImageConstant
-                                                                          .imgEllipse286x84,
-                                                                  width: 84.h,
-                                                                  radius: BorderRadius
-                                                                      .circular(
-                                                                          43.h),
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .center),
-                                                              CustomImageView(
-                                                                  imagePath:
-                                                                      ImageConstant
-                                                                          .imgSolarCameraMi,
-                                                                  height: 16
-                                                                      .adaptSize,
-                                                                  width: 16
-                                                                      .adaptSize,
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .bottomRight,
-                                                                  margin: EdgeInsets
-                                                                      .only(
-                                                                          right:
-                                                                              4.h))
-                                                            ])))
-                                              ]))),
-                                  SizedBox(height: 22.v),
-                                  Text("Name",
-                                      style: CustomTextStyles
-                                          .bodyMediumBluegray900),
-                                  SizedBox(height: 6.v),
-                                  _buildName(context),
-                                  SizedBox(height: 14.v),
-                                  Text("Location",
-                                      style: CustomTextStyles
-                                          .bodyMediumBluegray900),
-                                  SizedBox(height: 6.v),
-                                  _buildLocation(context),
-                                  SizedBox(height: 14.v),
-                                  Text("Email",
-                                      style: CustomTextStyles
-                                          .bodyMediumBluegray900),
-                                  SizedBox(height: 6.v),
-                                  _buildEmail(context),
-                                  SizedBox(height: 16.v),
-                                  Text("Change password",
-                                      style: CustomTextStyles
-                                          .bodyMediumBluegray900),
-                                  SizedBox(height: 4.v),
-                                  _buildPassword(context),
-                                  SizedBox(height: 16.v),
-                                  Text("Confirm password",
-                                      style:
-                                          CustomTextStyles.bodyMediumGray80002),
-                                  SizedBox(height: 4.v),
-                                  _buildConfirmpassword(context),
-                                  
-                                  Align(
-  alignment: Alignment.center,
-  child: Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      GestureDetector(
-        onTap: () {
-          onTapEight(context);
-           // Assuming you just want to close the current screen
-        },
-        child: Container(
-          margin: EdgeInsets.symmetric(vertical: 20.v),  // Adjusted for symmetry
-          padding: EdgeInsets.symmetric(horizontal: 27.h, vertical: 6.v),
-          decoration: AppDecoration.fillGreyA.copyWith(
-            borderRadius: BorderRadiusStyle.roundedBorder11,
-          ),
-          child: Text("Cancel",
-            style: theme.textTheme.titleSmall,
-            
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: _buildAppBar(context),
+        body: Center(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: Center(
+              child: Form(
+                key: _formKey,
+                child: Container(
+                  width: containerWidth,
+                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(height: 25),
+                      GestureDetector(
+                        onTap: _pickImage,
+                        child: CircleAvatar(
+                          radius: 50,
+                          backgroundImage: _image != null
+                              ? FileImage(File(_image!.path))
+                              : AssetImage(ImageConstant.imgEllipse286x84) as ImageProvider,
+                          child: Align(
+                            alignment: Alignment.bottomRight,
+                            child: CircleAvatar(
+                              radius: 15,
+                              backgroundColor: Colors.white,
+                              child: Icon(
+                                Icons.camera_alt,
+                                size: 20,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 26),
+                      _buildTextField("Name", nameController, "Pembudidaya Ikan"),
+                      SizedBox(height: 16),
+                      _buildTextField("Change password", passwordController, "must be 8 characters", TextInputType.visiblePassword, true),
+                      SizedBox(height: 16),
+                      _buildTextField("Confirm password", confirmpasswordController, "repeat password", TextInputType.visiblePassword, true),
+                      SizedBox(height: 52),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Flexible(
+                            child: SizedBox(
+                              height: 34.h,
+                              width: screenWidth * 0.4,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppDecoration.fillGray500.color,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(11),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Text(
+                                  "Cancel",
+                                  style: Theme.of(context).textTheme.titleSmall,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 20),
+                          Flexible(
+                            child: SizedBox(
+                              height: 34.h,
+                              width: screenWidth * 0.4,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppDecoration.fillBlueA.color,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(11),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  if (_formKey.currentState!.validate()) {
+                                    _saveProfileData();
+                                    Navigator.pop(context);
+                                  }
+                                },
+                                child: Text(
+                                  "Save edit",
+                                  style: Theme.of(context).textTheme.titleSmall,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 20),
+                    ],
+                  ),
+                ),
+              ),
+            ),
           ),
         ),
       ),
-      SizedBox(width: 20),  // Space between buttons
-      GestureDetector(
-        onTap: () {
-          onTapEight(context);
-        },
-        child: Container(
-          margin: EdgeInsets.symmetric(vertical: 20.v),  // Adjusted for symmetry
-          padding: EdgeInsets.symmetric(horizontal: 27.h, vertical: 6.v),
-          decoration: AppDecoration.fillBlueA.copyWith(
-            borderRadius: BorderRadiusStyle.roundedBorder11,
-          ),
-          child: Text("Save edit",
-            style: theme.textTheme.titleSmall,
-          ),
-        ),
-      ),
-    ],
-  ),
-)
-
-                                                
-                                ]))))),
-            ));
+    );
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
-  return CustomAppBar(
-    height: 47.v,
-    centerTitle: true,
-    title: AppbarTitle(text: "Edit Profile"),
-    leading: Padding(
-      padding: EdgeInsets.all(8.0),  // Increase the area for a better touch experience
-      child: GestureDetector(
-        onTap: () {
-          onTapEight(context);
-        },
-      ),
-    ),
-  );
-}
-
-
-
-  /// Section Widget
-  Widget _buildName(BuildContext context) {
-    return CustomTextFormField(
-        controller: nameController, hintText: "Pembudidaya Ikan", onFieldSubmitted: (_) {  },);
+    return CustomAppBar(
+      centerTitle: true,
+      title: AppbarTitle(text: "Edit Profile"),
+    );
   }
 
-  /// Section Widget
-  Widget _buildLocation(BuildContext context) {
-    return CustomTextFormField(
-        controller: locationController, hintText: "Lembang, Jawa Barat", onFieldSubmitted: (_) {  },);
-  }
-
-  /// Section Widget
-  Widget _buildEmail(BuildContext context) {
-    return CustomTextFormField(
-        controller: emailController,
-        hintText: "example@gmail.com",
-        textInputType: TextInputType.emailAddress, onFieldSubmitted: (_) {  },);
-  }
-
-  /// Section Widget
-  Widget _buildPassword(BuildContext context) {
-    return CustomTextFormField(
-        controller: passwordController,
-        hintText: "must be 8 characters",
-        hintStyle: CustomTextStyles.bodyMediumInterPrimary,
-        textInputType: TextInputType.visiblePassword,
-        obscureText: true, onFieldSubmitted: (_) {  },);
-  }
-
-  /// Section Widget
-  Widget _buildConfirmpassword(BuildContext context) {
-    return CustomTextFormField(
-        controller: confirmpasswordController,
-        hintText: "repeat password",
-        hintStyle: CustomTextStyles.bodyMediumInterPrimary,
-        textInputAction: TextInputAction.done,
-        textInputType: TextInputType.visiblePassword,
-        obscureText: true, onFieldSubmitted: (_) {  },);
-  }
-
-
-
-
-
-
-  /// Navigates to the dashboardScreen when the action is triggered.
-  onTapEight(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.profileScreen);
+  Widget _buildTextField(String label, TextEditingController controller, String hint, [TextInputType inputType = TextInputType.text, bool obscureText = false]) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: CustomTextStyles.bodyMediumBluegray900),
+        SizedBox(height: 6),
+        CustomTextFormField(
+          controller: controller,
+          hintText: hint,
+          textInputType: inputType,
+          obscureText: obscureText,
+          textStyle: TextStyle(color: Colors.black), // Set text color to black
+          onFieldSubmitted: (_) {},
+        ),
+      ],
+    );
   }
 }

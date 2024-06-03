@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:koiaqua/widgets/custom_elevated_button.dart';
 import '../widgets/custom_text_form_field.dart';
 import '../widgets/custom_checkbox_button.dart';
-import '../widgets/custom_outlined_button.dart';
 import '../core/app_export.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -19,11 +18,14 @@ class _LoginScreenState extends State<LoginScreen> {
   final FocusNode passwordFocusNode = FocusNode();
   bool rememberme = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-  
+ 
 
   @override
 Widget build(BuildContext context) {
+   final screenWidth = MediaQuery.of(context).size.width;
+  final containerWidth = screenWidth * 0.7; //
+  
+
   return SafeArea(
     child: Scaffold(
       backgroundColor: theme.colorScheme.onError,
@@ -44,7 +46,7 @@ Widget build(BuildContext context) {
                   Text("Email address", style: theme.textTheme.bodyMedium),
                   SizedBox(height: 6.v),
                   Container(
-                    width: 450, // Set the width to your desired value
+                    width: containerWidth, // Set the width to your desired value
                     child: CustomTextFormField(
                       controller: emailController,
                       hintText: "ikankoiku@gmail.com",
@@ -59,7 +61,7 @@ Widget build(BuildContext context) {
                   Text("Password", style: theme.textTheme.bodyMedium),
                   SizedBox(height: 6.v),
                   Container(
-                    width: 450, // Set the width to your desired value
+                    width: containerWidth, // Set the width to your desired value
                     child: CustomTextFormField(
                       controller: passwordController,
                       hintText: "password",
@@ -73,26 +75,28 @@ Widget build(BuildContext context) {
                     ),
                   ),
                   SizedBox(height: 10.v),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _buildRememberme(context),
-                      SizedBox(width: 230), // Margin antara remember me dan forgot password
-                      GestureDetector(
-                        onTap: () {
-                          onTapForgetPassword(context);
-                        },
-                        child: Text(
-                          "Forgot password?",
-                          style: theme.textTheme.bodySmall?.copyWith(fontSize: 11), // Specify the desired font size here
-                        ),
+                   Container(
+                width: containerWidth,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _buildRememberme(context),
+                    GestureDetector(
+                      onTap: () {
+                        onTapForgetPassword(context);
+                      },
+                      child: Text(
+                        "Forgot password?",
+                        style: theme.textTheme.bodySmall?.copyWith(fontSize: 11),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
+                ),
+              ),
 
                   SizedBox(height: 61.v),
                   CustomElevatedButton(
-                    width: 270.h,
+                    width: containerWidth,
                     text: "Log in",
                     buttonTextStyle: CustomTextStyles.labelLargeff000000,
                     onPressed: () {

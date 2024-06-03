@@ -196,6 +196,7 @@ class PrimaryColors {
   Color get blueGray100 => const Color(0XFFD8DADC);
   Color get blueGray400 => const Color(0XFF888888);
   Color get blueGray900 => const Color(0XFF333333);
+ 
 
   // Gray
   Color get gray100 => const Color(0XFFF6F6F6);
@@ -207,6 +208,7 @@ class PrimaryColors {
   Color get gray80001 => const Color(0XFF444444);
   Color get gray80002 => const Color(0XFF534C4C);
   Color get gray80003 => const Color(0XFF3C4348);
+    Color get gray500 => Color.fromARGB(255, 199, 199, 199);
 
   // Green
   Color get greenA700 => const Color(0XFF00BA07);

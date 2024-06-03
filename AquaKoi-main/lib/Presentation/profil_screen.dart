@@ -1,25 +1,47 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:koiaqua/Presentation/dashboard_screen.dart';
 import '../../core/app_export.dart';
 import '../../widgets/app_bar/appbar_title.dart';
 import '../../widgets/app_bar/custom_app_bar.dart';
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_text_form_field.dart';
 
-// ignore: must_be_immutable
-class ProfileScreen extends StatelessWidget {
-  ProfileScreen({Key? key})
-      : super(
-          key: key,
-        );
+class ProfileScreen extends StatefulWidget {
+  ProfileScreen({Key? key}) : super(key: key);
 
+  @override
+  _ProfileScreenState createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
   TextEditingController nameController = TextEditingController();
-
   TextEditingController emailController = TextEditingController();
-
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
+  void initState() {
+    super.initState();
+    _loadProfileData();
+  }
+
+  _loadProfileData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      nameController.text = prefs.getString('name') ?? '';
+      emailController.text = prefs.getString('email') ?? 'example@gmail.com'; // Get email from SharedPreferences
+    });
+  }
+
+  void _showImagePicker(BuildContext context) {
+    // Function to show image picker
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final containerWidth = screenWidth * 0.7;
+
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -32,72 +54,89 @@ class ProfileScreen extends StatelessWidget {
             child: Form(
               key: _formKey,
               child: SizedBox(
-                width: double.maxFinite,
+                width: containerWidth,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Card(
-                      clipBehavior: Clip.antiAlias,
-                      elevation: 0,
-                      margin: EdgeInsets.all(0),
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(
-                          color: appTheme.blueA400,
-                          width: 1.h,
+                    _buildProfileImage(context),
+                    SizedBox(height: 22),
+                    _buildDisplayField(context, "Name", nameController),
+                    SizedBox(height: 14),
+                    _buildDisplayField(context, "Email", emailController),
+                    SizedBox(height: 87),
+                    SizedBox(
+                      height: 36.h,
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppDecoration.fillBlueA.color, // Set the button color
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(11),
+                          ),
                         ),
-                        borderRadius: BorderRadiusStyle.roundedBorder11,
-                      ),
-                      child: Container(
-                        height: 89.v,
-                        width: 87.h,
-                        padding: EdgeInsets.all(1.h),
-                        decoration: AppDecoration.outlineBlueGray.copyWith(
-                          borderRadius: BorderRadiusStyle.roundedBorder11,
-                        ),
-                        child: Stack(
-                          alignment: Alignment.bottomRight,
-                          children: [
-                            CustomImageView(
-                              imagePath: ImageConstant.imgEllipse2,
-                              height: 86.v,
-                              width: 84.h,
-                              radius: BorderRadius.circular(
-                                42.h,
-                              ),
-                              alignment: Alignment.center,
-                            ),
-                            CustomImageView(
-                              imagePath: ImageConstant.imgSolarCameraMi,
-                              height: 16.adaptSize,
-                              width: 16.adaptSize,
-                              alignment: Alignment.bottomRight,
-                              margin: EdgeInsets.only(right: 4.h),
-                            )
-                          ],
+                        onPressed: () {
+                          Navigator.pushNamed(context, AppRoutes.editProfileScreen);
+                        },
+                        child: Text(
+                          "Edit profile",
+                          style: CustomTextStyles.labelLargeffffffff,
                         ),
                       ),
                     ),
-                    SizedBox(height: 22.v),
-                    _buildInputName(context),
-                    SizedBox(height: 14.v),
-                    _buildInputEmail(context),
-                    SizedBox(height: 87.v),
-                    CustomElevatedButton(
-                      width: 124.h,
-                      text: "Edit profile",
+                    SizedBox(height: 9),
+                    SizedBox(
+                      height: 36.h,
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppDecoration.fillGray500.color, // Set the button color
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(11),
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.pushNamed(context, AppRoutes.loginScreen);
+                        },
+                        child: Text(
+                          "Log out",
+                          style: CustomTextStyles.labelLargeffffffff,
+                        ),
+                      ),
                     ),
-                    SizedBox(height: 9.v),
-                    CustomElevatedButton(
-                      width: 124.h,
-                      text: "Log Out",
-                      decoration: AppDecoration.fillBlueA.copyWith(
-            borderRadius: BorderRadiusStyle.roundedBorder11,
-          ),
-                    ),
-                    SizedBox(height: 5.v)
+                    SizedBox(height: 5),
                   ],
                 ),
               ),
+            ),
+          ),
+        ),
+        bottomNavigationBar: _buildBottomBar(context),
+      ),
+    );
+  }
+
+  PreferredSizeWidget _buildAppBar(BuildContext context) {
+    return AppBar(
+      centerTitle: true,
+      title: Text("Profile"),
+    );
+  }
+
+  Widget _buildProfileImage(BuildContext context) {
+    return GestureDetector(
+      onTap: () => _showImagePicker(context),
+      child: CircleAvatar(
+        radius: 50,
+        backgroundImage: AssetImage(ImageConstant.imgEllipse286x84), // Default profile picture
+        child: Align(
+          alignment: Alignment.bottomRight,
+          child: CircleAvatar(
+            radius: 15,
+            backgroundColor: Colors.white,
+            child: Icon(
+              Icons.camera_alt,
+              size: 20,
+              color: Colors.black,
             ),
           ),
         ),
@@ -105,70 +144,75 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  /// Section Widget
-  PreferredSizeWidget _buildAppBar(BuildContext context) {
-    return CustomAppBar(
-      centerTitle: true,
-      title: AppbarTitle(
-        text: "Profile",
-      ),
-    );
-  }
-
-  /// Section Widget
-  Widget _buildInputName(BuildContext context) {
+  Widget _buildDisplayField(BuildContext context, String label, TextEditingController controller) {
     return Padding(
-      padding: EdgeInsets.only(right: 2.h),
+      padding: EdgeInsets.symmetric(horizontal: 16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Name",
-            style: theme.textTheme.bodyMedium,
+            label,
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
-          SizedBox(height: 6.v),
+          SizedBox(height: 6),
           CustomTextFormField(
-            width: 220.h,
-            controller: nameController,
-            hintText: "Pembudidaya Ikan",
-            onFieldSubmitted: (value) {
-              // Handle the submission, for example:
-              print("Name entered: $value");
-              // You can also add logic here to move focus to another field or perform other actions
-            },
-          )
+            controller: controller,
+            hintText: label, // Add hintText if needed
+            textStyle: TextStyle(color: Colors.black), // Set text color to black
+            readOnly: true, // Make the field read-only
+            onFieldSubmitted: (_) {}, // Add this line
+          ),
         ],
       ),
     );
   }
 
-
-  /// Section Widget
-Widget _buildInputEmail(BuildContext context) {
-  return Padding(
-    padding: EdgeInsets.only(right: 2.h),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "Email",
-          style: theme.textTheme.bodyMedium,
+  Widget _buildBottomBar(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            spreadRadius: 0,
+            blurRadius: 1,
+            offset: Offset(0, -1),
+          ),
+        ],
+        border: Border(
+          top: BorderSide(color: Colors.white, width: 1.5),
         ),
-        SizedBox(height: 6.v),
-        CustomTextFormField(
-          width: 220.h,
-          controller: emailController,
-          hintText: "example@gmail.com",
-          textInputAction: TextInputAction.done, // Ensures keyboard has a 'done' button
-          textInputType: TextInputType.emailAddress,
-          onFieldSubmitted: (value) {
-            // Optional: Handle what happens after the user submits the email
-            print("Email submitted: $value");
-          },
-        )
-      ],
-    ),
-  );
-}
-
+      ),
+      child: BottomNavigationBar(
+        currentIndex: 1, // Set to 1 because this is the profile screen
+        selectedItemColor: AppDecoration.fillBlueA.color,
+        unselectedItemColor: Colors.grey,
+        backgroundColor: Color(0xFFDFEAF5),
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Beranda',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profil',
+          ),
+        ],
+        onTap: (index) {
+          switch (index) {
+            case 0:
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DashboardScreen(),
+                ),
+              );
+              break;
+            case 1:
+              // Current screen is ProfileScreen
+              break;
+          }
+        },
+      ),
+    );
+  }
 }

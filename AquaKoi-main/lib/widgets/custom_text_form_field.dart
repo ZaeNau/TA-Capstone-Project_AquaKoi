@@ -6,7 +6,6 @@ class CustomTextFormField extends StatefulWidget {
     super.key,
     this.alignment,
     this.width,
-    this.scrollPadding,
     this.controller,
     this.focusNode,
     this.autofocus = true,
@@ -25,19 +24,20 @@ class CustomTextFormField extends StatefulWidget {
     this.borderDecoration,
     this.fillColor,
     this.filled = true,
-    this.validator, required void Function(dynamic _) onFieldSubmitted,
+    this.readOnly = false,
+    this.validator,
+    this.onFieldSubmitted, // Ini adalah parameter opsional sekarang
   });
 
   final Alignment? alignment;
   final double? width;
-  final TextEditingController? scrollPadding;
   final TextEditingController? controller;
   final FocusNode? focusNode;
-  final bool? autofocus;
+  final bool autofocus;
   final TextStyle? textStyle;
-  final bool? obscureText;
-  final TextInputAction? textInputAction;
-  final TextInputType? textInputType;
+  final bool obscureText;
+  final TextInputAction textInputAction;
+  final TextInputType textInputType;
   final int? maxLines;
   final String? hintText;
   final TextStyle? hintStyle;
@@ -48,8 +48,10 @@ class CustomTextFormField extends StatefulWidget {
   final EdgeInsets? contentPadding;
   final InputBorder? borderDecoration;
   final Color? fillColor;
-  final bool? filled;
+  final bool filled;
+  final bool readOnly;
   final FormFieldValidator<String>? validator;
+  final Function(String)? onFieldSubmitted; // Parameter opsional
 
   @override
   _CustomTextFormFieldState createState() => _CustomTextFormFieldState();
@@ -61,7 +63,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
   @override
   void initState() {
     super.initState();
-    _obscureText = widget.obscureText ?? false;
+    _obscureText = widget.obscureText;
   }
 
   void _toggleVisibility() {
@@ -87,14 +89,16 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
               EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           controller: widget.controller,
           focusNode: widget.focusNode ?? FocusNode(),
-          autofocus: widget.autofocus!,
+          autofocus: widget.autofocus,
           style: widget.textStyle ?? CustomTextStyles.bodyMediumPrimary,
           obscureText: _obscureText,
           textInputAction: widget.textInputAction,
           keyboardType: widget.textInputType,
           maxLines: widget.maxLines ?? 1,
+          readOnly: widget.readOnly, // Teruskan nilai readOnly
           decoration: decoration,
           validator: widget.validator,
+          onFieldSubmitted: widget.onFieldSubmitted, // Teruskan nilai onFieldSubmitted
         ),
       );
 
@@ -103,7 +107,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
         hintStyle: widget.hintStyle ?? CustomTextStyles.bodyMediumPrimary,
         prefixIcon: widget.prefix,
         prefixIconConstraints: widget.prefixConstraints,
-        suffixIcon: widget.obscureText!
+        suffixIcon: widget.obscureText
             ? IconButton(
                 icon: Icon(
                   _obscureText ? Icons.visibility : Icons.visibility_off,
