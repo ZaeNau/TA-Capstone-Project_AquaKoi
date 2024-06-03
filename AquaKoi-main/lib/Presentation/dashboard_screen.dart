@@ -296,16 +296,16 @@ Widget _buildTemperature(BuildContext context) {
           ),
           SizedBox(height: 24.v),
           SizedBox(
-            height: 28.v,
-            width: 72.h,
+            height: 37.v,
+            width: 147.h,
             child: Stack(
               alignment: Alignment.topLeft,
               children: [
                 Align(
                   alignment: Alignment.center,
                   child: Container(
-                    height: 28.v,
-                    width: 72.h,
+                    height: 37.v,
+                    width: 147.h,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(6.h),
                       gradient: LinearGradient(
@@ -320,9 +320,9 @@ Widget _buildTemperature(BuildContext context) {
                   ),
                 ),
                 Align(
-                  alignment: Alignment.topLeft,
+                  alignment: Alignment.center,
                   child: Padding(
-                    padding: EdgeInsets.only(left: 15.h),
+                    padding: EdgeInsets.only(),
                     child: Text(
                       "${sensorData['Suhu'] ?? 'N/A'} C",
                       style: theme.textTheme.titleLarge,
@@ -364,10 +364,10 @@ Widget _buildTemperature(BuildContext context) {
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                             child: Container(
-                              height: 15.v,
+                              height: 20.v,
                               child: GFProgressBar(
                                 percentage: suhuPercentage.clamp(0.0, 1.0),
-                                lineHeight: 30,
+                                lineHeight: 25,
                                 backgroundColor: appTheme.blueGray100,
                                 progressBarColor: appTheme.Red1,
                                 animation: true,
@@ -488,16 +488,16 @@ Widget _buildPH(BuildContext context) {
         ),
         SizedBox(height: 24.v),
         SizedBox(
-          height: 28.v,
-          width: 72.h,
+          height: 37.v,
+          width: 147.h,
           child: Stack(
             alignment: Alignment.topLeft,
             children: [
               Align(
                 alignment: Alignment.center,
                 child: Container(
-                  height: 28.v,
-                  width: 72.h,
+                  height: 37.v,
+                  width: 147.h,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(6.h),
                     gradient: LinearGradient(
@@ -512,9 +512,9 @@ Widget _buildPH(BuildContext context) {
                 ),
               ),
               Align(
-                alignment: Alignment.topLeft,
+                alignment: Alignment.center,
                 child: Padding(
-                  padding: EdgeInsets.only(left: 22.h),
+                  padding: EdgeInsets.only(),
                   child: Text(
                     "${sensorData['ph'] ?? 'N/A'}",
                     style: theme.textTheme.titleLarge,
@@ -554,10 +554,10 @@ Widget _buildPH(BuildContext context) {
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 1, vertical: 3),
                         child: Container(
-                          height: 15.v,
+                          height: 20.v,
                           child: GFProgressBar(
                             percentage: phPercentageClamped,
-                            lineHeight: 30,
+                            lineHeight: 25,
                             backgroundColor: appTheme.blueGray100,
                             progressBarColor: appTheme.greenA700,
                             animation: true,
@@ -630,16 +630,16 @@ Widget _buildAmmonia(BuildContext context) {
         ),
         SizedBox(height: 24.v),
         Container(
-          height: 28.v,
-          width: 72.h,
+          height: 37.v,
+          width: 147.h,
           child: Stack(
             alignment: Alignment.topLeft,
             children: [
               Align(
                 alignment: Alignment.center,
                 child: Container(
-                  height: 28.v,
-                  width: 72.h,
+                  height: 37.v,
+                  width: 147.h,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(6.h),
                     gradient: LinearGradient(
@@ -696,10 +696,10 @@ Widget _buildAmmonia(BuildContext context) {
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 1, vertical: 3),
                         child: Container(
-                          height: 15.v,
+                          height: 20.v,
                           child: GFProgressBar(
                             percentage: ammoniaPercentageClamped,
-                            lineHeight: 30,
+                            lineHeight: 25,
                             backgroundColor: appTheme.blueGray100,
                             progressBarColor: appTheme.Red1,
                             animation: true,
@@ -772,16 +772,16 @@ Widget _buildTDS(BuildContext context) {
         ),
         SizedBox(height: 24.v),
         Container(
-          height: 28.v,
-          width: 72.h,
+          height: 37.v,
+          width: 147.h,
           child: Stack(
-            alignment: Alignment.topLeft,
+            alignment: Alignment.center,
             children: [
               Align(
                 alignment: Alignment.center,
                 child: Container(
-                  height: 28.v,
-                  width: 72.h,
+                  height: 37.v,
+                  width: 147.h,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(6.h),
                     gradient: LinearGradient(
@@ -838,10 +838,10 @@ Widget _buildTDS(BuildContext context) {
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 1, vertical: 3),
                         child: Container(
-                          height: 15.v,
+                          height: 20.v,
                           child: GFProgressBar(
                             percentage: tdsPercentageClamped,
-                            lineHeight: 30,
+                            lineHeight: 25,
                             backgroundColor: appTheme.blueGray100,
                             progressBarColor: appTheme.greenA700,
                             animation: true,
@@ -942,16 +942,16 @@ Widget _buildTurbidity(BuildContext context) {
         ),
         SizedBox(height: 24.v),
         SizedBox(
-          height: 28.v,
-          width: 72.h,
+          height: 37.v,
+          width: 147.h,
           child: Stack(
-            alignment: Alignment.topLeft,
+            alignment: Alignment.center,
             children: [
               Align(
                 alignment: Alignment.center,
                 child: Container(
-                  height: 28.v,
-                  width: 72.h,
+                  height: 37.v,
+                  width: 147.h,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(6.h),
                     gradient: LinearGradient(
@@ -1005,10 +1005,10 @@ Widget _buildTurbidity(BuildContext context) {
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 1, vertical: 3),
                         child: Container(
-                          height: 15.v,
+                          height: 20.v,
                           child: GFProgressBar(
                             percentage: turbidityPercentageClamped,
-                            lineHeight: 30,
+                            lineHeight: 25,
                             backgroundColor: appTheme.blueGray100,
                             progressBarColor: appTheme.amber700,
                             animation: true,
@@ -1124,7 +1124,7 @@ Widget _buildTurbidity(BuildContext context) {
     required String good,
   }) {
     return SizedBox(
-      width: 131.h,
+      width: 223.h,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

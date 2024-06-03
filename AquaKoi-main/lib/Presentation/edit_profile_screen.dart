@@ -179,7 +179,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           hintText: hint,
           textInputType: inputType,
           obscureText: obscureText,
-          textStyle: TextStyle(color: Colors.black), // Set text color to black
           onFieldSubmitted: (_) {},
         ),
       ],
