@@ -3,6 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:koiaqua/widgets/custom_elevated_button.dart';
 import '../widgets/custom_text_form_field.dart';
 import '../widgets/custom_checkbox_button.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:koiaqua/common/toast.dart';
+
 import '../core/app_export.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -23,7 +27,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
 Widget build(BuildContext context) {
    final screenWidth = MediaQuery.of(context).size.width;
-  final containerWidth = screenWidth * 0.7; //
+  final containerWidth = screenWidth * 0.7; 
   
 
   return SafeArea(
@@ -93,7 +97,6 @@ Widget build(BuildContext context) {
                   ],
                 ),
               ),
-
                   SizedBox(height: 61.v),
                   CustomElevatedButton(
                     width: containerWidth,
@@ -103,6 +106,36 @@ Widget build(BuildContext context) {
                       onTapLogIn(context);
                     },
                   ),
+                  SizedBox(height: 10,),
+                  GestureDetector(
+                    onTap: () {
+                      _signInWithGoogle();
+                    },
+                  child: Container(
+                  width: containerWidth,
+                  height: 45,
+                  decoration: BoxDecoration(
+                  color: Colors.red,
+                  borderRadius: BorderRadius.circular(10),
+                  ),                    
+                  child: const Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(FontAwesomeIcons.google, color: Colors.white,),
+                        SizedBox(width: 5,),
+                        Text(
+                          "Sign in with Google",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
                   SizedBox(height: 63.v),
                   GestureDetector(
                     onTap: () {
@@ -153,6 +186,8 @@ Widget build(BuildContext context) {
     );
   }
 
+
+
   /// Handles login action with Firebase Authentication.
 void onTapLogIn(BuildContext context) async {
   if (_formKey.currentState!.validate()) {
@@ -191,6 +226,35 @@ void onTapLogIn(BuildContext context) async {
     }
   }
 }
+/// Handles login action with Google Authentication.
+
+  _signInWithGoogle()async{
+
+    final GoogleSignIn _googleSignIn = GoogleSignIn();
+
+    try {
+
+      final GoogleSignInAccount? googleSignInAccount = await _googleSignIn.signIn();
+
+      if(googleSignInAccount != null ){
+        final GoogleSignInAuthentication googleSignInAuthentication = await
+        googleSignInAccount.authentication;
+
+        final AuthCredential credential = GoogleAuthProvider.credential(
+          idToken: googleSignInAuthentication.idToken,
+          accessToken: googleSignInAuthentication.accessToken,
+        );
+
+        await FirebaseAuth.instance.signInWithCredential(credential);
+        Navigator.pushNamed(context, AppRoutes.dashboardScreen);
+      }
+
+    }catch(e) {
+    showToast(message: "some error occured $e");
+    }
+  }
+
+}
 
   /// Navigates to the registerScreen when the action is triggered.
   void onTapTxtDonthaveanaccount(BuildContext context) {
@@ -206,12 +270,3 @@ void onTapLogIn(BuildContext context) async {
   void _focusNextField(BuildContext context, FocusNode nextFocus) {
     FocusScope.of(context).requestFocus(nextFocus);
   }
-
-  @override
-  void dispose() {
-    emailController.dispose();
-    passwordController.dispose();
-    passwordFocusNode.dispose();
-    super.dispose();
-  }
-}
