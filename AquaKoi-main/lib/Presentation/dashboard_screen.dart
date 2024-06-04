@@ -205,6 +205,9 @@ final DatabaseReference _databaseReference = FirebaseDatabase.instance.ref().chi
                 _buildTemperature(context),
                 SizedBox(height: 10.v),
                 _buildRowWithTDSAndTurbidity(context),
+                SizedBox(height: 10.v),
+                _buildParameterRangeInfo(context),
+                SizedBox(height: 10.v)
               ],
             ),
           ),
@@ -1179,4 +1182,62 @@ Widget _buildTurbidity(BuildContext context) {
       ),
     );
   }
+Widget _buildParameterRangeInfo(BuildContext context) {
+  return Padding(
+    padding: EdgeInsets.symmetric(horizontal: 5.0),
+    child: Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: 10.h,
+        vertical: 15.v,
+      ),
+      decoration: AppDecoration.fillOnSecondaryContainer.copyWith(
+        borderRadius: BorderRadiusStyle.roundedBorder18,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Parameter Range Information",
+            style: CustomTextStyles.bodySmallPrimaryContainer.copyWith(
+              fontSize: 11.h,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: 5.v),
+          Text(
+            "Temperature: 24°C - 28°C",
+            style: CustomTextStyles.bodySmallPrimaryContainer.copyWith(
+              fontSize: 11.h,
+            ),
+          ),
+          Text(
+            "TDS: No more than 150",
+            style: CustomTextStyles.bodySmallPrimaryContainer.copyWith(
+              fontSize: 11.h,
+            ),
+          ),
+          Text(
+            "pH: 6.5 - 8.0",
+            style: CustomTextStyles.bodySmallPrimaryContainer.copyWith(
+              fontSize: 11.h,
+            ),
+          ),
+          Text(
+            "Ammonia: No more than 0.2 mg/L",
+            style: CustomTextStyles.bodySmallPrimaryContainer.copyWith(
+              fontSize: 11.h,
+            ),
+          ),
+          Text(
+            "Turbidity: 5 - 37 NTU",
+            style: CustomTextStyles.bodySmallPrimaryContainer.copyWith(
+              fontSize: 11.h,
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
 }
