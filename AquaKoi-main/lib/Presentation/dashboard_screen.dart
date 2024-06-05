@@ -1072,7 +1072,7 @@ Widget _buildTurbidity(BuildContext context) {
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withOpacity(0.3),
             spreadRadius: 0,
             blurRadius: 1,
             offset: Offset(0, -1),
