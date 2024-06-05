@@ -873,7 +873,7 @@ Widget _buildTDS(BuildContext context) {
           child: Padding(
             padding: EdgeInsets.only(right: 4.h),
             child: Text(
-              "Water pump",
+              "Filter",
               style: CustomTextStyles.bodySmallPrimaryContainer_1,
             ),
           ),
@@ -1038,9 +1038,9 @@ Widget _buildTurbidity(BuildContext context) {
         Align(
           alignment: Alignment.centerRight,
           child: Padding(
-            padding: EdgeInsets.only(left: 4.h),
+            padding: EdgeInsets.only(),
             child: Text(
-              "Water pump",
+              "Filter",
               style: CustomTextStyles.bodySmallPrimaryContainer_1,
             ),
           ),
@@ -1067,7 +1067,7 @@ Widget _buildTurbidity(BuildContext context) {
   );
 }
 
-  Widget _buildBottomBar(BuildContext context) {
+ Widget _buildBottomBar(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         boxShadow: [
@@ -1120,6 +1120,7 @@ Widget _buildTurbidity(BuildContext context) {
       ),
     );
   }
+
 
   Widget _buildFortyEight(
     BuildContext context, {
@@ -1199,7 +1200,7 @@ Widget _buildParameterRangeInfo(BuildContext context) {
           Text(
             "Parameter Range Information",
             style: CustomTextStyles.bodySmallPrimaryContainer.copyWith(
-              fontSize: 11.h,
+              fontSize: 9.h,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -1207,31 +1208,31 @@ Widget _buildParameterRangeInfo(BuildContext context) {
           Text(
             "Temperature: 24°C - 28°C",
             style: CustomTextStyles.bodySmallPrimaryContainer.copyWith(
-              fontSize: 11.h,
+              fontSize: 9.h,
             ),
           ),
           Text(
             "TDS: No more than 150",
             style: CustomTextStyles.bodySmallPrimaryContainer.copyWith(
-              fontSize: 11.h,
+              fontSize: 9.h,
             ),
           ),
           Text(
             "pH: 6.5 - 8.0",
             style: CustomTextStyles.bodySmallPrimaryContainer.copyWith(
-              fontSize: 11.h,
+              fontSize: 9.h,
             ),
           ),
           Text(
             "Ammonia: No more than 0.2 mg/L",
             style: CustomTextStyles.bodySmallPrimaryContainer.copyWith(
-              fontSize: 11.h,
+              fontSize: 9.h,
             ),
           ),
           Text(
             "Turbidity: 5 - 37 NTU",
             style: CustomTextStyles.bodySmallPrimaryContainer.copyWith(
-              fontSize: 11.h,
+              fontSize: 9.h,
             ),
           ),
         ],
