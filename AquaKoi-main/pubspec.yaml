@@ -1,4 +1,4 @@
-name: koiaqua
+name: AquaKoi
 description: "A new Flutter project."
 version: 1.0.0+1
 environment:
@@ -9,7 +9,7 @@ dependencies:
   cached_network_image: ^3.3.0
   cupertino_icons: ^1.0.6
   percent_indicator: ^4.0.0
-  firebase_core: ^2.31.1
+  firebase_core: ^2.32.0
   firebase_database: ^10.5.6
   firebase_auth: ^4.19.6
   fluttertoast: ^8.2.4
@@ -20,6 +20,7 @@ dependencies:
   shared_preferences: ^2.0.6
   font_awesome_flutter: ^10.6.0
   google_sign_in: ^6.1.5
+  firebase_messaging: ^14.9.4
 
 dev_dependencies:
   flutter_test:

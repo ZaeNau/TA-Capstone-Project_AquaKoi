@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:koiaqua/Presentation/login_screen.dart';
+import 'package:AquaKoi/Presentation/login_screen.dart';
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key});
