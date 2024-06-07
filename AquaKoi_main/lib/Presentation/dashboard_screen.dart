@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:getwidget/getwidget.dart';
-import 'package:AquaKoi/Presentation/profil_screen.dart';
+import 'package:aquakoi/Presentation/profil_screen.dart';
 import '../widgets/app_bar/custom_app_bar.dart';
 import '../widgets/app_bar/appbar_title_searchview.dart';
 import 'package:flutter/material.dart';

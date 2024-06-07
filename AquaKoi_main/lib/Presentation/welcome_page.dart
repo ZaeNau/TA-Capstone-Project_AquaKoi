@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:AquaKoi/Presentation/login_screen.dart';
+import 'package:aquakoi/Presentation/login_screen.dart';
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key});
@@ -51,7 +51,7 @@ class WelcomePage extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.only(top: screenSize.height * spaceBetweenLogoAndTextRatio),
                 child: Text(
-                  'AquaKoi',
+                  'aquakoi',
                   style: TextStyle(
                     fontSize: screenSize.height * 0.048, // 3.5% of screen height for the font size
                     fontWeight: FontWeight.bold,

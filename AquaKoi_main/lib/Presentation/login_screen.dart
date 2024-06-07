@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:AquaKoi/widgets/custom_elevated_button.dart';
+import 'package:aquakoi/widgets/custom_elevated_button.dart';
 import '../widgets/custom_text_form_field.dart';
 import '../widgets/custom_checkbox_button.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:AquaKoi/common/toast.dart';
+import 'package:aquakoi/common/toast.dart';
 
 import '../core/app_export.dart';
 

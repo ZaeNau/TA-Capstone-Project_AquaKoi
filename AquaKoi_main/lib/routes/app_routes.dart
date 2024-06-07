@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:AquaKoi/Presentation/profil_screen.dart';
+import 'package:aquakoi/Presentation/profil_screen.dart';
 import '../Presentation/welcome_page.dart';
 import '../Presentation/login_screen.dart';
 import '../Presentation/register_screen.dart';

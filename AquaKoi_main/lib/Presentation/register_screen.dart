@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:AquaKoi/Presentation/login_screen.dart';
-import 'package:AquaKoi/widgets/custom_elevated_button.dart';
+import 'package:aquakoi/Presentation/login_screen.dart';
+import 'package:aquakoi/widgets/custom_elevated_button.dart';
 import '../widgets/custom_text_form_field.dart';
 import '../core/app_export.dart';
 import 'package:flutter/gestures.dart';
