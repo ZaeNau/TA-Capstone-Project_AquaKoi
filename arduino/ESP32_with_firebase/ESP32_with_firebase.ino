@@ -8,8 +8,8 @@
 #include "addons/TokenHelper.h"
 #include "addons/RTDBHelper.h"
 
-#define WIFI_SSID "Kos34D"
-#define WIFI_PASSWORD "Kos34D2024"
+#define WIFI_SSID "Kos34D_Lt2_plus"
+#define WIFI_PASSWORD "Eric2010"
 
 #define API_KEY "AIzaSyBN2McacTs5kKbfS2Lc5umzutLqZkHuQso"
 #define DATABASE_URL "https://ta-capstone-22597-default-rtdb.asia-southeast1.firebasedatabase.app/"
@@ -17,7 +17,7 @@
 #define USER_EMAIL "user@gmail.com"
 #define USER_PASSWORD "password123"
 
-#define ONE_WIRE_BUS 2  // Pin untuk sensor Temparture
+#define ONE_WIRE_BUS 2  // Pin untuk sensor Suhu
 #define MQ_sensor 33    // Pin untuk sensor Gas Amonis
 #define TDS_Pin 32      // Pin untuk sensor TDS
 #define PH_PIN 34       // Pin untuk sensor PH
@@ -35,16 +35,15 @@ const int waterpump = 18; // Deklarasi dan inisialisasi pin relay
 #define ESPVOLTAGE 3300
 
 #define MIN_TEMPERATURE 20
-#define MAX_TEMPERATURE 26
+#define MAX_TEMPERATURE 28
 #define MIN_AMONIA 0 // Ubah nilainya sesuai rentang yang diharapkan
 #define MAX_AMONIA 0.2 // Ubah nilainya sesuai rentang yang diharapkan
 #define MIN_TDS 0 // Ubah nilainya sesuai rentang yang diharapkan
-#define MAX_TDS 150 // Ubah nilainya sesuai rentang yang diharapkan
+#define MAX_TDS 500 // Ubah nilainya sesuai rentang yang diharapkan
 #define MIN_PH 0 // Ubah nilainya sesuai rentang yang diharapkan
 #define MAX_PH 14 // Ubah nilainya sesuai rentang yang diharapkan
 #define MIN_TURBIDITY 0 // Ubah nilainya sesuai rentang yang diharapkan
 #define MAX_TURBIDITY 10 // Ubah nilainya sesuai rentang yang diharapkan
-
 
 // Inisialisasi Sensor untuk pembacaan
 OneWire oneWire(ONE_WIRE_BUS);
@@ -95,7 +94,7 @@ String parentPath;
 FirebaseJson json;
 
 unsigned long sendDataPrevMillis = 0;
-unsigned long timerDelay = 5000;
+unsigned long timerDelay = 5000; // Increased delay to 60 seconds
 
 bool signInOK = false;
 
@@ -117,6 +116,7 @@ void readAirQuality();
 void readTDS();
 void readPH();
 void readTurbidity();
+void controlRelays();
 
 void setup() {
   Serial.begin(115200);
@@ -151,23 +151,30 @@ void setup() {
 }
 
 void loop() {
+  readTemperature();
+  delay(2000); // Add delay to reduce the load
+  readAirQuality();
+  delay(2000); // Add delay to reduce the load
+  readTDS();
+  delay(2000); // Add delay to reduce the load
+  readPH();
+  delay(2000); // Add delay to reduce the load
+  readTurbidity();
+  delay(2000); // Add delay to reduce the load
+  controlRelays();
+  
   if (Firebase.ready() && (millis() - sendDataPrevMillis > timerDelay || sendDataPrevMillis == 0)) {
     sendDataPrevMillis = millis();
     parentPath = databasePath + "/";
     
-    readTemperature();
     json.set(tempPath.c_str(), String(Suhu)); // Assuming temperature is a float or int
     json.set(tempPercPath.c_str(), String(temperaturePercentage));
-    readAirQuality();
     json.set(amoPath.c_str(), String(Amonia)); // Assuming average is a float or int
     json.set(amoPercPath.c_str(), String(amoniaPercentage));
-    readTDS();
     json.set(tdsPath.c_str(), String(tdsValue)); // Assuming sensorValue is an int or float
     json.set(tdsPercPath.c_str(), String(tdsPercentage));
-    readPH();
     json.set(phPath.c_str(), String(corrected_pH)); // Assuming phValue is a float
     json.set(phPercPath.c_str(), String(phPercentage));
-    readTurbidity();
     json.set(turbPath.c_str(), String(kekeruhan)); // Assuming kekeruhan is an int
     json.set(turbPercPath.c_str(), String(turbidityPercentage));
 
@@ -177,10 +184,32 @@ void loop() {
     
     Serial.printf("Set json... %s\n", Firebase.RTDB.setJSON(&fbdo, parentPath.c_str(), &json) ? "ok" : fbdo.errorReason().c_str());
     
-    delay(500);
+    delay(1000); // Increased delay to reduce load
   }
 }
 
+void controlRelays() {
+  if (Suhu > MAX_TEMPERATURE) {
+    digitalWrite(chiller, HIGH);
+    Serial.println("Chiller ON");
+  } else if (Suhu < MIN_TEMPERATURE) {
+    digitalWrite(Heater, HIGH);
+    Serial.println("Heater ON");
+  } else {
+    digitalWrite(chiller, LOW);
+    digitalWrite(Heater, LOW);
+    Serial.println("Chiller OFF");
+    Serial.println("Heater OFF");
+  }
+
+  if (tdsValue > MAX_TDS) {
+    digitalWrite(waterpump, HIGH);
+    Serial.println("Water Pump ON");
+  } else {
+    digitalWrite(waterpump, LOW);
+    Serial.println("Water Pump OFF");
+  }
+}
 
 void readTemperature(){
   sensors.requestTemperatures();
@@ -194,18 +223,6 @@ void readTemperature(){
   Serial.print("Suhu (Persentase): ");
   Serial.print(temperaturePercentage);
   Serial.println("%");
-  if (Suhu > 28.00) {
-    digitalWrite(chiller, HIGH);
-    Serial.println("ON ");
-  } else if (Suhu < 20.00) {
-    digitalWrite(Heater, HIGH);
-    Serial.println("ON ");
-  } else {
-    digitalWrite(chiller, LOW);
-    digitalWrite(Heater, LOW);
-    Serial.println("Chiller OFF");
-    Serial.println("Heater OFF");
-  }
 }
 
 // Custom mapping function for float values
@@ -245,13 +262,6 @@ void readTDS(){
   Serial.print("TDS (Persentase): ");
   Serial.print(tdsPercentage);
   Serial.println("%");
-  if (tdsValue > 150) {
-    digitalWrite(waterpump, HIGH);
-    Serial.println("ON ");
-  } else {
-    digitalWrite(waterpump, LOW);
-    Serial.println("OFF");
-  }
 }
 
 void readPH(){
@@ -282,4 +292,4 @@ void readTurbidity(){
   Serial.print("Kekeruhan Air (Persentase): ");
   Serial.print(turbidityPercentage);
   Serial.println("%");
-}
+} 
