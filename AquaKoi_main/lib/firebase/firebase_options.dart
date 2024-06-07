@@ -23,11 +23,20 @@ class DefaultFirebaseOptions {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        return ios;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for ios - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.macOS:
-        return macos;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for macos - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.windows:
-        return windows;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for windows - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -42,53 +51,21 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyBN2McacTs5kKbfS2Lc5umzutLqZkHuQso',
-    appId: '1:508290113524:web:90b1c90bb8b7ccc4dd63a1',
+    appId: '1:508290113524:web:5f11daba36b372e2dd63a1',
     messagingSenderId: '508290113524',
     projectId: 'ta-capstone-22597',
     authDomain: 'ta-capstone-22597.firebaseapp.com',
     databaseURL: 'https://ta-capstone-22597-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'ta-capstone-22597.appspot.com',
-    measurementId: 'G-S9RRP8YJ86',
+    measurementId: 'G-CX92GH2C7E',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyAnMmIRmKLkbF3TQo8ITKvRwXJV6fu_vLU',
-    appId: '1:508290113524:android:1a237d7531b5a805dd63a1',
+    appId: '1:508290113524:android:a40b5bd808c943b5dd63a1',
     messagingSenderId: '508290113524',
     projectId: 'ta-capstone-22597',
     databaseURL: 'https://ta-capstone-22597-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'ta-capstone-22597.appspot.com',
   );
-
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyC1OKXOQPB0_71T2JcZNW3Bkr866LY8CqQ',
-    appId: '1:508290113524:ios:6beeeb6075c7a767dd63a1',
-    messagingSenderId: '508290113524',
-    projectId: 'ta-capstone-22597',
-    databaseURL: 'https://ta-capstone-22597-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'ta-capstone-22597.appspot.com',
-    iosBundleId: 'com.example.koiaqua',
-  );
-
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyC1OKXOQPB0_71T2JcZNW3Bkr866LY8CqQ',
-    appId: '1:508290113524:ios:6beeeb6075c7a767dd63a1',
-    messagingSenderId: '508290113524',
-    projectId: 'ta-capstone-22597',
-    databaseURL: 'https://ta-capstone-22597-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'ta-capstone-22597.appspot.com',
-    iosBundleId: 'com.example.koiaqua',
-  );
-
-  static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyBN2McacTs5kKbfS2Lc5umzutLqZkHuQso',
-    appId: '1:508290113524:web:fda194d6d440c506dd63a1',
-    messagingSenderId: '508290113524',
-    projectId: 'ta-capstone-22597',
-    authDomain: 'ta-capstone-22597.firebaseapp.com',
-    databaseURL: 'https://ta-capstone-22597-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'ta-capstone-22597.appspot.com',
-    measurementId: 'G-N0SXRE2R4K',
-  );
-
 }
