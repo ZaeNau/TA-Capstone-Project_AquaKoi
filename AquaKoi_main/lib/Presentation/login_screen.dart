@@ -216,22 +216,36 @@ void onTapLogIn(BuildContext context) async {
       // Navigate to dashboard if login is successful
       Navigator.pushNamed(context, AppRoutes.dashboardScreen);
     } on FirebaseAuthException catch (e) {
-      String message;
+      String errorMessage = '';
       if (e.code == 'user-not-found') {
-        message = 'No user found for that email.';
+        errorMessage = 'You are not registered.';
       } else if (e.code == 'wrong-password') {
-        message = 'Wrong password provided.';
+        errorMessage = 'Your password is incorrect.';
       } else {
-        message = 'An error occurred. Please try again.';
+        errorMessage = 'You account not registered. \n Please try again.';
       }
 
-      // Check if the widget is still mounted before using the context
-      if (!mounted) return;
-      
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Login Failed'),
+            content: Text(errorMessage),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
     }
   }
 }
+
 
 /// Handles login action with Google Authentication.
 

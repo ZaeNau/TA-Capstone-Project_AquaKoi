@@ -133,19 +133,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget _buildProfileImage(BuildContext context) {
     return GestureDetector(
-      onTap: () => _showImagePicker(context),
       child: CircleAvatar(
         radius: 50,
         backgroundImage: _profileImagePath != null
             ? FileImage(File(_profileImagePath!))
             : AssetImage(ImageConstant.imgEllipse286x84), // Default profile picture
-        child: Align(
-          alignment: Alignment.bottomRight,
-          child: CircleAvatar(
-            radius: 15,
-            backgroundColor: Colors.white,
-          ),
-        ),
       ),
     );
   }
