@@ -6,6 +6,7 @@ import '../widgets/custom_checkbox_button.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:aquakoi/common/toast.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
@@ -96,6 +97,7 @@ Widget build(BuildContext context) {
                         style: theme.textTheme.bodySmall?.copyWith(fontSize: 11),
                       ),
                     ),
+
                   ],
                 ),
               ),
@@ -138,6 +140,29 @@ Widget build(BuildContext context) {
                   ),
                 ),
               ),
+              SizedBox(height: 10),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, AppRoutes.dashboardScreen);
+                    },
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          CupertinoIcons.question_circle_fill,
+                          color: Colors.grey,
+                        ),
+                        SizedBox(width: 5),
+                        Text(
+                          "Panduan?",
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                   SizedBox(height: 63.v),
                   GestureDetector(
                     onTap: () {
