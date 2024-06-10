@@ -2,8 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../core/app_export.dart';
-import '../widgets/app_bar/appbar_title.dart';
-import '../widgets/app_bar/custom_app_bar.dart';
 import '../widgets/custom_text_form_field.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -162,9 +160,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
-    return CustomAppBar(
+    return AppBar(
       centerTitle: true,
-      title: AppbarTitle(text: "Edit Profile"),
+      title: Text("Edit Profile"),
     );
   }
 
