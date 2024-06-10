@@ -6,6 +6,8 @@ import '../widgets/custom_checkbox_button.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:aquakoi/common/toast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 import '../core/app_export.dart';
 
@@ -196,13 +198,17 @@ void onTapLogIn(BuildContext context) async {
         email: emailController.text,
         password: passwordController.text,
       );
-      
+
       // Use userCredential here
       User? user = userCredential.user;
       if (user != null) {
         ('User ID: ${user.uid}');
         ('User Email: ${user.email}');
       }
+
+      // Save login state to shared preferences
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setBool('isLoggedIn', true);
 
       // Check if the widget is still mounted before using the context
       if (!mounted) return;
@@ -226,34 +232,35 @@ void onTapLogIn(BuildContext context) async {
     }
   }
 }
+
 /// Handles login action with Google Authentication.
 
-  _signInWithGoogle()async{
+_signInWithGoogle() async {
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
 
-    final GoogleSignIn _googleSignIn = GoogleSignIn();
+  try {
+    final GoogleSignInAccount? googleSignInAccount = await _googleSignIn.signIn();
 
-    try {
+    if (googleSignInAccount != null) {
+      final GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
 
-      final GoogleSignInAccount? googleSignInAccount = await _googleSignIn.signIn();
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        idToken: googleSignInAuthentication.idToken,
+        accessToken: googleSignInAuthentication.accessToken,
+      );
 
-      if(googleSignInAccount != null ){
-        final GoogleSignInAuthentication googleSignInAuthentication = await
-        googleSignInAccount.authentication;
+      await FirebaseAuth.instance.signInWithCredential(credential);
 
-        final AuthCredential credential = GoogleAuthProvider.credential(
-          idToken: googleSignInAuthentication.idToken,
-          accessToken: googleSignInAuthentication.accessToken,
-        );
+      // Save login state to shared preferences
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setBool('isLoggedIn', true);
 
-        await FirebaseAuth.instance.signInWithCredential(credential);
-        Navigator.pushNamed(context, AppRoutes.dashboardScreen);
-      }
-
-    }catch(e) {
-    showToast(message: "some error occured $e");
+      Navigator.pushNamed(context, AppRoutes.dashboardScreen);
     }
+  } catch (e) {
+    showToast(message: "Some error occurred $e");
   }
-
+}
 }
 
   /// Navigates to the registerScreen when the action is triggered.

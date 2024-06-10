@@ -185,7 +185,6 @@ final DatabaseReference _databaseReference = FirebaseDatabase.instance.ref().chi
     return SafeArea(
       child: Scaffold(
         backgroundColor: theme.colorScheme.onError,
-        appBar: _buildAppBar(context),
         body: SingleChildScrollView(
           child: Container(
             width: MediaQuery.of(context).size.width,
@@ -214,32 +213,6 @@ final DatabaseReference _databaseReference = FirebaseDatabase.instance.ref().chi
         ),
         bottomNavigationBar: _buildBottomBar(context),
       ),
-    );
-  }
-
-  PreferredSizeWidget _buildAppBar(BuildContext context) {
-    return CustomAppBar(
-      centerTitle: true,
-      title: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 17.h, vertical: 17.h),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                AppbarTitleSearchview(
-                  hintText: "Find Parameter",
-                  controller: widget.searchController,
-                ),
-              ],
-            ),
-          ),
-          SizedBox(height: 1),
-          Divider(),
-          SizedBox(height: 1),
-        ],
-      ),
-      styleType: Style.bgFill,
     );
   }
 

@@ -10,7 +10,7 @@ class _GuideFragmentState extends State<GuideFragment> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
         title: Text(
           "Panduan",
           style: TextStyle(

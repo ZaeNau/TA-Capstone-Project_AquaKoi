@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:aquakoi/Presentation/dashboard_screen.dart';
 import '../../core/app_export.dart';
 import '../../widgets/custom_text_form_field.dart';
@@ -15,6 +18,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  String? _profileImagePath;
 
   @override
   void initState() {
@@ -26,12 +30,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       nameController.text = prefs.getString('name') ?? '';
-      emailController.text = prefs.getString('email') ?? 'example@gmail.com'; // Get email from SharedPreferences
+      emailController.text = prefs.getString('email') ?? ''; // Get email from SharedPreferences
+      _profileImagePath = prefs.getString('profileImagePath'); // Get profile image path
     });
   }
 
-  void _showImagePicker(BuildContext context) {
-    // Function to show image picker
+  void _showImagePicker(BuildContext context) async {
+    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _profileImagePath = pickedFile.path;
+      });
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('profileImagePath', pickedFile.path); // Save profile image path to SharedPreferences
+    }
   }
 
   @override
@@ -124,17 +136,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
       onTap: () => _showImagePicker(context),
       child: CircleAvatar(
         radius: 50,
-        backgroundImage: AssetImage(ImageConstant.imgEllipse286x84), // Default profile picture
+        backgroundImage: _profileImagePath != null
+            ? FileImage(File(_profileImagePath!))
+            : AssetImage(ImageConstant.imgEllipse286x84), // Default profile picture
         child: Align(
           alignment: Alignment.bottomRight,
           child: CircleAvatar(
             radius: 15,
             backgroundColor: Colors.white,
-            child: Icon(
-              Icons.camera_alt,
-              size: 20,
-              color: Colors.black,
-            ),
           ),
         ),
       ),
