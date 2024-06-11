@@ -143,13 +143,13 @@ Widget build(BuildContext context) {
               SizedBox(height: 10),
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushNamed(context, AppRoutes.dashboardScreen);
+                      Navigator.pushNamed(context, AppRoutes.panduanScreen);
                     },
                     child: const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(
-                          CupertinoIcons.question_circle_fill,
+                          CupertinoIcons.question_circle,
                           color: Colors.grey,
                         ),
                         SizedBox(width: 5),

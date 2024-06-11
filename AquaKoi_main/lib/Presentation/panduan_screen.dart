@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
-class GuideFragment extends StatefulWidget {
+class PanduanScreen extends StatefulWidget {
+  const PanduanScreen({super.key});
+
   @override
-  _GuideFragmentState createState() => _GuideFragmentState();
+  _PanduanScreenState createState() => _PanduanScreenState();
 }
 
-class _GuideFragmentState extends State<GuideFragment> {
+class _PanduanScreenState extends State<PanduanScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +39,7 @@ class _GuideFragmentState extends State<GuideFragment> {
                       height: 150,
                       child: Center(
                         child: Image.asset(
-                          "assets/judul_panduan_2.png", // Replace with your actual image path
+                          "assets/images/image_not_found.png", // Replace with your actual image path
                           fit: BoxFit.contain,
                         ),
                       ),
@@ -46,33 +48,33 @@ class _GuideFragmentState extends State<GuideFragment> {
                   SizedBox(height: 28),
                   // Panduan Image with text overlay
                   _buildPanduanImage(
-                    "assets/rectangle_panduan.png",
+                    "assets/images/image_not_found.png",
                     "Panduan 1", // Text to display
-                    "assets/panduan_1.png", // Image to display within the rectangle
+                    "assets/images/image_not_found.png", // Image to display within the rectangle
                   ),
                   SizedBox(height: 12),
                   _buildPanduanImage(
-                    "assets/rectangle_panduan.png",
+                    "assets/images/image_not_found.png",
                     "Panduan 2", // Text to display
-                    "assets/switch_svg.png", // Image to display within the rectangle
+                    "assets/images/image_not_found.png", // Image to display within the rectangle
                   ),
                   SizedBox(height: 12),
                   _buildPanduanImage(
-                    "assets/rectangle_panduan.png",
+                    "assets/images/image_not_found.png",
                     "Panduan 3", // Text to display
-                    "assets/panduan_3.png", // Image to display within the rectangle
+                    "assets/images/image_not_found.png", // Image to display within the rectangle
                   ),
                   SizedBox(height: 12),
                   _buildPanduanImage(
-                    "assets/rectangle_panduan.png",
+                    "assets/images/image_not_found.png",
                     "Panduan 4", // Text to display
-                    "assets/panduan_4.png", // Image to display within the rectangle
+                    "assets/images/image_not_found.png", // Image to display within the rectangle
                   ),
                   SizedBox(height: 12),
                   _buildPanduanImage(
-                    "assets/rectangle_panduan.png",
+                    "assets/images/image_not_found.png",
                     "Panduan 5", // Text to display
-                    "assets/panduan_5.png", // Image to display within the rectangle
+                    "assets/images/image_not_found.png", // Image to display within the rectangle
                   ),
                 ],
               ),

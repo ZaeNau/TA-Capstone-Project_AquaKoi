@@ -7,6 +7,7 @@ import '../Presentation/forget_password_screen.dart';
 import '../Presentation/dashboard_screen.dart';
 import '../Presentation/edit_profile_screen.dart';
 // import '../Presentation/app_navigation_screen.dart';
+import '../Presentation/panduan_screen.dart';
 
 class AppRoutes {
 
@@ -24,12 +25,15 @@ class AppRoutes {
   
   static const String editProfileScreen = '/edit_profile_screen';
 
+  static const String panduanScreen = '/panduan_screen';
+
   // static const String appNavigationScreen = '/app_navigation_screen';
 
   static Map<String, WidgetBuilder> routes = {
     welcomepage: (context) => const WelcomePage(),
     //actual code
     loginScreen: (context) => LoginScreen(),
+    panduanScreen: (context) => PanduanScreen(),
     registerScreen: (context) => RegisterScreen(),
     dashboardScreen: (context) => DashboardScreen(),
     forgetPasswordScreen: (context) => ForgetPasswordScreen(),
