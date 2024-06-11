@@ -89,7 +89,7 @@ String amoPercPath = "/AmoniaPercentage";
 String tdsPercPath = "/TdsPercentage";
 String phPercPath = "/phPercentage";
 String turbPercPath = "/turbidityPercentage";
-String parentPath;
+String sensorPath;
 String relaypath;
 
 FirebaseJson json;
@@ -149,7 +149,7 @@ void setup() {
   Serial.print("User UID: ");
   Serial.print(uid);
   // Update database path
-  databasePath = "/UsersData/" + uid + "/Sensors";
+  databasePath = "/UsersData/" + uid;
 }
 
 void loop() {
@@ -168,7 +168,7 @@ void loop() {
   
   if (Firebase.ready() && (millis() - sendDataPrevMillis > timerDelay || sendDataPrevMillis == 0)) {
     sendDataPrevMillis = millis();
-    parentPath = databasePath + "/";
+    sensorPath = databasePath + "/Sensors/" + "/";
     
     json.set(tempPath.c_str(), String(Suhu)); // Assuming temperature is a float or int
     json.set(tempPercPath.c_str(), String(temperaturePercentage));
@@ -185,7 +185,7 @@ void loop() {
     json.toString(jsonData); // Convert JSON object to string
     Serial.println("JSON Data: " + jsonData); // Print JSON data for debugging
     
-    Serial.printf("Set json... %s\n", Firebase.RTDB.setJSON(&fbdo, parentPath.c_str(), &json) ? "ok" : fbdo.errorReason().c_str());
+    Serial.printf("Set json... %s\n", Firebase.RTDB.setJSON(&fbdo, sensorPath.c_str(), &json) ? "ok" : fbdo.errorReason().c_str());
     
     delay(1000); // Increased delay to reduce load
   }
@@ -193,7 +193,7 @@ void loop() {
 
 // New function to update relay states in Firebase RTDB
 void updateRelayStates() {
-  relaypath = databasePath + "/relayState" + "/";
+  relaypath = databasePath + "/relayState/" + "/";
 
   json.set(String("chiller").c_str(), digitalRead(chiller) == HIGH ? "1" : "0");
   json.set(String("Heater").c_str(), digitalRead(Heater) == HIGH ? "1" : "0");
@@ -203,7 +203,7 @@ void updateRelayStates() {
   json.toString(jsonData); // Convert JSON object to string
   Serial.println("JSON Data: " + jsonData); // Print JSON data for debugging
 
-  Serial.printf("Set json... %s\n", Firebase.RTDB.setJSON(&fbdo, parentPath.c_str(), &json) ? "ok" : fbdo.errorReason().c_str());
+  Serial.printf("Set json... %s\n", Firebase.RTDB.setJSON(&fbdo, sensorPath.c_str(), &json) ? "ok" : fbdo.errorReason().c_str());
 }
 
 void controlRelays() {
