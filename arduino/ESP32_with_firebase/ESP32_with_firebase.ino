@@ -116,6 +116,7 @@ void readAirQuality();
 void readTDS();
 void readPH();
 void readTurbidity();
+void updateRelayStates()
 void controlRelays();
 
 void setup() {
@@ -162,6 +163,7 @@ void loop() {
   readTurbidity();
   delay(2000); // Add delay to reduce the load
   controlRelays();
+  updateRelayStates();
   
   if (Firebase.ready() && (millis() - sendDataPrevMillis > timerDelay || sendDataPrevMillis == 0)) {
     sendDataPrevMillis = millis();
@@ -186,6 +188,21 @@ void loop() {
     
     delay(1000); // Increased delay to reduce load
   }
+}
+
+// New function to update relay states in Firebase RTDB
+void updateRelayStates() {
+  parentPath = databasePath + "/RelayStates";
+
+  json.set(String("chiller").c_str(), digitalRead(chiller) == HIGH ? "1" : "0");
+  json.set(String("Heater").c_str(), digitalRead(Heater) == HIGH ? "1" : "0");
+  json.set(String("waterpump").c_str(), digitalRead(waterpump) == HIGH ? "1" : "0");
+
+  String jsonData;
+  json.toString(jsonData); // Convert JSON object to string
+  Serial.println("JSON Data: " + jsonData); // Print JSON data for debugging
+
+  Serial.printf("Set json... %s\n", Firebase.RTDB.setJSON(&fbdo, parentPath.c_str(), &json) ? "ok" : fbdo.errorReason().c_str());
 }
 
 void controlRelays() {
@@ -294,4 +311,4 @@ void readTurbidity(){
   Serial.print("Kekeruhan Air (Persentase): ");
   Serial.print(turbidityPercentage);
   Serial.println("%");
-} 
+}
