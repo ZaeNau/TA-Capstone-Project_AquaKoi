@@ -8,7 +8,7 @@
 #include "addons/TokenHelper.h"
 #include "addons/RTDBHelper.h"
 
-#define WIFI_SSID "Kos34D_Lt2_plus"
+#define WIFI_SSID "Kos34D_Lt2"
 #define WIFI_PASSWORD "Eric2010"
 
 #define API_KEY "AIzaSyBN2McacTs5kKbfS2Lc5umzutLqZkHuQso"
@@ -23,8 +23,8 @@
 #define PH_PIN 34       // Pin untuk sensor PH
 #define sensorPin A0    // Pin untuk sensor kekeruhan
 
-const int Heater = 5; // Deklarasi dan inisialisasi pin relay
 const int chiller = 4; // Deklarasi dan inisialisasi pin relay
+const int Heater = 5; // Deklarasi dan inisialisasi pin relay
 const int waterpump = 18; // Deklarasi dan inisialisasi pin relay
 
 #define RL 10
@@ -39,11 +39,11 @@ const int waterpump = 18; // Deklarasi dan inisialisasi pin relay
 #define MIN_AMONIA 0 // Ubah nilainya sesuai rentang yang diharapkan
 #define MAX_AMONIA 0.2 // Ubah nilainya sesuai rentang yang diharapkan
 #define MIN_TDS 0 // Ubah nilainya sesuai rentang yang diharapkan
-#define MAX_TDS 500 // Ubah nilainya sesuai rentang yang diharapkan
+#define MAX_TDS 100 // Ubah nilainya sesuai rentang yang diharapkan
 #define MIN_PH 0 // Ubah nilainya sesuai rentang yang diharapkan
 #define MAX_PH 14 // Ubah nilainya sesuai rentang yang diharapkan
 #define MIN_TURBIDITY 0 // Ubah nilainya sesuai rentang yang diharapkan
-#define MAX_TURBIDITY 10 // Ubah nilainya sesuai rentang yang diharapkan
+#define MAX_TURBIDITY 37 // Ubah nilainya sesuai rentang yang diharapkan
 
 // Inisialisasi Sensor untuk pembacaan
 OneWire oneWire(ONE_WIRE_BUS);
@@ -242,7 +242,8 @@ void readAirQuality() {
   if (readIndex >= numReadings) {
     readIndex = 0;
   }
-  Amonia = total / numReadings;
+  average = total / numReadings;
+  Amonia = map(average, 0, 10, 0.2, 0);
   Serial.print("Amonia ppm: ");
   Serial.println(Amonia);
   // Calculate percentage using the custom mapFloat function
@@ -254,7 +255,8 @@ void readAirQuality() {
 
 void readTDS(){
   int sensorValue = analogRead(TDS_Pin);
-  tdsValue = (0.6656 * sensorValue) + 69.604;
+  average = (0.6656 * sensorValue) + 69.604;
+  tdsValue = map(average, 0, 1000, 500, 0);
   Serial.print("TDS Value: ");
   Serial.println(tdsValue);
   // Calculate percentage
@@ -284,7 +286,7 @@ void readTurbidity(){
   total = total + readings[currentIndex];
   currentIndex = (currentIndex + 1) % numReadings;
   int average = total / numReadings;
-  kekeruhan = map(average, 0, 700, 10, 0);
+  kekeruhan = map(average, 0, 700, 37, 0);
   Serial.print("Kekeruhan Air : ");
   Serial.println(kekeruhan);
   // Calculate percentage
