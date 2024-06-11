@@ -154,7 +154,9 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-final DatabaseReference _databaseReference = FirebaseDatabase.instance.ref().child('UsersData').child('cSFGHidGb4gzLBalujMaowdFDGG2').child('Sensors').child('relayState');
+  final DatabaseReference _sensorsReference = FirebaseDatabase.instance.ref().child('UsersData').child('cSFGHidGb4gzLBalujMaowdFDGG2').child('Sensors');
+  final DatabaseReference _relayStateReference = FirebaseDatabase.instance.ref().child('UsersData').child('cSFGHidGb4gzLBalujMaowdFDGG2').child('Sensors').child('relayState');
+    
   Map<String, dynamic> sensorData = {};
   bool _heaterState = false;
   bool _coolerState = false;
@@ -164,14 +166,12 @@ final DatabaseReference _databaseReference = FirebaseDatabase.instance.ref().chi
   void initState() {
     super.initState();
     if (FirebaseAuth.instance.currentUser != null) {
-      _databaseReference.onValue.listen((event) {
+      //Fetch Sensors data
+      _sensorsReference.onValue.listen((event) {
         final data = event.snapshot.value;
         if (data != null && data is Map) {
           setState(() {
             sensorData = Map<String, dynamic>.from(data);
-            _heaterState = sensorData['Heater'] == '1';
-            _coolerState = sensorData['chiller'] == '1';
-            _waterpState = sensorData['WaterPump'] == '1';
           });
         } else {
           setState(() {
@@ -179,9 +179,22 @@ final DatabaseReference _databaseReference = FirebaseDatabase.instance.ref().chi
           });
         }
       });
+      //Fetch Relay Data
+      _relayStateReference.onValue.listen((event) {
+        final data = event.snapshot.value;
+        if (data != null && data is Map) {
+          setState(() {
+            _heaterState = data['Heater'] == '1';
+            _coolerState = data['chiller'] == '1';
+            _waterpState = data['WaterPump'] == '1';
+          });
+        }
+      });
     } else {
       // Redirect to login if not authenticated
-      Navigator.pushNamed(context, AppRoutes.loginScreen);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.pushNamed(context, AppRoutes.loginScreen);
+      });
     }
   }
   @override
@@ -385,8 +398,11 @@ Widget _buildTemperature(BuildContext context) {
                   ToggleButton(
                     initialState: _heaterState, // Kontrol ini bisa diatur berdasarkan data aktual
                     onToggle: (bool value) {
+                      setState(() {
+                        _heaterState = value;
+                      });
                       //update firebase data when toggle button state changes
-                      _databaseReference.update({'Heater':value? '1':'0'});
+                      _relayStateReference.update({'Heater':value? '1':'0'});
                     },
                   ),
                   SizedBox(height: 10.v),
@@ -398,8 +414,11 @@ Widget _buildTemperature(BuildContext context) {
                   ToggleButton(
                     initialState: _coolerState, // Kontrol ini bisa diatur berdasarkan data aktual
                     onToggle: (bool value) {
+                      setState(() {
+                        _coolerState = value;
+                      });
                       //update firebase data when toggle button state changes
-                      _databaseReference.update({'chiller':value? '1':'0'});
+                      _relayStateReference.update({'chiller':value? '1':'0'});
                     },
                   ),
                 ],
@@ -867,8 +886,11 @@ Widget _buildTDS(BuildContext context) {
                   ToggleButton(
                   initialState: _waterpState, // Kontrol ini bisa diatur berdasarkan data aktual
                   onToggle: (bool value) {
+                    setState(() {
+                      _waterpState = value;
+                    });
                   //update firebase data when toggle button state changes
-                   _databaseReference.update({'waterpump':value? '1':'0'});
+                   _relayStateReference.update({'waterpump':value? '1':'0'});
                   },
                 ),
               ],
@@ -1035,8 +1057,11 @@ Widget _buildTurbidity(BuildContext context) {
                   ToggleButton(
                   initialState: _waterpState, // Kontrol ini bisa diatur berdasarkan data aktual
                   onToggle: (bool value) {
+                    setState(() {
+                      _waterpState = value;
+                    });
                   //update firebase data when toggle button state changes
-                   _databaseReference.update({'waterpump':value? '1':'0'});
+                   _relayStateReference.update({'waterpump':value? '1':'0'});
                   },
                 ),
               ],
