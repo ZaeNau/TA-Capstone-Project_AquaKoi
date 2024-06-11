@@ -21,97 +21,70 @@ class _PanduanScreenState extends State<PanduanScreen> {
         ),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(height: 10), // Add some spacing at the top
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                children: [
-                  // Card with blue background and image
-                  Card(
-                    elevation: 4, // Add elevation to make the card pop out
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    color: Colors.blue,
-                    child: Container(
-                      height: 150,
-                      child: Center(
-                        child: Image.asset(
-                          "assets/images/image_not_found.png", // Replace with your actual image path
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 28),
-                  // Panduan Image with text overlay
-                  _buildPanduanImage(
-                    "assets/images/image_not_found.png",
-                    "Panduan 1", // Text to display
-                    "assets/images/image_not_found.png", // Image to display within the rectangle
-                  ),
-                  SizedBox(height: 12),
-                  _buildPanduanImage(
-                    "assets/images/image_not_found.png",
-                    "Panduan 2", // Text to display
-                    "assets/images/image_not_found.png", // Image to display within the rectangle
-                  ),
-                  SizedBox(height: 12),
-                  _buildPanduanImage(
-                    "assets/images/image_not_found.png",
-                    "Panduan 3", // Text to display
-                    "assets/images/image_not_found.png", // Image to display within the rectangle
-                  ),
-                  SizedBox(height: 12),
-                  _buildPanduanImage(
-                    "assets/images/image_not_found.png",
-                    "Panduan 4", // Text to display
-                    "assets/images/image_not_found.png", // Image to display within the rectangle
-                  ),
-                  SizedBox(height: 12),
-                  _buildPanduanImage(
-                    "assets/images/image_not_found.png",
-                    "Panduan 5", // Text to display
-                    "assets/images/image_not_found.png", // Image to display within the rectangle
-                  ),
-                ],
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              // Panduan Image with text below
+              _buildPanduanImageWithText(
+                "assets/images/image_not_found.png",
+                "Panduan 1 \n •	Login \n 1.	Jika sudah memiliki akun, masukkan username dan password pada halaman login, lalu klik tombol “Log in” atau dapat langsung menekan tombol “Sign in with Google” sebagai opsi lainnya. \n2.	Jika belum memiliki akun, klik tombol Sign up",
               ),
-            ),
-          ],
+              SizedBox(height: 12),
+              _buildPanduanImageWithText(
+                "assets/images/image_not_found.png",
+                "Panduan 2",
+              ),
+              SizedBox(height: 12),
+              _buildPanduanImageWithText(
+                "assets/images/image_not_found.png",
+                "Panduan 3",
+              ),
+              SizedBox(height: 12),
+              _buildPanduanImageWithText(
+                "assets/images/image_not_found.png",
+                "Panduan 4",
+              ),
+              SizedBox(height: 12),
+              _buildPanduanImageWithText(
+                "assets/images/image_not_found.png",
+                "Panduan 5",
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildPanduanImage(String rectangleImagePath, String text,
-      String imageImagePath) {
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        Image.asset(
-          rectangleImagePath, // Image of the rectangle
-          width: double.infinity, // Full width of the screen
-          fit: BoxFit.fitWidth, // Fit the image to the width of the screen
-        ),
-        Column(
+  Widget _buildPanduanImageWithText(String imagePath, String text) {
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Image.asset(
+              imagePath,
+              fit: BoxFit.cover,
+              width: double.infinity,
+              height: 150,
+            ),
+            SizedBox(height: 12),
             Text(
               text,
               style: TextStyle(
-                fontWeight: FontWeight.bold, // Make the text bold
+                fontWeight: FontWeight.bold,
                 fontSize: 16,
               ),
             ),
-            SizedBox(height: 10), // Add some spacing
-            Image.asset(
-              imageImagePath, // Image to display within the rectangle
-              height: 60, // Adjust the height of the image as needed
-            ),
           ],
         ),
-      ],
+      ),
     );
   }
 }

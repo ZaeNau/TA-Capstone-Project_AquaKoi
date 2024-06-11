@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:aquakoi/Presentation/dashboard_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../core/app_export.dart';
@@ -36,6 +37,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Future<void> _saveProfileData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('name', nameController.text);
+    if (_image != null) {
+      prefs.setString('profileImagePath', _image!.path);
+    }
   }
 
   Future<void> _pickImage() async {
@@ -60,94 +64,64 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             child: Center(
               child: Form(
                 key: _formKey,
-                child: Container(
+                child: SizedBox(
                   width: containerWidth,
-                  padding: EdgeInsets.symmetric(horizontal: 16.0),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      SizedBox(height: 25),
-                      GestureDetector(
-                        onTap: _pickImage,
-                        child: CircleAvatar(
-                          radius: 50,
-                          backgroundImage: _image != null
-                              ? FileImage(File(_image!.path))
-                              : AssetImage(ImageConstant.imgEllipse286x84) as ImageProvider,
-                          child: Align(
-                            alignment: Alignment.bottomRight,
-                            child: CircleAvatar(
-                              radius: 15,
-                              backgroundColor: Colors.white,
-                              child: Icon(
-                                Icons.camera_alt,
-                                size: 20,
-                                color: Colors.black,
-                              ),
+                      _buildProfileImage(),
+                      SizedBox(height: 22),
+                      _buildTextFormField(
+                        "Name",
+                        nameController,
+                        "Please enter your name",
+                      ),
+                      SizedBox(height: 14),
+                      _buildTextFormField(
+                        "Password",
+                        passwordController,
+                        "Please enter your password",
+                        obscureText: true,
+                      ),
+                      SizedBox(height: 14),
+                      _buildTextFormField(
+                        "Confirm Password",
+                        confirmpasswordController,
+                        "Please confirm your password",
+                        obscureText: true,
+                        validator: (value) {
+                          if (value != passwordController.text) {
+                            return 'Passwords do not match';
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(height: 87),
+                      SizedBox(
+                        height: 36,
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppDecoration.fillBlueA.color, // Set the button color
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(11),
                             ),
+                          ),
+                          onPressed: () {
+                            if (_formKey.currentState?.validate() ?? false) {
+                              _saveProfileData();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Profile saved')),
+                              );
+                              Navigator.pushNamed(context, AppRoutes.profileScreen);
+                            }
+                          },
+                          child: Text(
+                            "Save",
+                            style: CustomTextStyles.labelLargeffffffff,
                           ),
                         ),
                       ),
-                      SizedBox(height: 26),
-                      _buildTextField("Name", nameController, "Pembudidaya Ikan"),
-                      SizedBox(height: 16),
-                      _buildTextField("Change password", passwordController, "must be 8 characters", TextInputType.visiblePassword, true),
-                      SizedBox(height: 16),
-                      _buildTextField("Confirm password", confirmpasswordController, "repeat password", TextInputType.visiblePassword, true),
-                      SizedBox(height: 52),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Flexible(
-                            child: SizedBox(
-                              height: 34.h,
-                              width: screenWidth * 0.4,
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppDecoration.fillGray500.color,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(11),
-                                  ),
-                                ),
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                child: Text(
-                                  "Cancel",
-                                  style: Theme.of(context).textTheme.titleSmall,
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 20),
-                          Flexible(
-                            child: SizedBox(
-                              height: 34.h,
-                              width: screenWidth * 0.4,
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppDecoration.fillBlueA.color,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(11),
-                                  ),
-                                ),
-                                onPressed: () {
-                                  if (_formKey.currentState!.validate()) {
-                                    _saveProfileData();
-                                    Navigator.pop(context);
-                                  }
-                                },
-                                child: Text(
-                                  "Save edit",
-                                  style: Theme.of(context).textTheme.titleSmall,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 20),
+                      SizedBox(height: 5),
                     ],
                   ),
                 ),
@@ -155,6 +129,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ),
           ),
         ),
+        bottomNavigationBar: _buildBottomBar(context),
       ),
     );
   }
@@ -166,20 +141,97 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  Widget _buildTextField(String label, TextEditingController controller, String hint, [TextInputType inputType = TextInputType.text, bool obscureText = false]) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label, style: CustomTextStyles.bodyMediumBluegray900),
-        SizedBox(height: 6),
-        CustomTextFormField(
-          controller: controller,
-          hintText: hint,
-          textInputType: inputType,
-          obscureText: obscureText,
-          onFieldSubmitted: (_) {},
+  Widget _buildProfileImage() {
+    return GestureDetector(
+      onTap: _pickImage,
+      child: CircleAvatar(
+        radius: 50,
+        backgroundImage: _image != null ? FileImage(File(_image!.path)) : null,
+        child: _image == null
+            ? Icon(Icons.add_a_photo, size: 50)
+            : null,
+      ),
+    );
+  }
+
+  Widget _buildTextFormField(
+    String label,
+    TextEditingController controller,
+    String? validationMessage, {
+    bool obscureText = false,
+    String? Function(String?)? validator,
+  }) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(label, style: Theme.of(context).textTheme.bodyMedium),
+          SizedBox(height: 6),
+          CustomTextFormField(
+            controller: controller,
+            hintText: label,
+            textStyle: TextStyle(color: Colors.black),
+            obscureText: obscureText,
+            validator: validator ??
+                (value) {
+                  if (value == null || value.isEmpty) {
+                    return validationMessage;
+                  }
+                  return null;
+                },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBottomBar(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.3),
+            spreadRadius: 0,
+            blurRadius: 1,
+            offset: Offset(0, -1),
+          ),
+        ],
+        border: Border(
+          top: BorderSide(color: Colors.white, width: 1.5),
         ),
-      ],
+      ),
+      child: BottomNavigationBar(
+        currentIndex: 1,
+        selectedItemColor: AppDecoration.fillBlueA.color,
+        unselectedItemColor: Colors.grey,
+        backgroundColor: Color(0xFFDFEAF5),
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Beranda',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profil',
+          ),
+        ],
+        onTap: (index) {
+          switch (index) {
+            case 0:
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DashboardScreen(),
+                ),
+              );
+              break;
+            case 1:
+              // Current screen is ProfileScreen
+              break;
+          }
+        },
+      ),
     );
   }
 }

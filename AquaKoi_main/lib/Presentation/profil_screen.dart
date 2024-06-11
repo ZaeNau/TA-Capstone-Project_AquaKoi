@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
@@ -28,9 +27,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   _loadProfileData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    nameController.text = prefs.getString('name') ?? '';
+    emailController.text = prefs.getString('email') ?? ''; // Get email from SharedPreferences
     setState(() {
-      nameController.text = prefs.getString('name') ?? '';
-      emailController.text = prefs.getString('email') ?? ''; // Get email from SharedPreferences
       _profileImagePath = prefs.getString('profileImagePath'); // Get profile image path
     });
   }
@@ -74,7 +73,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     _buildDisplayField(context, "Email", emailController),
                     SizedBox(height: 87),
                     SizedBox(
-                      height: 36.h,
+                      height: 36,
                       width: MediaQuery.of(context).size.width * 0.4,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
@@ -94,7 +93,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     SizedBox(height: 9),
                     SizedBox(
-                      height: 36.h,
+                      height: 36,
                       width: MediaQuery.of(context).size.width * 0.4,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
@@ -137,7 +136,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         radius: 50,
         backgroundImage: _profileImagePath != null
             ? FileImage(File(_profileImagePath!))
-            : AssetImage(ImageConstant.imgEllipse286x84), // Default profile picture
+            : AssetImage(ImageConstant.imgEllipse286x84) as ImageProvider, // Default profile picture
       ),
     );
   }
