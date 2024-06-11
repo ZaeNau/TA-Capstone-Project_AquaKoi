@@ -193,6 +193,8 @@ void loop() {
 
 // New function to update relay states in Firebase RTDB
 void updateRelayStates() {
+  if (Firebase.ready() && (millis() - sendDataPrevMillis > timerDelay || sendDataPrevMillis == 0)) {
+  sendDataPrevMillis = millis();
   relaypath = databasePath + "/relayState/" + "/";
 
   json.set(String("chiller").c_str(), digitalRead(chiller) == HIGH ? "1" : "0");
@@ -204,6 +206,9 @@ void updateRelayStates() {
   Serial.println("JSON Data: " + jsonData); // Print JSON data for debugging
 
   Serial.printf("Set json... %s\n", Firebase.RTDB.setJSON(&fbdo, sensorPath.c_str(), &json) ? "ok" : fbdo.errorReason().c_str());
+
+  delay(1000); // Increased delay to reduce load
+  }
 }
 
 void controlRelays() {
