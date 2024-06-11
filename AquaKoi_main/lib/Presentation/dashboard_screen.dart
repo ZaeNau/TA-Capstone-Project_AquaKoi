@@ -154,18 +154,24 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-final DatabaseReference _databaseReference = FirebaseDatabase.instance.ref().child('UsersData').child('cSFGHidGb4gzLBalujMaowdFDGG2').child('Sensors');
+final DatabaseReference _databaseReference = FirebaseDatabase.instance.ref().child('UsersData').child('cSFGHidGb4gzLBalujMaowdFDGG2').child('Sensors').child('relayState');
   Map<String, dynamic> sensorData = {};
+  bool _heaterState = false;
+  bool _coolerState = false;
+  bool _waterpState = false;
 
   @override
   void initState() {
-  super.initState();
+    super.initState();
     if (FirebaseAuth.instance.currentUser != null) {
       _databaseReference.onValue.listen((event) {
         final data = event.snapshot.value;
         if (data != null && data is Map) {
           setState(() {
             sensorData = Map<String, dynamic>.from(data);
+            _heaterState = sensorData['Heater'] == '1';
+            _coolerState = sensorData['chiller'] == '1';
+            _waterpState = sensorData['WaterPump'] == '1';
           });
         } else {
           setState(() {
@@ -377,9 +383,10 @@ Widget _buildTemperature(BuildContext context) {
                   ),
                   SizedBox(height: 3.v),
                   ToggleButton(
-                    initialState: true, // Kontrol ini bisa diatur berdasarkan data aktual
+                    initialState: _heaterState, // Kontrol ini bisa diatur berdasarkan data aktual
                     onToggle: (bool value) {
-                      print("Heater is now: $value");
+                      //update firebase data when toggle button state changes
+                      _databaseReference.update({'Heater':value? '1':'0'});
                     },
                   ),
                   SizedBox(height: 10.v),
@@ -389,9 +396,10 @@ Widget _buildTemperature(BuildContext context) {
                   ),
                   SizedBox(height: 3.v),
                   ToggleButton(
-                    initialState: false, // Kontrol ini bisa diatur berdasarkan data aktual
+                    initialState: _coolerState, // Kontrol ini bisa diatur berdasarkan data aktual
                     onToggle: (bool value) {
-                      print("Cooler is now: $value");
+                      //update firebase data when toggle button state changes
+                      _databaseReference.update({'chiller':value? '1':'0'});
                     },
                   ),
                 ],
@@ -844,7 +852,7 @@ Widget _buildTDS(BuildContext context) {
           child: Padding(
             padding: EdgeInsets.only(right: 4.h),
             child: Text(
-              "Filter",
+              "WaterPump",
               style: CustomTextStyles.bodySmallPrimaryContainer_1,
             ),
           ),
@@ -856,10 +864,11 @@ Widget _buildTDS(BuildContext context) {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                ToggleButton(
-                  initialState: true,
+                  ToggleButton(
+                  initialState: _waterpState, // Kontrol ini bisa diatur berdasarkan data aktual
                   onToggle: (bool value) {
-                    print("ToggleButton is now: $value");
+                  //update firebase data when toggle button state changes
+                   _databaseReference.update({'waterpump':value? '1':'0'});
                   },
                 ),
               ],
@@ -1011,7 +1020,7 @@ Widget _buildTurbidity(BuildContext context) {
           child: Padding(
             padding: EdgeInsets.only(),
             child: Text(
-              "Filter",
+              "WaterPump",
               style: CustomTextStyles.bodySmallPrimaryContainer_1,
             ),
           ),
@@ -1023,10 +1032,11 @@ Widget _buildTurbidity(BuildContext context) {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                ToggleButton(
-                  initialState: true,
+                  ToggleButton(
+                  initialState: _waterpState, // Kontrol ini bisa diatur berdasarkan data aktual
                   onToggle: (bool value) {
-                    print("ToggleButton is now: $value");
+                  //update firebase data when toggle button state changes
+                   _databaseReference.update({'waterpump':value? '1':'0'});
                   },
                 ),
               ],
