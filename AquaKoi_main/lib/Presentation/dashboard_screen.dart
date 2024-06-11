@@ -1159,7 +1159,7 @@ Widget _buildParameterRangeInfo(BuildContext context) {
     padding: EdgeInsets.symmetric(horizontal: 5.0),
     child: Container(
       padding: EdgeInsets.symmetric(
-        horizontal: 10.h,
+        horizontal: 90.h,
         vertical: 15.v,
       ),
       decoration: AppDecoration.fillOnSecondaryContainer.copyWith(
@@ -1171,7 +1171,7 @@ Widget _buildParameterRangeInfo(BuildContext context) {
           Text(
             "Parameter Range Information",
             style: CustomTextStyles.bodySmallPrimaryContainer.copyWith(
-              fontSize: 9.h,
+              fontSize: 13.h,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -1179,7 +1179,7 @@ Widget _buildParameterRangeInfo(BuildContext context) {
           Text(
             "Temperature: 24°C - 28°C",
             style: CustomTextStyles.bodySmallPrimaryContainer.copyWith(
-              fontSize: 9.h,
+              fontSize: 10.h,
             ),
           ),
           Text(

@@ -27,28 +27,65 @@ class _PanduanScreenState extends State<PanduanScreen> {
             children: [
               // Panduan Image with text below
               _buildPanduanImageWithText(
-                "assets/images/image_not_found.png",
-                "Panduan 1 \n •	Login \n 1.	Jika sudah memiliki akun, masukkan username dan password pada halaman login, lalu klik tombol “Log in” atau dapat langsung menekan tombol “Sign in with Google” sebagai opsi lainnya. \n2.	Jika belum memiliki akun, klik tombol Sign up",
+                "assets/images/panduan (1).png",
+                """Panduan 1 
+                \n •	Login 
+                \n 1.	Jika sudah memiliki akun, masukkan username dan password pada halaman login, lalu klik tombol “Log in” atau dapat langsung menekan tombol “Sign in with Google” sebagai opsi lainnya. 
+                \n2.	Jika belum memiliki akun, klik tombol “Sign up”. 
+                \n3. Klik tombol Panduan untuk mendapat intruksi penggunaan aplikasi.""",
               ),
               SizedBox(height: 12),
               _buildPanduanImageWithText(
-                "assets/images/image_not_found.png",
-                "Panduan 2",
+                "assets/images/panduan (2).png",
+                """Panduan 2 
+                \n •	Sign up 
+                \n1.	Isi formulir pendaftaran dengan informasi yang diperlukan, lalu klik tombol submit untuk membuat akun baru. Sistem akan kembali ke halaman login. 
+                \n2.	Jika sudah memiliki akun, klik tombol “Log in”.""",
               ),
               SizedBox(height: 12),
               _buildPanduanImageWithText(
-                "assets/images/image_not_found.png",
-                "Panduan 3",
+                "assets/images/panduan (3).png",
+                """Panduan 3 
+                \n •	Dashboard 
+                \n1.	Pada dashboard, data monitoring secara real-time akan ditampilkan. 
+                \n2.	Controlling / tindakan penstabilan dapat dilakukan melalui halaman ini.
+                \n3.  Terdapat informasi range nilai dari setiap parameter.
+                \n4.	Klik icon profile jika ingin berpindah ke halaman profile.""",
+               ),
+              SizedBox(height: 12),
+              _buildPanduanImageWithText(
+                "assets/images/panduan (4).png",
+                """Panduan 4 
+                \n •	Monitoring Kualitas Air pada halaman dashboard
+                \n1.	Data ditampilkan secara real-time yang meliputi tingkat keasaman (pH), tingkat ammonia, temperature, total dissolved water (TDS), serta kekeruhan (turbidity).""",
               ),
               SizedBox(height: 12),
               _buildPanduanImageWithText(
-                "assets/images/image_not_found.png",
-                "Panduan 4",
+                "assets/images/panduan (5).png",
+                """Panduan 5 
+                \n •	Controlling Kualitas Air pada halaman dashboard 
+                \n1.	Untuk mengatur suhu air, gunakan tombol untuk mengaktifkan atau menonaktifkan “Heater” dan “Cooler”.
+                \n2.	Untuk mengatur total dissolved water(TDS) dan kekeruhan (turbidity), gunakan tombol untuk mengaktifkan atau menonaktifkan “Filter”.""",
               ),
               SizedBox(height: 12),
               _buildPanduanImageWithText(
-                "assets/images/image_not_found.png",
-                "Panduan 5",
+                "assets/images/panduan (6).png",
+                """Panduan 6 
+                \n •	Profile 
+                \n1. Informasi akun, yakni foto profil, nama, dan email dapat dilihat.
+                \n2. Klik tombol “Edit Profile” untuk mengubah informasi profil.
+                \n3. Klik tombol “Log out” untuk mengeluarkan akun dari aplikasi
+                \n4. Klik icon dashboard jika ingin berpindah ke halaman dashboard.""",
+              ),
+              SizedBox(height: 12),
+              _buildPanduanImageWithText(
+                "assets/images/panduan (7).png",
+                """Panduan 7 
+                \n •	Edit Profile 
+                \n1. Klik icon kembali jika tidak ingin melakukan perubahan.
+                \n2. Klik ikon kamera di atas gambar avatar untuk mengganti foto profil.
+                \n3. Isi informasi yang ingin diubah, yakni terdapat name, change password, dan confirm password.
+                \n4. Klik tombol "Save" untuk menyimpan perubahan.""",
               ),
             ],
           ),
@@ -72,7 +109,7 @@ class _PanduanScreenState extends State<PanduanScreen> {
               imagePath,
               fit: BoxFit.cover,
               width: double.infinity,
-              height: 150,
+              height: 300,
             ),
             SizedBox(height: 12),
             Text(
