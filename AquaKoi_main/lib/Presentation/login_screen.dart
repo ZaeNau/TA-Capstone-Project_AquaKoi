@@ -8,7 +8,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:aquakoi/common/toast.dart';
 import 'package:flutter/cupertino.dart';
 
-
 import '../core/app_export.dart';
 
 class LoginScreen extends StatefulWidget {
