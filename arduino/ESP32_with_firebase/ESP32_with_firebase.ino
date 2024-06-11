@@ -90,6 +90,7 @@ String tdsPercPath = "/TdsPercentage";
 String phPercPath = "/phPercentage";
 String turbPercPath = "/turbidityPercentage";
 String parentPath;
+String relaypath;
 
 FirebaseJson json;
 
@@ -192,7 +193,7 @@ void loop() {
 
 // New function to update relay states in Firebase RTDB
 void updateRelayStates() {
-  databasePath = "/relayState" + "/";
+  relaypath = databasePath + "/relayState" + "/";
 
   json.set(String("chiller").c_str(), digitalRead(chiller) == HIGH ? "1" : "0");
   json.set(String("Heater").c_str(), digitalRead(Heater) == HIGH ? "1" : "0");
