@@ -192,7 +192,7 @@ void loop() {
 
 // New function to update relay states in Firebase RTDB
 void updateRelayStates() {
-  parentPath = databasePath + "/Sensors/" + "/relayState" + "/";
+  databasePath = "/relayState" + "/";
 
   json.set(String("chiller").c_str(), digitalRead(chiller) == HIGH ? "1" : "0");
   json.set(String("Heater").c_str(), digitalRead(Heater) == HIGH ? "1" : "0");
