@@ -4,7 +4,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase/firebase_options.dart';
 import 'core/app_export.dart';
 import 'firebase/firebase_api.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 var globalMessengerKey = GlobalKey<ScaffoldMessengerState>();
 
@@ -23,16 +22,10 @@ void main() async {
   // Change theme if needed
   ThemeHelper().changeTheme('primary');
 
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-
-  runApp(MyApp(prefs: prefs));
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final SharedPreferences prefs;
-
-  const MyApp({Key? key, required this.prefs}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Sizer(
@@ -41,7 +34,7 @@ class MyApp extends StatelessWidget {
           theme: theme,
           title: 'aquakoi',
           debugShowCheckedModeBanner: false,
-          initialRoute: prefs.getBool('isLoggedIn') == true ? AppRoutes.dashboardScreen : AppRoutes.welcomepage,
+          initialRoute: AppRoutes.welcomepage,
           routes: AppRoutes.routes,
         );
       },

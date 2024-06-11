@@ -7,7 +7,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:aquakoi/common/toast.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 
 import '../core/app_export.dart';
@@ -231,10 +230,6 @@ void onTapLogIn(BuildContext context) async {
         ('User Email: ${user.email}');
       }
 
-      // Save login state to shared preferences
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setBool('isLoggedIn', true);
-
       // Check if the widget is still mounted before using the context
       if (!mounted) return;
 
@@ -289,10 +284,6 @@ _signInWithGoogle() async {
       );
 
       await FirebaseAuth.instance.signInWithCredential(credential);
-
-      // Save login state to shared preferences
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setBool('isLoggedIn', true);
 
       Navigator.pushNamed(context, AppRoutes.dashboardScreen);
     }
