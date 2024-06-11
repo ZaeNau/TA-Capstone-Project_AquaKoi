@@ -23,8 +23,8 @@
 #define PH_PIN 34       // Pin untuk sensor PH
 #define sensorPin A0    // Pin untuk sensor kekeruhan
 
-const int chiller = 4; // Deklarasi dan inisialisasi pin relay
-const int Heater = 5; // Deklarasi dan inisialisasi pin relay
+const int chiller = 16; // Deklarasi dan inisialisasi pin relay
+const int Heater = 17; // Deklarasi dan inisialisasi pin relay
 const int waterpump = 18; // Deklarasi dan inisialisasi pin relay
 
 #define RL 10
