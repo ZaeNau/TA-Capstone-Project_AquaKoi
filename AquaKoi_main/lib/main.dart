@@ -6,6 +6,7 @@ import 'core/app_export.dart';
 import 'firebase/firebase_api.dart';
 
 var globalMessengerKey = GlobalKey<ScaffoldMessengerState>();
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,6 +32,7 @@ class MyApp extends StatelessWidget {
     return Sizer(
       builder: (context, orientation, deviceType) {
         return MaterialApp(
+          navigatorKey: navigatorKey, // Add the navigator key here
           theme: theme,
           title: 'aquakoi',
           debugShowCheckedModeBanner: false,
