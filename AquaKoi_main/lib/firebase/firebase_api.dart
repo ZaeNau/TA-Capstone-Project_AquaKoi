@@ -15,9 +15,6 @@ class FirebaseApi {
     final fCMToken = await _firebaseMessaging.getToken();
     // Token check
     print('Token: $fCMToken');
-
-    //intialize further setting for push notif
-    initNotifications();
   }
 
   // Function to handle receiving messages
