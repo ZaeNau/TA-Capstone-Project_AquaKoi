@@ -23,6 +23,7 @@ dependencies:
   firebase_messaging: ^14.9.4  # Ensure compatibility with latest stable version
   firebase_core: ^2.11.0  # Latest stable version for firebase_core
   flutter_plugin_android_lifecycle: ^2.0.20
+  flutter_local_notifications: ^17.1.2
 
 dev_dependencies:
   flutter_test:

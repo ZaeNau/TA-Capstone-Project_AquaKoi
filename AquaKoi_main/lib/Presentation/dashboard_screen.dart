@@ -393,9 +393,11 @@ Widget _buildTemperature(BuildContext context) {
                                 animation: true,
                                 animationDuration: 1000,
                                 radius: 20,
+                                child: Center(
                                 child: Text(
                                   tempPercentageDisplay,
                                   style: CustomTextStyles.googleSansPrimaryContainer,
+                                ),
                                 ),
                               ),
                             ),
