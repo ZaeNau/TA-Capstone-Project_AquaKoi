@@ -6,78 +6,6 @@ import 'package:aquakoi/Presentation/profil_screen.dart';
 import 'package:flutter/material.dart';
 import '../core/app_export.dart';
 
-class ToggleButton extends StatefulWidget {
-  final bool initialState;
-  final Function(bool) onToggle;
-
-  const ToggleButton({super.key, required this.initialState, required this.onToggle});
-
-  @override
-  // ignore: library_private_types_in_public_api
-  _ToggleButtonState createState() => _ToggleButtonState();
-}
-
-class _ToggleButtonState extends State<ToggleButton> {
-  late bool isOn;
-
-  @override
-  void initState() {
-    super.initState();
-    isOn = widget.initialState;
-  }
-
-  void _toggle() {
-    setState(() {
-      isOn = !isOn;
-    });
-    widget.onToggle(isOn);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: _toggle,
-      child: Container(
-        width: 50,
-        height: 25,
-        decoration: isOn
-            ? AppDecoration.gradientLightBlueToBlueA
-            : AppDecoration.gradientGrayToBlueGray,
-        child: Stack(
-          children: [
-            AnimatedPositioned(
-              duration: Duration(milliseconds: 300),
-              curve: Curves.easeInOut,
-              left: isOn ? 25 : 0,
-              right: isOn ? 0 : 25,
-              child: Container(
-                width: 25,
-                height: 25,
-                decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 255, 255, 255),
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: isOn ? Colors.blue : Colors.grey,
-                    width: 1,
-                  ),
-                ),
-                alignment: Alignment.center,
-                child: Text(
-                  isOn ? 'ON' : 'OFF',
-                  style: TextStyle(
-                    color: isOn ? Colors.blue[700] : Colors.grey[900],
-                    fontSize: 8,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 class ParameterCard extends StatelessWidget {
   final String title;
   final String value;
@@ -197,6 +125,28 @@ class _DashboardScreenState extends State<DashboardScreen> {
         Navigator.pushNamed(context, AppRoutes.loginScreen);
       });
     }
+
+    // Listen for changes in the 'Heater', 'chiller', and 'WaterPump' nodes
+    _relayStateReference.child('Heater').onValue.listen((event) {
+      var value = event.snapshot.value;
+      setState(() {
+        _heaterState = (value == '1');
+      });
+    });
+
+    _relayStateReference.child('chiller').onValue.listen((event) {
+      var value = event.snapshot.value;
+      setState(() {
+        _coolerState = (value == '1');
+      });
+    });
+
+    _relayStateReference.child('WaterPump').onValue.listen((event) {
+      var value = event.snapshot.value;
+      setState(() {
+        _waterpState = (value == '1');
+      });
+    });
   }
   @override
   Widget build(BuildContext context) {
@@ -413,47 +363,79 @@ Widget _buildTemperature(BuildContext context) {
           ),
           SizedBox(height: 24.v),
           Padding(
-            padding: EdgeInsets.only(right: 4.h),
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Heater",
-                    style: CustomTextStyles.bodySmallPrimaryContainer_1,
-                  ),
-                  SizedBox(height: 3.v),
-                  ToggleButton(
-                    initialState: _heaterState, // Kontrol ini bisa diatur berdasarkan data aktual
-                    onToggle: (bool value) {
-                      setState(() {
-                        _heaterState = value;
-                      });
-                      //update firebase data when toggle button state changes
-                      _relayStateReference.update({'Heater':value? '1':'0'});
-                    },
-                  ),
-                  SizedBox(height: 10.v),
-                  Text(
-                    "Cooler",
-                    style: CustomTextStyles.bodySmallPrimaryContainer_1,
-                  ),
-                  SizedBox(height: 3.v),
-                  ToggleButton(
-                    initialState: _coolerState, // Kontrol ini bisa diatur berdasarkan data aktual
-                    onToggle: (bool value) {
-                      setState(() {
-                        _coolerState = value;
-                      });
-                      //update firebase data when toggle button state changes
-                      _relayStateReference.update({'chiller':value? '1':'0'});
-                    },
-                  ),
-                ],
+  padding: EdgeInsets.only(right: 4.h),
+  child: Align(
+    alignment: Alignment.centerRight,
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Heater",
+          style: CustomTextStyles.bodySmallPrimaryContainer_1.copyWith(fontSize: 11.0), // Adjust font size here
+        ),
+        SizedBox(height: 3.v),
+        Container(
+          height: 20, // Adjust the height as needed
+          width: 60, // Adjust the width as needed
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20), // Rounded corners
+            color: _heaterState ? Colors.blue : Colors.grey, // Use different colors for on and off states
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.3),
+                blurRadius: 4,
+                spreadRadius: 1,
+              ),
+            ],
+          ),
+          child: Center(
+            child: Text(
+              _heaterState ? 'On' : 'Off', // Display On or Off text
+              style: TextStyle(
+                fontSize: 10.0,
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),
+        ),
+        SizedBox(height: 10.v),
+        Text(
+          "Cooler",
+          style: CustomTextStyles.bodySmallPrimaryContainer_1.copyWith(fontSize: 11.0), // Adjust font size here
+        ),
+        SizedBox(height: 3.v),
+        Container(
+          height: 20, // Adjust the height as needed
+          width: 60, // Adjust the width as needed
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20), // Rounded corners
+            color: _coolerState ? Colors.blue : Colors.grey, // Use different colors for on and off states
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.3),
+                blurRadius: 4,
+                spreadRadius: 1,
+              ),
+            ],
+          ),
+          child: Center(
+            child: Text(
+              _coolerState ? 'On' : 'Off', // Display On or Off text
+              style: TextStyle(
+                fontSize: 10.0,
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+      ],
+    ),
+  ),
+),
+
+         
         ],
       ),
     ),
@@ -966,26 +948,33 @@ Widget _buildTDS(BuildContext context) {
           ),
         ),
         SizedBox(height: 3.v),
-        Align(
-          alignment: Alignment.centerRight,
-          child: Container(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                  ToggleButton(
-                  initialState: _waterpState, // Kontrol ini bisa diatur berdasarkan data aktual
-                  onToggle: (bool value) {
-                    setState(() {
-                      _waterpState = value;
-                    });
-                  //update firebase data when toggle button state changes
-                   _relayStateReference.update({'waterpump':value? '1':'0'});
-                  },
+          Container(
+            height: 20, // Adjust the height as needed
+            width: 60, // Adjust the width as needed
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              // Rounded corners
+              color: _waterpState ? Colors.blue : Colors.grey,
+              // Use different colors for on and off states
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.3),
+                  blurRadius: 4,
+                  spreadRadius: 1,
                 ),
               ],
             ),
+            child: Center(
+              child: Text(
+                _waterpState ? 'ON' : 'OFF', // Display On or Off text
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 10.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
           ),
-        ),
       ],
     ),
   );
@@ -1149,7 +1138,7 @@ Widget _buildTurbidity(BuildContext context) {
         Align(
           alignment: Alignment.centerRight,
           child: Padding(
-            padding: EdgeInsets.only(),
+            padding: EdgeInsets.only(right: 4.h),
             child: Text(
               "WaterPump",
               style: CustomTextStyles.bodySmallPrimaryContainer_1,
@@ -1157,26 +1146,33 @@ Widget _buildTurbidity(BuildContext context) {
           ),
         ),
         SizedBox(height: 3.v),
-        Align(
-          alignment: Alignment.centerRight,
-          child: Container(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ToggleButton(
-                  initialState: _waterpState, // Kontrol ini bisa diatur berdasarkan data aktual
-                  onToggle: (bool value) {
-                    setState(() {
-                      _waterpState = value;
-                    });
-                    // update firebase data when toggle button state changes
-                    _relayStateReference.update({'waterpump': value ? '1' : '0'});
-                  },
+          Container(
+            height: 20, // Adjust the height as needed
+            width: 60, // Adjust the width as needed
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              // Rounded corners
+              color: _waterpState ? Colors.blue : Colors.grey,
+              // Use different colors for on and off states
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.3),
+                  blurRadius: 4,
+                  spreadRadius: 1,
                 ),
               ],
             ),
+            child: Center(
+              child: Text(
+                _waterpState ? 'ON' : 'OFF', // Display On or Off text
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 10.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
           ),
-        ),
       ],
     ),
   );
