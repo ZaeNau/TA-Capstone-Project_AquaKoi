@@ -338,7 +338,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       .spaceBetween,
                                   children: [
                                     Text(
-                                      "bad",
+                                      "Bad",
                                       style: CustomTextStyles
                                           .googleSansSecondaryContainer
                                           .copyWith(
@@ -348,7 +348,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       ),
                                     ),
                                     Text(
-                                      "good",
+                                      "Good",
                                       style: CustomTextStyles
                                           .googleSansGreenA700.copyWith(
                                         color: appTheme.greenA700,
@@ -435,8 +435,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     SizedBox(height: 10.v),
                     Text(
                       "Cooler",
-                      style: CustomTextStyles.bodySmallPrimaryContainer_1
-                          .copyWith(fontSize: 11.0), // Adjust font size here
+                      style: CustomTextStyles.bodySmallPrimaryContainer_1.copyWith(fontSize: 11.0), // Adjust font size here
                     ),
                     SizedBox(height: 3.v),
                     Container(
@@ -503,8 +502,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
     double phPercentageClamped = phPercentage.clamp(0.0, 1.0);
 
     // Determine progress bar color based on the percentage
-    Color progressBarColor = phPercentageClamped < 0.5 ? Colors.red : Colors
-        .green;
+    Color progressBarColor = phPercentageClamped < 0.5 
+    ? Colors.red 
+    : Colors.green;
 
     return Container(
       margin: EdgeInsets.only(right: 4.h),
@@ -604,7 +604,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  "bad",
+                                  "Bad",
                                   style: CustomTextStyles
                                       .googleSansSecondaryContainer.copyWith(
                                     color: theme.colorScheme.secondaryContainer,
@@ -612,7 +612,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   ),
                                 ),
                                 Text(
-                                  "good",
+                                  "Good",
                                   style: CustomTextStyles.googleSansGreenA700
                                       .copyWith(
                                     color: appTheme.greenA700,
@@ -775,7 +775,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  "bad",
+                                  "Bad",
                                   style: CustomTextStyles
                                       .googleSansSecondaryContainer.copyWith(
                                     color: theme.colorScheme.secondaryContainer,
@@ -783,7 +783,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   ),
                                 ),
                                 Text(
-                                  "good",
+                                  "Good",
                                   style: CustomTextStyles.googleSansGreenA700
                                       .copyWith(
                                     color: appTheme.greenA700,
@@ -837,15 +837,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
         : 0.0;
 
     // Convert tdsPercentage to display as percentage
-    String tdsPercentageDisplay = (tdsPercentage * 100).toStringAsFixed(0) +
-        "%";
+    String tdsPercentageDisplay = (tdsPercentage * 100).toStringAsFixed(0) +"%";
 
     // Clamp the percentage for the GFProgressBar display
     double tdsPercentageClamped = tdsPercentage.clamp(0.0, 1.0);
 
     // Determine progress bar color based on the percentage
-    Color progressBarColor = tdsPercentageClamped < 0.5 ? Colors.red : Colors
-        .green;
+    Color progressBarColor = tdsPercentageClamped < 0.5 
+    ? Colors.red 
+    : Colors.green;
 
     return Container(
       margin: EdgeInsets.only(right: 4.h),
@@ -945,7 +945,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  "bad",
+                                  "Bad",
                                   style: CustomTextStyles
                                       .googleSansSecondaryContainer.copyWith(
                                     color: theme.colorScheme.secondaryContainer,
@@ -953,7 +953,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   ),
                                 ),
                                 Text(
-                                  "good",
+                                  "Good",
                                   style: CustomTextStyles.googleSansGreenA700
                                       .copyWith(
                                     color: appTheme.greenA700,
@@ -997,13 +997,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
           ),
           SizedBox(height: 24.v),
-          Align(
-            alignment: Alignment.centerRight,
-            child: Padding(
-              padding: EdgeInsets.only(right: 4.h),
+          Padding(
+            padding: EdgeInsets.only(right:4.h),
+            child: Align(
+              alignment: Alignment.center,
               child: Text(
                 "WaterPump",
-                style: CustomTextStyles.bodySmallPrimaryContainer_1,
+                style: CustomTextStyles.bodySmallPrimaryContainer_1.copyWith(fontSize:11.0),
               ),
             ),
           ),
@@ -1152,7 +1152,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  "bad",
+                                  "Bad",
                                   style: CustomTextStyles
                                       .googleSansSecondaryContainer.copyWith(
                                     color: theme.colorScheme.secondaryContainer,
@@ -1160,7 +1160,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   ),
                                 ),
                                 Text(
-                                  "good",
+                                  "Good",
                                   style: CustomTextStyles.googleSansGreenA700
                                       .copyWith(
                                     color: appTheme.greenA700,
@@ -1205,13 +1205,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
           ),
           SizedBox(height: 24.v),
-          Align(
-            alignment: Alignment.centerRight,
-            child: Padding(
-              padding: EdgeInsets.only(right: 4.h),
+          Padding(
+            padding: EdgeInsets.only(right: 4.h),
+            child: Align(
+              alignment: Alignment.center,
               child: Text(
                 "WaterPump",
-                style: CustomTextStyles.bodySmallPrimaryContainer_1,
+                style: CustomTextStyles.bodySmallPrimaryContainer_1.copyWith(fontSize:11.0),
               ),
             ),
           ),
