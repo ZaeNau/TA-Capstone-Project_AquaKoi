@@ -248,9 +248,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
 Widget _buildTemperature(BuildContext context) {
-  double suhuPercentage = sensorData['SuhuPercentage'] != null
+  double tempPercentage = sensorData['SuhuPercentage'] != null
       ? double.tryParse(sensorData['SuhuPercentage'])! / 100
       : 0.0;
+
+  // Display the correct percentage, even if it exceeds 100%
+  String tempPercentageDisplay = (tempPercentage * 100).toStringAsFixed(0) + "%";
+  
+  // Clamp the percentage for the GFProgressBar display
+  double tempPercentageClamped = tempPercentage.clamp(0.0, 1.0);
+
+// Determine progress bar color based on the percentage
+  Color progressBarColor = tempPercentageClamped < 0.5 ? Colors.red : Colors.green;
 
   return Padding(
     padding: EdgeInsets.symmetric(horizontal: 5.0),
@@ -360,15 +369,15 @@ Widget _buildTemperature(BuildContext context) {
                             child: Container(
                               height: 20.v,
                               child: GFProgressBar(
-                                percentage: suhuPercentage.clamp(0.0, 1.0),
+                                percentage: tempPercentageClamped,
                                 lineHeight: 25,
                                 backgroundColor: appTheme.blueGray100,
-                                progressBarColor: appTheme.Red1,
+                                progressBarColor: progressBarColor,
                                 animation: true,
                                 animationDuration: 1000,
                                 radius: 20,
                                 child: Text(
-                                  "${(suhuPercentage * 100).toStringAsFixed(0)}%",
+                                  tempPercentageDisplay,
                                   style: CustomTextStyles.googleSansPrimaryContainer,
                                 ),
                               ),
@@ -455,6 +464,9 @@ Widget _buildPH(BuildContext context) {
   
   // Clamp the percentage for the GFProgressBar display
   double phPercentageClamped = phPercentage.clamp(0.0, 1.0);
+
+  // Determine progress bar color based on the percentage
+  Color progressBarColor = phPercentageClamped < 0.5 ? Colors.red : Colors.green;
 
   return Container(
     margin: EdgeInsets.only(right: 4.h),
@@ -561,7 +573,7 @@ Widget _buildPH(BuildContext context) {
                             percentage: phPercentageClamped,
                             lineHeight: 25,
                             backgroundColor: appTheme.blueGray100,
-                            progressBarColor: appTheme.greenA700,
+                            progressBarColor: progressBarColor,
                             animation: true,
                             animationDuration: 1000,
                             radius: 20, // Use double for radius
@@ -597,6 +609,9 @@ Widget _buildAmmonia(BuildContext context) {
   
   // Clamp the percentage for the GFProgressBar display
   double ammoniaPercentageClamped = ammoniaPercentage.clamp(0.0, 1.0);
+
+// Determine progress bar color based on the percentage
+  Color progressBarColor = ammoniaPercentageClamped < 0.5 ? Colors.red : Colors.green;
 
   return Container(
     margin: EdgeInsets.only(left: 4.h),
@@ -703,7 +718,7 @@ Widget _buildAmmonia(BuildContext context) {
                             percentage: ammoniaPercentageClamped,
                             lineHeight: 25,
                             backgroundColor: appTheme.blueGray100,
-                            progressBarColor: appTheme.Red1,
+                            progressBarColor: progressBarColor,
                             animation: true,
                             animationDuration: 1000,
                             radius: 20, // Use double for radius
@@ -739,6 +754,9 @@ Widget _buildTDS(BuildContext context) {
   
   // Clamp the percentage for the GFProgressBar display
   double tdsPercentageClamped = tdsPercentage.clamp(0.0, 1.0);
+
+  // Determine progress bar color based on the percentage
+  Color progressBarColor = tdsPercentageClamped < 0.5 ? Colors.red : Colors.green;
 
   return Container(
     margin: EdgeInsets.only(right: 4.h),
@@ -845,7 +863,7 @@ Widget _buildTDS(BuildContext context) {
                             percentage: tdsPercentageClamped,
                             lineHeight: 25,
                             backgroundColor: appTheme.blueGray100,
-                            progressBarColor: appTheme.greenA700,
+                            progressBarColor: progressBarColor,
                             animation: true,
                             animationDuration: 1000,
                             radius: 20, // Use double for radius
@@ -913,6 +931,9 @@ Widget _buildTurbidity(BuildContext context) {
   
   // Clamp the percentage for the GFProgressBar display
   double turbidityPercentageClamped = turbidityPercentage.clamp(0.0, 1.0);
+
+  // Determine progress bar color based on the percentage
+  Color progressBarColor = turbidityPercentageClamped < 0.5 ? Colors.red : Colors.green;
 
   return Container(
     margin: EdgeInsets.only(left: 4.h),
@@ -1016,7 +1037,7 @@ Widget _buildTurbidity(BuildContext context) {
                             percentage: turbidityPercentageClamped,
                             lineHeight: 25,
                             backgroundColor: appTheme.blueGray100,
-                            progressBarColor: appTheme.amber700,
+                            progressBarColor: progressBarColor, // Set color based on percentage
                             animation: true,
                             animationDuration: 1000,
                             radius: 20, // Use double for radius
@@ -1073,6 +1094,7 @@ Widget _buildTurbidity(BuildContext context) {
     ),
   );
 }
+
 
  Widget _buildBottomBar(BuildContext context) {
     return Container(
@@ -1156,40 +1178,6 @@ Widget _buildTurbidity(BuildContext context) {
     );
   }
 
-  Widget _buildFifteen(
-    BuildContext context, {
-    required String twentyFive,
-  }) {
-    return SizedBox(
-      height: 22.v,
-      width: 23.h,
-      child: Stack(
-        alignment: Alignment.topRight,
-        children: [
-          CustomImageView(
-            imagePath: ImageConstant.imgFavorite,
-            height: 22.v,
-            alignment: Alignment.center,
-          ),
-          Align(
-            alignment: Alignment.topRight,
-            child: Padding(
-              padding: EdgeInsets.only(
-                top: 3.v,
-                right: 3.h,
-              ),
-              child: Text(
-                twentyFive,
-                style: theme.textTheme.bodySmall!.copyWith(
-                  color: theme.colorScheme.primary.withOpacity(1),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 Widget _buildParameterRangeInfo(BuildContext context) {
   return Padding(
     padding: EdgeInsets.symmetric(horizontal: 5.0),
