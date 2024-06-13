@@ -355,15 +355,32 @@ Widget _buildTemperature(BuildContext context) {
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(height: 6.v),
-                          Padding(
-                            padding: EdgeInsets.only(left: 8.h),
-                            child: _buildFortyEight(
-                              context,
-                              bad: "bad",
-                              good: "good",
-                            ),
+                      SizedBox(height: 6.v),
+                      Padding(
+                        padding: EdgeInsets.only(left: 5.h),
+                        child: SizedBox(
+                          width: 223.h,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "bad",
+                                style: CustomTextStyles.googleSansSecondaryContainer.copyWith(
+                                  color: theme.colorScheme.secondaryContainer,
+                                  fontSize: 11.0, // Adjust the font size here
+                                ),
+                              ),
+                              Text(
+                                "good",
+                                style: CustomTextStyles.googleSansGreenA700.copyWith(
+                                  color: appTheme.greenA700,
+                                  fontSize: 11.0, // Adjust the font size here
+                                ),
+                              ),
+                            ],
                           ),
+                        ),
+                      ),
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                             child: Container(
@@ -559,10 +576,27 @@ Widget _buildPH(BuildContext context) {
                       SizedBox(height: 6.v),
                       Padding(
                         padding: EdgeInsets.only(left: 5.h),
-                        child: _buildFortyEight(
-                          context,
-                          bad: "bad",
-                          good: "good",
+                        child: SizedBox(
+                          width: 223.h,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "bad",
+                                style: CustomTextStyles.googleSansSecondaryContainer.copyWith(
+                                  color: theme.colorScheme.secondaryContainer,
+                                  fontSize: 11.0, // Adjust the font size here
+                                ),
+                              ),
+                              Text(
+                                "good",
+                                style: CustomTextStyles.googleSansGreenA700.copyWith(
+                                  color: appTheme.greenA700,
+                                  fontSize: 11.0, // Adjust the font size here
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                       Padding(
@@ -704,10 +738,27 @@ Widget _buildAmmonia(BuildContext context) {
                       SizedBox(height: 6.v),
                       Padding(
                         padding: EdgeInsets.only(left: 5.h),
-                        child: _buildFortyEight(
-                          context,
-                          bad: "bad",
-                          good: "good",
+                        child: SizedBox(
+                          width: 223.h,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "bad",
+                                style: CustomTextStyles.googleSansSecondaryContainer.copyWith(
+                                  color: theme.colorScheme.secondaryContainer,
+                                  fontSize: 11.0, // Adjust the font size here
+                                ),
+                              ),
+                              Text(
+                                "good",
+                                style: CustomTextStyles.googleSansGreenA700.copyWith(
+                                  color: appTheme.greenA700,
+                                  fontSize: 11.0, // Adjust the font size here
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                       Padding(
@@ -849,10 +900,27 @@ Widget _buildTDS(BuildContext context) {
                       SizedBox(height: 6.v),
                       Padding(
                         padding: EdgeInsets.only(left: 5.h),
-                        child: _buildFortyEight(
-                          context,
-                          bad: "bad",
-                          good: "good",
+                        child: SizedBox(
+                          width: 223.h,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "bad",
+                                style: CustomTextStyles.googleSansSecondaryContainer.copyWith(
+                                  color: theme.colorScheme.secondaryContainer,
+                                  fontSize: 11.0, // Adjust the font size here
+                                ),
+                              ),
+                              Text(
+                                "good",
+                                style: CustomTextStyles.googleSansGreenA700.copyWith(
+                                  color: appTheme.greenA700,
+                                  fontSize: 11.0, // Adjust the font size here
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                       Padding(
@@ -1023,10 +1091,27 @@ Widget _buildTurbidity(BuildContext context) {
                       SizedBox(height: 6.v),
                       Padding(
                         padding: EdgeInsets.only(left: 5.h),
-                        child: _buildFortyEight(
-                          context,
-                          bad: "bad",
-                          good: "good",
+                        child: SizedBox(
+                          width: 223.h,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "bad",
+                                style: CustomTextStyles.googleSansSecondaryContainer.copyWith(
+                                  color: theme.colorScheme.secondaryContainer,
+                                  fontSize: 11.0, // Adjust the font size here
+                                ),
+                              ),
+                              Text(
+                                "good",
+                                style: CustomTextStyles.googleSansGreenA700.copyWith(
+                                  color: appTheme.greenA700,
+                                  fontSize: 11.0, // Adjust the font size here
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                       Padding(
@@ -1076,14 +1161,14 @@ Widget _buildTurbidity(BuildContext context) {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                  ToggleButton(
+                ToggleButton(
                   initialState: _waterpState, // Kontrol ini bisa diatur berdasarkan data aktual
                   onToggle: (bool value) {
                     setState(() {
                       _waterpState = value;
                     });
-                  //update firebase data when toggle button state changes
-                   _relayStateReference.update({'waterpump':value? '1':'0'});
+                    // update firebase data when toggle button state changes
+                    _relayStateReference.update({'waterpump': value ? '1' : '0'});
                   },
                 ),
               ],
@@ -1094,7 +1179,6 @@ Widget _buildTurbidity(BuildContext context) {
     ),
   );
 }
-
 
  Widget _buildBottomBar(BuildContext context) {
     return Container(
@@ -1150,33 +1234,6 @@ Widget _buildTurbidity(BuildContext context) {
     );
   }
 
-
-  Widget _buildFortyEight(
-    BuildContext context, {
-    required String bad,
-    required String good,
-  }) {
-    return SizedBox(
-      width: 223.h,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            bad,
-            style: CustomTextStyles.googleSansSecondaryContainer.copyWith(
-              color: theme.colorScheme.secondaryContainer,
-            ),
-          ),
-          Text(
-            good,
-            style: CustomTextStyles.googleSansGreenA700.copyWith(
-              color: appTheme.greenA700,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
 Widget _buildParameterRangeInfo(BuildContext context) {
   return Padding(
