@@ -21,7 +21,7 @@
 #define MQ_SENSOR 33    // Ammonia gas sensor pin
 #define TDS_PIN 32      // TDS sensor pin
 #define PH_PIN 34       // pH sensor pin
-#define sensorPin A0 // Turbidity sensor pin
+#define TURBIDITY_PIN A0 // Turbidity sensor pin
 
 // Relay pins
 const int chiller = 16; // Deklarasi dan inisialisasi pin relay
@@ -34,7 +34,7 @@ const int waterpump = 18; // Deklarasi dan inisialisasi pin relay
 #define MIN_AMONIA 0
 #define MAX_AMONIA 0.2
 #define MIN_TDS 0
-#define MAX_TDS 500
+#define MAX_TDS 100
 #define MIN_PH 0
 #define MAX_PH 14
 #define MIN_TURBIDITY 0
@@ -48,20 +48,20 @@ const int waterpump = 18; // Deklarasi dan inisialisasi pin relay
 #define ESPADC 4096.0
 #define ESPVOLTAGE 3300
 
-
 // Initialize sensors
 OneWire oneWire(ONE_WIRE_BUS);
-DallasTemperature sensors(&oneWire);
+DallasTemperature temperatureSensor(&oneWire);
 MQ135 gasSensor(MQ_SENSOR);
 DFRobot_PH ph;
 
-// Sensor values and state variables
+// deklarasi formulas
 const int numReadings = 5; // Jumlah pembacaan untuk perhitungan rata-rata
 float readings[numReadings]; // Array untuk menyimpan pembacaan sensor
 int readIndex = 0; // Indeks pembacaan saat ini
 float total = 0; // Total pembacaan untuk perhitungan rata-rata
 float average = 0; // Nilai rata-rata pembacaan
 
+// Sensor values
 float temperature;
 float Suhu;
 float voltage;
@@ -69,13 +69,13 @@ float corrected_pH;
 float tdsValue;
 float Amonia;
 float kekeruhan;
-
+//Sensors percentage
 float temperaturePercentage;
 float amoniaPercentage;
 float tdsPercentage;
 float phPercentage;
 float turbidityPercentage;
-
+//state variables
 bool heaterState = false;
 bool coolerState = false;
 bool waterPumpState = false;
@@ -86,27 +86,26 @@ int currentIndex = 0;
 FirebaseData fbdo;
 FirebaseAuth auth;
 FirebaseConfig config;
+//path declare
 String uid;
-
-//Firebase databases Path
 String databasePathSensors;
 String databasePathRelay;
-
-//Sensors to database path
+//Sensors path
 String tempPath = "/Suhu";
 String amoPath = "/Amonia";
 String tdsPath = "/Tds";
 String phPath = "/ph";
 String turbPath = "/turbidity";
-
-//Sensors percentage to database path
+//percentage path
 String tempPercPath = "/SuhuPercentage";
 String amoPercPath = "/AmoniaPercentage";
 String tdsPercPath = "/TdsPercentage";
 String phPercPath = "/phPercentage";
 String turbPercPath = "/turbidityPercentage";
+String sensorspath;
 
 FirebaseJson json;
+
 
 // Timing
 unsigned long sendDataPrevMillis = 0;
@@ -151,8 +150,8 @@ void initFirebase() {
 
 // Sensor reading functions
 void readTemperature(){
-  sensors.requestTemperatures();
-  float temperature = sensors.getTempCByIndex(0);
+  temperatureSensor.requestTemperatures();
+  float temperature = temperatureSensor.getTempCByIndex(0);
   Suhu = 1.0465 * temperature - 1.3365;
   Serial.print("Suhu: ");
   Serial.print(Suhu);
@@ -163,7 +162,6 @@ void readTemperature(){
   Serial.print(temperaturePercentage);
   Serial.println("%");
 }
-
 
 void readAirQuality() {
   float VRL = analogRead(MQ_SENSOR) * (3.3 / 4095.0);
@@ -200,7 +198,6 @@ void readTDS() {
   Serial.print(tdsPercentage);
   Serial.println("%");
 }
-
 void readPH() {
   voltage = analogRead(PH_PIN) / ESPADC * ESPVOLTAGE;
   float phValue = ph.readPH(voltage, temperature);
@@ -215,7 +212,7 @@ void readPH() {
 }
 
 void readTurbidity() {
-  int Turbidity = analogRead(sensorPin);
+  int Turbidity = analogRead(TURBIDITY_PIN);
   total = total - readings[currentIndex];
   readings[currentIndex] = Turbidity;
   total = total + readings[currentIndex];
@@ -240,31 +237,25 @@ float mapFloat(float x, float in_min, float in_max, float out_min, float out_max
 void controlRelays() {
   if (Suhu > MAX_TEMPERATURE) {
     digitalWrite(chiller, HIGH);
-    Serial.println("Chiller ON");
     coolerState = true;
   } else {
     digitalWrite(chiller, LOW);
-    Serial.println("Chiller OFF");
     coolerState = false;
   }
 
   if (Suhu < MIN_TEMPERATURE) {
     digitalWrite(Heater, HIGH);
-    Serial.println("Heater ON");
     heaterState = true;
   } else {
     digitalWrite(Heater, LOW);
-    Serial.println("Heater OFF");
     heaterState = false;
   }
 
   if (tdsValue > MAX_TDS) {
     digitalWrite(waterpump, HIGH);
-    Serial.println("waterpump ON");
     waterPumpState = true;
   } else {
     digitalWrite(waterpump, LOW);
-    Serial.println("waterpump OFF");
     waterPumpState = false;
   }
 }
@@ -281,11 +272,11 @@ void updateRelayStates() {
 // Setup function
 void setup() {
   Serial.begin(115200);
-  sensors.begin();
+  temperatureSensor.begin();
 
-  pinMode(Heater, OUTPUT); // Set pin relay sebagai output
-  pinMode(chiller, OUTPUT); // Set pin chiller sebagai output
-  pinMode(waterpump, OUTPUT); // Set pin chiller sebagai output
+  pinMode(chiller, OUTPUT);
+  pinMode(Heater, OUTPUT);
+  pinMode(waterpump, OUTPUT);
 
   initWiFi();
   initFirebase();
@@ -304,11 +295,12 @@ void loop() {
   readTurbidity();
   delay(2000); // Add delay to reduce the load
   controlRelays();
-  delay(2000);
 
-if (Firebase.ready() && (millis() - sendDataPrevMillis > timerDelay || sendDataPrevMillis == 0)) {
+  if (Firebase.ready() && (millis() - sendDataPrevMillis > timerDelay || sendDataPrevMillis == 0)) {
     sendDataPrevMillis = millis();
-    
+
+    sensorpath = databasePathSensors + "/";
+
     json.set(tempPath.c_str(), String(Suhu)); // Assuming temperature is a float or int
     json.set(tempPercPath.c_str(), String(temperaturePercentage));
     json.set(amoPath.c_str(), String(Amonia)); // Assuming average is a float or int
@@ -324,8 +316,11 @@ if (Firebase.ready() && (millis() - sendDataPrevMillis > timerDelay || sendDataP
     json.toString(jsonData); // Convert JSON object to string
     Serial.println("JSON Data: " + jsonData); // Print JSON data for debugging
     
-    Serial.printf("Set json... %s\n", Firebase.RTDB.setJSON(&fbdo, databasePathSensors.c_str(), &json) ? "ok" : fbdo.errorReason().c_str());
-    
-    delay(1000); // Increased delay to reduce loadupdateRelayStates();
+    Serial.printf("Set json... %s\n", Firebase.RTDB.setJSON(&fbdo, sensorpath.c_str(), &json) ? "ok" : fbdo.errorReason().c_str());
+
+    // Update relay states
+    updateRelayStates();
+
+    delay(1000); // Increased delay to reduce load
   }
 }

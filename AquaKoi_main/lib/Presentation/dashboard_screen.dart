@@ -90,7 +90,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       .child('UsersData').child('cSFGHidGb4gzLBalujMaowdFDGG2')
       .child('Sensors');
   final DatabaseReference _relayStateReference = FirebaseDatabase.instance.ref()
-      .child('UsersData').child('cSFGHidGb4gzLBalujMaowdFDGG2').child('Sensors')
+      .child('UsersData').child('cSFGHidGb4gzLBalujMaowdFDGG2')
       .child('relayState');
 
   Map<String, dynamic> sensorData = {};
