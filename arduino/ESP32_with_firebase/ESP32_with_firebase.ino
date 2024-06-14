@@ -33,8 +33,8 @@ const int waterpump = 18; // Deklarasi dan inisialisasi pin relay
 #define MAX_TEMPERATURE 28
 #define MIN_AMONIA 0
 #define MAX_AMONIA 0.2
-#define MIN_TDS 100
-#define MAX_TDS 500
+#define MIN_TDS 0
+#define MAX_TDS 100
 #define MIN_PH 0
 #define MAX_PH 14
 #define MIN_TURBIDITY 5
@@ -192,7 +192,7 @@ void readAirQuality() {
 void readTDS() {
   int sensorValue = analogRead(TDS_PIN);
   average = (0.6656 * sensorValue) + 69.604;
-  tdsValue = map(average, 0, 1000, 600, 0);
+  tdsValue = map(average, 0, 1000, 500, 0);
   Serial.print("TDS Value: ");
   Serial.println(tdsValue);
   // Calculate percentage
@@ -258,14 +258,6 @@ void controlRelays() {
   }
 
   if (tdsValue > MAX_TDS) {
-    digitalWrite(waterpump, HIGH);
-    waterPumpState = true;
-  } else {
-    digitalWrite(waterpump, LOW);
-    waterPumpState = false;
-  }
-
-    if (kekeruhan < MIN_TURBIDITY) {
     digitalWrite(waterpump, HIGH);
     waterPumpState = true;
   } else {
