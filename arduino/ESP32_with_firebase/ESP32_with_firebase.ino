@@ -34,7 +34,7 @@ const int waterpump = 18; // Deklarasi dan inisialisasi pin relay
 #define MIN_AMONIA 0
 #define MAX_AMONIA 0.2
 #define MIN_TDS 0
-#define MAX_TDS 100
+#define MAX_TDS 500
 #define MIN_PH 0
 #define MAX_PH 14
 #define MIN_TURBIDITY 0
@@ -262,10 +262,15 @@ void controlRelays() {
 
 // Update relay states in Firebase
 void updateRelayStates() {
+  json.clear();
   json.set("chiller", coolerState ? "1" : "0");
   json.set("heater", heaterState ? "1" : "0");
   json.set("waterpump", waterPumpState ? "1" : "0");
 
+  String relayJsonData;
+  json.toString(relayJsonData); // Convert JSON object to string
+  Serial.println("Relay JSON Data: " + relayJsonData); // Print JSON data for debugging
+  Serial.println("Database Path Relay: " + databasePathRelay); // Print database path for debugging
   Serial.printf("Set JSON... %s\n", Firebase.RTDB.setJSON(&fbdo, databasePathRelay.c_str(), &json) ? "ok" : fbdo.errorReason().c_str());
 }
 
@@ -299,7 +304,7 @@ void loop() {
   if (Firebase.ready() && (millis() - sendDataPrevMillis > timerDelay || sendDataPrevMillis == 0)) {
     sendDataPrevMillis = millis();
 
-    sensorpath = databasePathSensors + "/";
+    sensorspath = databasePathSensors + "/";
 
     json.set(tempPath.c_str(), String(Suhu)); // Assuming temperature is a float or int
     json.set(tempPercPath.c_str(), String(temperaturePercentage));
@@ -316,11 +321,11 @@ void loop() {
     json.toString(jsonData); // Convert JSON object to string
     Serial.println("JSON Data: " + jsonData); // Print JSON data for debugging
     
-    Serial.printf("Set json... %s\n", Firebase.RTDB.setJSON(&fbdo, sensorpath.c_str(), &json) ? "ok" : fbdo.errorReason().c_str());
-
+    Serial.printf("Set json... %s\n", Firebase.RTDB.setJSON(&fbdo, sensorspath.c_str(), &json) ? "ok" : fbdo.errorReason().c_str());
     // Update relay states
     updateRelayStates();
 
     delay(1000); // Increased delay to reduce load
   }
+
 }
