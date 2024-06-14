@@ -34,7 +34,7 @@ const int waterpump = 18; // Deklarasi dan inisialisasi pin relay
 #define MIN_AMONIA 0
 #define MAX_AMONIA 0.2
 #define MIN_TDS 0
-#define MAX_TDS 100
+#define MAX_TDS 500
 #define MIN_PH 0
 #define MAX_PH 14
 #define MIN_TURBIDITY 0
@@ -166,7 +166,7 @@ void readTemperature(){
 
 
 void readAirQuality() {
-  float VRL = analogRead(MQ_sensor) * (3.3 / 4095.0);
+  float VRL = analogRead(MQ_SENSOR) * (3.3 / 4095.0);
   float RS = (3.3 / VRL - 1) * 10;
   float ratio = RS / Ro;
   float ppm = pow(10, ((log10(ratio) - b) / m));
@@ -189,7 +189,7 @@ void readAirQuality() {
 }
 
 void readTDS() {
-  int sensorValue = analogRead(TDS_Pin);
+  int sensorValue = analogRead(TDS_PIN);
   average = (0.6656 * sensorValue) + 69.604;
   tdsValue = map(average, 0, 1000, 500, 0);
   Serial.print("TDS Value: ");
@@ -238,7 +238,7 @@ float mapFloat(float x, float in_min, float in_max, float out_min, float out_max
 
 // Control relays based on sensor values
 void controlRelays() {
-  if (suhu > MAX_TEMPERATURE) {
+  if (Suhu > MAX_TEMPERATURE) {
     digitalWrite(chiller, HIGH);
     Serial.println("Chiller ON");
     coolerState = true;
@@ -248,7 +248,7 @@ void controlRelays() {
     coolerState = false;
   }
 
-  if (temperature < MIN_TEMPERATURE) {
+  if (Suhu < MIN_TEMPERATURE) {
     digitalWrite(Heater, HIGH);
     Serial.println("Heater ON");
     heaterState = true;
@@ -258,7 +258,7 @@ void controlRelays() {
     heaterState = false;
   }
 
-  if (tds > MAX_TDS) {
+  if (tdsValue > MAX_TDS) {
     digitalWrite(waterpump, HIGH);
     Serial.println("waterpump ON");
     waterPumpState = true;
@@ -324,7 +324,7 @@ if (Firebase.ready() && (millis() - sendDataPrevMillis > timerDelay || sendDataP
     json.toString(jsonData); // Convert JSON object to string
     Serial.println("JSON Data: " + jsonData); // Print JSON data for debugging
     
-    Serial.printf("Set json... %s\n", Firebase.RTDB.setJSON(&fbdo, parentPath.c_str(), &json) ? "ok" : fbdo.errorReason().c_str());
+    Serial.printf("Set json... %s\n", Firebase.RTDB.setJSON(&fbdo, databasePathSensors.c_str(), &json) ? "ok" : fbdo.errorReason().c_str());
     
     delay(1000); // Increased delay to reduce loadupdateRelayStates();
   }
