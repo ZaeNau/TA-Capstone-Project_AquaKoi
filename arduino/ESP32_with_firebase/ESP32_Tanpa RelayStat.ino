@@ -209,6 +209,14 @@ void controlRelays() {
     digitalWrite(waterpump, LOW);
     Serial.println("Water Pump OFF");
   }
+
+    if (kekeruhan < MIN_TURBIDITY) {
+    digitalWrite(waterpump, HIGH);
+    waterPumpState = true;
+  } else {
+    digitalWrite(waterpump, LOW);
+    waterPumpState = false;
+  }
 }
 
 void readTemperature(){
