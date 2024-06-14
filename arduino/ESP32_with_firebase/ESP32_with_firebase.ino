@@ -29,15 +29,15 @@ const int Heater = 17; // Deklarasi dan inisialisasi pin relay
 const int waterpump = 18; // Deklarasi dan inisialisasi pin relay
 
 // Relay limits
-#define MIN_TEMPERATURE 20
+#define MIN_TEMPERATURE 24
 #define MAX_TEMPERATURE 28
 #define MIN_AMONIA 0
 #define MAX_AMONIA 0.2
-#define MIN_TDS 0
+#define MIN_TDS 100
 #define MAX_TDS 500
 #define MIN_PH 0
 #define MAX_PH 14
-#define MIN_TURBIDITY 0
+#define MIN_TURBIDITY 5
 #define MAX_TURBIDITY 37
 
 // Sensor reading parameters
@@ -153,11 +153,13 @@ void readTemperature(){
   temperatureSensor.requestTemperatures();
   float temperature = temperatureSensor.getTempCByIndex(0);
   Suhu = 1.0465 * temperature - 1.3365;
+  // Suhu = map(average, 0, 100, 28, 0);
   Serial.print("Suhu: ");
   Serial.print(Suhu);
   Serial.println(" °C");
   // Calculate percentage
   temperaturePercentage = map(Suhu, MIN_TEMPERATURE, MAX_TEMPERATURE, 0, 100);
+  temperaturePercentage = constrain(temperaturePercentage, 0, 100);
   Serial.print("Suhu (Persentase): ");
   Serial.print(temperaturePercentage);
   Serial.println("%");
@@ -176,11 +178,12 @@ void readAirQuality() {
     readIndex = 0;
   }
   average = total / numReadings;
-  Amonia = map(average, 0, 10, 0.2, 0);
+  Amonia = map(average, 0, 100, 0.2, 0);
   Serial.print("Amonia ppm: ");
   Serial.println(Amonia);
   // Calculate percentage using the custom mapFloat function
   amoniaPercentage = mapFloat(Amonia, MIN_AMONIA, MAX_AMONIA, 0, 100);
+  amoniaPercentage = constrain(amoniaPercentage, 0, 100);
   Serial.print("Amonia (Persentase): ");
   Serial.print(amoniaPercentage);
   Serial.println("%");
@@ -189,11 +192,12 @@ void readAirQuality() {
 void readTDS() {
   int sensorValue = analogRead(TDS_PIN);
   average = (0.6656 * sensorValue) + 69.604;
-  tdsValue = map(average, 0, 1000, 500, 0);
+  tdsValue = map(average, 0, 1000, 600, 0);
   Serial.print("TDS Value: ");
   Serial.println(tdsValue);
   // Calculate percentage
   tdsPercentage = map(tdsValue, MIN_TDS, MAX_TDS, 0, 100);
+  tdsPercentage = constrain(tdsPercentage, 0, 100);
   Serial.print("TDS (Persentase): ");
   Serial.print(tdsPercentage);
   Serial.println("%");
@@ -206,6 +210,7 @@ void readPH() {
   Serial.println(corrected_pH, 4);
   // Calculate percentage
   phPercentage = map(corrected_pH, MIN_PH, MAX_PH, 0, 100);
+  phPercentage = constrain(phPercentage, 0, 100);
   Serial.print("pH (Persentase): ");
   Serial.print(phPercentage);
   Serial.println("%");
@@ -217,12 +222,13 @@ void readTurbidity() {
   readings[currentIndex] = Turbidity;
   total = total + readings[currentIndex];
   currentIndex = (currentIndex + 1) % numReadings;
-  int average = total / numReadings;
+  average = total / numReadings;
   kekeruhan = map(average, 0, 700, 37, 0);
   Serial.print("Kekeruhan Air : ");
   Serial.println(kekeruhan);
   // Calculate percentage
   turbidityPercentage = map(kekeruhan, MIN_TURBIDITY, MAX_TURBIDITY, 0, 100);
+  turbidityPercentage = constrain(turbidityPercentage, 0, 100);
   Serial.print("Kekeruhan Air (Persentase): ");
   Serial.print(turbidityPercentage);
   Serial.println("%");
@@ -252,6 +258,14 @@ void controlRelays() {
   }
 
   if (tdsValue > MAX_TDS) {
+    digitalWrite(waterpump, HIGH);
+    waterPumpState = true;
+  } else {
+    digitalWrite(waterpump, LOW);
+    waterPumpState = false;
+  }
+
+    if (kekeruhan < MIN_TURBIDITY) {
     digitalWrite(waterpump, HIGH);
     waterPumpState = true;
   } else {
