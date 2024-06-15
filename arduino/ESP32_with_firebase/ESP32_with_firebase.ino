@@ -266,7 +266,30 @@ void controlRelays() {
   }
 }
 
-// Update relay states in Firebase
+// Update Sensors data in Firebase
+void updateSensorsData() {
+  // Clear JSON object
+  json.clear();
+  sensorspath = databasePathSensors + "/"
+  // Update sensor data in the JSON object
+  json.set(tempPath.c_str(), String(Suhu)); // Assuming temperature is a float or int
+  json.set(tempPercPath.c_str(), String(temperaturePercentage));
+  json.set(amoPath.c_str(), String(Amonia)); // Assuming average is a float or int
+  json.set(amoPercPath.c_str(), String(amoniaPercentage));
+  json.set(tdsPath.c_str(), String(tdsValue)); // Assuming sensorValue is an int or float
+  json.set(tdsPercPath.c_str(), String(tdsPercentage));
+  json.set(phPath.c_str(), String(corrected_pH)); // Assuming phValue is a float
+  json.set(phPercPath.c_str(), String(phPercentage));
+  json.set(turbPath.c_str(), String(kekeruhan)); // Assuming kekeruhan is an int
+  json.set(turbPercPath.c_str(), String(turbidityPercentage));
+
+  String jsonData;
+  json.toString(jsonData); // Convert JSON object to string
+  Serial.println("JSON Data: " + jsonData); // Print JSON data for debugging
+  Serial.printf("Set json... %s\n", Firebase.RTDB.setJSON(&fbdo, sensorspath.c_str(), &json) ? "ok" : fbdo.errorReason().c_str());
+}
+
+// Update relay states data in Firebase
 void updateRelayStates() {
   json.clear();
   json.set("chiller", coolerState ? "1" : "0");
@@ -306,32 +329,14 @@ void loop() {
   readTurbidity();
   delay(2000); // Add delay to reduce the load
   controlRelays();
-
+  
   if (Firebase.ready() && (millis() - sendDataPrevMillis > timerDelay || sendDataPrevMillis == 0)) {
     sendDataPrevMillis = millis();
 
-    sensorspath = databasePathSensors + "/";
-
-    json.set(tempPath.c_str(), String(Suhu)); // Assuming temperature is a float or int
-    json.set(tempPercPath.c_str(), String(temperaturePercentage));
-    json.set(amoPath.c_str(), String(Amonia)); // Assuming average is a float or int
-    json.set(amoPercPath.c_str(), String(amoniaPercentage));
-    json.set(tdsPath.c_str(), String(tdsValue)); // Assuming sensorValue is an int or float
-    json.set(tdsPercPath.c_str(), String(tdsPercentage));
-    json.set(phPath.c_str(), String(corrected_pH)); // Assuming phValue is a float
-    json.set(phPercPath.c_str(), String(phPercentage));
-    json.set(turbPath.c_str(), String(kekeruhan)); // Assuming kekeruhan is an int
-    json.set(turbPercPath.c_str(), String(turbidityPercentage));
-
-    String jsonData;
-    json.toString(jsonData); // Convert JSON object to string
-    Serial.println("JSON Data: " + jsonData); // Print JSON data for debugging
-    
-    Serial.printf("Set json... %s\n", Firebase.RTDB.setJSON(&fbdo, sensorspath.c_str(), &json) ? "ok" : fbdo.errorReason().c_str());
-    // Update relay states
+    // Update sensor data in Firebase under the /sensors path
+    updateSensorsData();
+    // Update relay states in Firebase under the /relayState path
     updateRelayStates();
-
     delay(1000); // Increased delay to reduce load
   }
-
 }
