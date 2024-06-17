@@ -13,14 +13,15 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  await FirebaseApi().initNotifications();
 
-  // Set preferred orientation
+  // Replace with actual userId, for example by fetching it from authentication
+  String userId = 'cSFGHidGb4gzLBalujMaowdFDGG2';
+  await FirebaseApi().initNotifications(userId);
+
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
 
-  // Change theme if needed
   ThemeHelper().changeTheme('primary');
 
   runApp(MyApp());
@@ -32,7 +33,7 @@ class MyApp extends StatelessWidget {
     return Sizer(
       builder: (context, orientation, deviceType) {
         return MaterialApp(
-          navigatorKey: navigatorKey, // Add the navigator key here
+          navigatorKey: navigatorKey,
           theme: theme,
           title: 'aquakoi',
           debugShowCheckedModeBanner: false,
