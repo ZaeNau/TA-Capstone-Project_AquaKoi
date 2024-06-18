@@ -1,5 +1,9 @@
 # AquaKoi
 
+<p align="center">
+    <img src='/img/Slide 4_3 - 1.png'>
+</p>
+
 AquaKoi is an IoT-based system designed for monitoring and controlling the water quality in koi fish cultivation. The system provides real-time access to water parameters via a mobile application built with Flutter and Firebase, featuring automatic control mechanisms for optimal water conditions.
 
 ## Features
