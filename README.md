@@ -1,12 +1,11 @@
-# TA Capstone
+# TA-Capstone-Project_(AquaKoi)
  "Sistem Monitoring dan Control Kualitas Air Pada Pembudidayaan Ikan Koi Berbasis Internet of Things (IoT)"
 
 <p align="center">
     <img src='/img/universitas-telkom-2.jpg'>
 </p>
 
-In the background of this project, Pembudidayaan ikan koi semakin populer di kalangan penggemar ikan hias. Kualitas air yang buruk dapat menyebabkan stres pada ikan dan bahkan kematian, menyulitkan para pembudidaya. Untuk mengatasi masalah ini, teknologi berbasis Internet of Things (IoT) dikembangkan untuk pemantauan kualitas air secara real-time. Namun, belum ada alat sensor yang terintegrasi langsung dengan aplikasi mobile. Oleh karena itu, diperlukan pengembangan teknologi sensor canggih yang dapat mengukur parameter air secara real-time dan menjaga kualitas air tetap stabil. Alat ini akan terhubung dengan mobile application untuk pemantauan jarak jauh dan respons cepat terhadap perubahan kondisi air, serta menerapkan pendekatan berbasis data dan machine learning untuk menganalisis data kualitas air. Tantangan tetap ada dalam hal aksesibilitas dan biaya implementasi. Dengan demikian, proposal ini bertujuan untuk mengembangkan solusi efektif dan terhubung dalam pemantauan kualitas air untuk mendukung keberhasilan pembudidayaan ikan koi.
-
+In the background of this project, koi fish farming is increasingly popular among ornamental fish enthusiasts. Poor water quality can cause stress in fish and even death, making it difficult for farmers. To solve this problem, Internet of Things (IoT)-based technologies were developed for real-time monitoring of water quality. However, there is no sensor tool that is directly integrated with mobile applications. Therefore, it is necessary to develop advanced sensor technology that can measure water parameters in real-time and maintain stable water quality. This tool will be connected to a mobile application for remote monitoring and rapid response to changes in water conditions, and apply data-driven and machine learning approaches to analyze water quality data. Challenges remain in terms of accessibility and implementation costs. Thus, this proposal aims to develop an effective and connected solution for water quality monitoring to support successful koi fish farming.
 
 ## Project Documents:
 - Project Plan : https://drive.google.com/drive/folders/1sbX9HUXv0mQmwCuilSuDW-VSyVkuASoj
