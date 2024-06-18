@@ -50,12 +50,17 @@ class ParameterCard extends StatelessWidget {
             children: [
               Image.asset(imagePath, width: 24, height: 24),
               SizedBox(width: 8),
-              Expanded(child: Text(title,
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold))),
+              Expanded(
+                  child: Text(title,
+                      style: TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.bold))),
             ],
           ),
-          Text('$value $unit', style: TextStyle(
-              fontSize: 24, fontWeight: FontWeight.bold, color: Colors.blue)),
+          Text('$value $unit',
+              style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue)),
           LinearProgressIndicator(
             value: accuracy,
             backgroundColor: Colors.grey[300],
@@ -85,11 +90,15 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  final DatabaseReference _sensorsReference = FirebaseDatabase.instance.ref()
-      .child('UsersData').child('cSFGHidGb4gzLBalujMaowdFDGG2')
+  final DatabaseReference _sensorsReference = FirebaseDatabase.instance
+      .ref()
+      .child('UsersData')
+      .child('cSFGHidGb4gzLBalujMaowdFDGG2')
       .child('Sensors');
-  final DatabaseReference _relayStateReference = FirebaseDatabase.instance.ref()
-      .child('UsersData').child('cSFGHidGb4gzLBalujMaowdFDGG2')
+  final DatabaseReference _relayStateReference = FirebaseDatabase.instance
+      .ref()
+      .child('UsersData')
+      .child('cSFGHidGb4gzLBalujMaowdFDGG2')
       .child('relayState');
 
   Map<String, dynamic> sensorData = {};
@@ -119,9 +128,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
         final data = event.snapshot.value;
         if (data != null && data is Map) {
           setState(() {
-            _heaterState = data['Heater'] == '1';
+            _heaterState = data['heater'] == '1';
             _coolerState = data['chiller'] == '1';
-            _waterpState = data['WaterPump'] == '1';
+            _waterpState = data['waterpump'] == '1';
           });
         }
       });
@@ -133,30 +142,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
 
     // Listen for changes in the 'Heater', 'chiller', and 'WaterPump' nodes
-    _relayStateReference
-        .child('Heater')
-        .onValue
-        .listen((event) {
+    _relayStateReference.child('heater').onValue.listen((event) {
       var value = event.snapshot.value;
       setState(() {
         _heaterState = (value == '1');
       });
     });
 
-    _relayStateReference
-        .child('chiller')
-        .onValue
-        .listen((event) {
+    _relayStateReference.child('chiller').onValue.listen((event) {
       var value = event.snapshot.value;
       setState(() {
         _coolerState = (value == '1');
       });
     });
 
-    _relayStateReference
-        .child('WaterPump')
-        .onValue
-        .listen((event) {
+    _relayStateReference.child('waterpump').onValue.listen((event) {
       var value = event.snapshot.value;
       setState(() {
         _waterpState = (value == '1');
@@ -171,10 +171,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         backgroundColor: theme.colorScheme.onError,
         body: SingleChildScrollView(
           child: Container(
-            width: MediaQuery
-                .of(context)
-                .size
-                .width,
+            width: MediaQuery.of(context).size.width,
             padding: EdgeInsets.symmetric(horizontal: 15.h, vertical: 1.v),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -222,16 +219,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
         : 0.0;
 
     // Display the correct percentage, even if it exceeds 100%
-    String tempPercentageDisplay = (tempPercentage * 100).toStringAsFixed(0) +
-        "%";
+    String tempPercentageDisplay =
+        (tempPercentage * 100).toStringAsFixed(0) + "%";
 
     // Clamp the percentage for the GFProgressBar display
     double tempPercentageClamped = tempPercentage.clamp(0.0, 1.0);
 
-// Determine progress bar color based on the percentage
-    Color progressBarColor = tempPercentageClamped < 0.5 ? Colors.red : Colors
-        .green;
-
+    // Determine progress bar color based on the percentage
+    Color barColor;
+    if (tempPercentageClamped > 0.9333 || tempPercentageClamped < 0.6667) {
+      barColor = Colors.red;
+    } else {
+      barColor = Colors.green;
+    }
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 5.0),
       child: Container(
@@ -333,25 +333,38 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               child: SizedBox(
                                 width: 223.h,
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment
-                                      .spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       "Bad",
                                       style: CustomTextStyles
                                           .googleSansSecondaryContainer
                                           .copyWith(
-                                        color: theme.colorScheme
-                                            .secondaryContainer,
-                                        fontSize: 11.0, // Adjust the font size here
+                                        color: theme
+                                            .colorScheme.secondaryContainer,
+                                        fontSize:
+                                            11.0, // Adjust the font size here
                                       ),
                                     ),
                                     Text(
                                       "Good",
                                       style: CustomTextStyles
-                                          .googleSansGreenA700.copyWith(
+                                          .googleSansGreenA700
+                                          .copyWith(
                                         color: appTheme.greenA700,
-                                        fontSize: 11.0, // Adjust the font size here
+                                        fontSize:
+                                            11.0, // Adjust the font size here
+                                      ),
+                                    ),
+                                    Text(
+                                      "Bad",
+                                      style: CustomTextStyles
+                                          .googleSansSecondaryContainer
+                                          .copyWith(
+                                        color: theme
+                                            .colorScheme.secondaryContainer,
+                                        fontSize: 11.0,
                                       ),
                                     ),
                                   ],
@@ -367,7 +380,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   percentage: tempPercentageClamped,
                                   lineHeight: 25,
                                   backgroundColor: appTheme.blueGray100,
-                                  progressBarColor: progressBarColor,
+                                  progressBarColor: barColor,
                                   animation: true,
                                   animationDuration: 1000,
                                   radius: 20,
@@ -434,7 +447,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     SizedBox(height: 10.v),
                     Text(
                       "Cooler",
-                      style: CustomTextStyles.bodySmallPrimaryContainer_1.copyWith(fontSize: 11.0), // Adjust font size here
+                      style: CustomTextStyles.bodySmallPrimaryContainer_1
+                          .copyWith(fontSize: 11.0), // Adjust font size here
                     ),
                     SizedBox(height: 3.v),
                     Container(
@@ -468,8 +482,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
               ),
             ),
-
-
           ],
         ),
       ),
@@ -501,10 +513,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
     double phPercentageClamped = phPercentage.clamp(0.0, 1.0);
 
     // Determine progress bar color based on the percentage
-    Color progressBarColor = phPercentageClamped < 0.5 
-    ? Colors.red 
-    : Colors.green;
-
+    Color barColor;
+    if (phPercentageClamped > 0.5714 || phPercentageClamped < 0.4643) {
+      barColor = Colors.red;
+    } else {
+      barColor = Colors.green;
+    }
     return Container(
       margin: EdgeInsets.only(right: 4.h),
       padding: EdgeInsets.symmetric(horizontal: 10.h, vertical: 15.v),
@@ -585,8 +599,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Container(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: 4.h, vertical: 1.v),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 4.h, vertical: 1.v),
                     decoration: AppDecoration.outlineBlueGray.copyWith(
                       borderRadius: BorderRadiusStyle.roundedBorder15,
                     ),
@@ -605,7 +619,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 Text(
                                   "Bad",
                                   style: CustomTextStyles
-                                      .googleSansSecondaryContainer.copyWith(
+                                      .googleSansSecondaryContainer
+                                      .copyWith(
                                     color: theme.colorScheme.secondaryContainer,
                                     fontSize: 11.0, // Adjust the font size here
                                   ),
@@ -618,20 +633,29 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     fontSize: 11.0, // Adjust the font size here
                                   ),
                                 ),
+                                Text(
+                                  "Bad",
+                                  style: CustomTextStyles
+                                      .googleSansSecondaryContainer
+                                      .copyWith(
+                                    color: theme.colorScheme.secondaryContainer,
+                                    fontSize: 11.0,
+                                  ),
+                                ),
                               ],
                             ),
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 1, vertical: 3),
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 1, vertical: 3),
                           child: Container(
                             height: 20.v,
                             child: GFProgressBar(
                               percentage: phPercentageClamped,
                               lineHeight: 25,
                               backgroundColor: appTheme.blueGray100,
-                              progressBarColor: progressBarColor,
+                              progressBarColor: barColor,
                               animation: true,
                               animationDuration: 1000,
                               radius: 20,
@@ -665,17 +689,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
         : 0.0;
 
     // Display the correct percentage, even if it exceeds 100%
-    String ammoniaPercentageDisplay = (ammoniaPercentage * 100).toStringAsFixed(
-        0) + "%";
+    String ammoniaPercentageDisplay =
+        (ammoniaPercentage * 100).toStringAsFixed(0) + "%";
 
     // Clamp the percentage for the GFProgressBar display
     double ammoniaPercentageClamped = ammoniaPercentage.clamp(0.0, 1.0);
 
-// Determine progress bar color based on the percentage
-    Color progressBarColor = ammoniaPercentageClamped < 0.5
-        ? Colors.red
-        : Colors.green;
-
+    // Determine progress bar color based on the percentage
+    Color barColor;
+    if (ammoniaPercentageClamped > 0.2 || ammoniaPercentageClamped < 0.15) {
+      barColor = Colors.red;
+    } else {
+      barColor = Colors.green;
+    }
     return Container(
       margin: EdgeInsets.only(left: 4.h),
       padding: EdgeInsets.symmetric(horizontal: 10.h, vertical: 15.v),
@@ -756,8 +782,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Container(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: 4.h, vertical: 1.v),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 4.h, vertical: 1.v),
                     decoration: AppDecoration.outlineBlueGray.copyWith(
                       borderRadius: BorderRadiusStyle.roundedBorder15,
                     ),
@@ -776,7 +802,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 Text(
                                   "Bad",
                                   style: CustomTextStyles
-                                      .googleSansSecondaryContainer.copyWith(
+                                      .googleSansSecondaryContainer
+                                      .copyWith(
                                     color: theme.colorScheme.secondaryContainer,
                                     fontSize: 11.0, // Adjust the font size here
                                   ),
@@ -794,15 +821,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 1, vertical: 3),
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 1, vertical: 3),
                           child: Container(
                             height: 20.v,
                             child: GFProgressBar(
                               percentage: ammoniaPercentageClamped,
                               lineHeight: 25,
                               backgroundColor: appTheme.blueGray100,
-                              progressBarColor: progressBarColor,
+                              progressBarColor: barColor,
                               animation: true,
                               animationDuration: 1000,
                               radius: 20,
@@ -836,16 +863,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
         : 0.0;
 
     // Convert tdsPercentage to display as percentage
-    String tdsPercentageDisplay = (tdsPercentage * 100).toStringAsFixed(0) +"%";
+    String tdsPercentageDisplay =
+        (tdsPercentage * 100).toStringAsFixed(0) + "%";
 
     // Clamp the percentage for the GFProgressBar display
     double tdsPercentageClamped = tdsPercentage.clamp(0.0, 1.0);
 
     // Determine progress bar color based on the percentage
-    Color progressBarColor = tdsPercentageClamped < 0.5 
-    ? Colors.red 
-    : Colors.green;
-
+    Color barColor;
+    if (tdsPercentageClamped > 0.8333 || tdsPercentageClamped < 0.1667) {
+      barColor = Colors.red;
+    } else {
+      barColor = Colors.green;
+    }
     return Container(
       margin: EdgeInsets.only(right: 4.h),
       padding: EdgeInsets.symmetric(horizontal: 10.h, vertical: 15.v),
@@ -926,8 +956,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Container(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: 4.h, vertical: 1.v),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 4.h, vertical: 1.v),
                     decoration: AppDecoration.outlineBlueGray.copyWith(
                       borderRadius: BorderRadiusStyle.roundedBorder15,
                     ),
@@ -946,7 +976,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 Text(
                                   "Bad",
                                   style: CustomTextStyles
-                                      .googleSansSecondaryContainer.copyWith(
+                                      .googleSansSecondaryContainer
+                                      .copyWith(
                                     color: theme.colorScheme.secondaryContainer,
                                     fontSize: 11.0, // Adjust the font size here
                                   ),
@@ -959,20 +990,29 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     fontSize: 11.0, // Adjust the font size here
                                   ),
                                 ),
+                                Text(
+                                  "Bad",
+                                  style: CustomTextStyles
+                                      .googleSansSecondaryContainer
+                                      .copyWith(
+                                    color: theme.colorScheme.secondaryContainer,
+                                    fontSize: 11.0,
+                                  ),
+                                ),
                               ],
                             ),
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 1, vertical: 3),
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 1, vertical: 3),
                           child: Container(
                             height: 20.v,
                             child: GFProgressBar(
                               percentage: tdsPercentageClamped,
                               lineHeight: 25,
                               backgroundColor: appTheme.blueGray100,
-                              progressBarColor: progressBarColor,
+                              progressBarColor: barColor,
                               animation: true,
                               animationDuration: 1000,
                               radius: 20,
@@ -997,12 +1037,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
           SizedBox(height: 24.v),
           Padding(
-            padding: EdgeInsets.only(right:4.h),
+            padding: EdgeInsets.only(right: 4.h),
             child: Align(
               alignment: Alignment.center,
               child: Text(
                 "WaterPump",
-                style: CustomTextStyles.bodySmallPrimaryContainer_1.copyWith(fontSize:11.0),
+                style: CustomTextStyles.bodySmallPrimaryContainer_1
+                    .copyWith(fontSize: 11.0),
               ),
             ),
           ),
@@ -1045,16 +1086,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
         : 0.0;
 
     // Convert turbidityPercentage to display as percentage
-    String turbidityPercentageDisplay = (turbidityPercentage * 100)
-        .toStringAsFixed(0) + "%";
+    String turbidityPercentageDisplay =
+        (turbidityPercentage * 100).toStringAsFixed(0) + "%";
 
     // Clamp the percentage for the GFProgressBar display
     double turbidityPercentageClamped = turbidityPercentage.clamp(0.0, 1.0);
 
     // Determine progress bar color based on the percentage
-    Color progressBarColor = turbidityPercentageClamped < 0.5
-        ? Colors.red
-        : Colors.green;
+    Color barColor;
+    if (turbidityPercentageClamped > 0.925 ||
+        turbidityPercentageClamped < 0.125) {
+      barColor = Colors.red;
+    } else {
+      barColor = Colors.green;
+    }
 
     return Container(
       margin: EdgeInsets.only(left: 4.h),
@@ -1133,8 +1178,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Container(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: 4.h, vertical: 1.v),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 4.h, vertical: 1.v),
                     decoration: AppDecoration.outlineBlueGray.copyWith(
                       borderRadius: BorderRadiusStyle.roundedBorder15,
                     ),
@@ -1153,7 +1198,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 Text(
                                   "Bad",
                                   style: CustomTextStyles
-                                      .googleSansSecondaryContainer.copyWith(
+                                      .googleSansSecondaryContainer
+                                      .copyWith(
                                     color: theme.colorScheme.secondaryContainer,
                                     fontSize: 11.0, // Adjust the font size here
                                   ),
@@ -1166,20 +1212,29 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     fontSize: 11.0, // Adjust the font size here
                                   ),
                                 ),
+                                Text(
+                                  "Bad",
+                                  style: CustomTextStyles
+                                      .googleSansSecondaryContainer
+                                      .copyWith(
+                                    color: theme.colorScheme.secondaryContainer,
+                                    fontSize: 11.0,
+                                  ),
+                                ),
                               ],
                             ),
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 1, vertical: 3),
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 1, vertical: 3),
                           child: Container(
                             height: 20.v,
                             child: GFProgressBar(
                               percentage: turbidityPercentageClamped,
                               lineHeight: 25,
                               backgroundColor: appTheme.blueGray100,
-                              progressBarColor: progressBarColor,
+                              progressBarColor: barColor,
                               // Set color based on percentage
                               animation: true,
                               animationDuration: 1000,
@@ -1210,7 +1265,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
               alignment: Alignment.center,
               child: Text(
                 "WaterPump",
-                style: CustomTextStyles.bodySmallPrimaryContainer_1.copyWith(fontSize:11.0),
+                style: CustomTextStyles.bodySmallPrimaryContainer_1
+                    .copyWith(fontSize: 11.0),
               ),
             ),
           ),
@@ -1301,13 +1357,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-
   Widget _buildParameterRangeInfo(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 5.0),
+      padding: const EdgeInsets.symmetric(horizontal: 5.0),
       child: Container(
         padding: EdgeInsets.symmetric(
-          horizontal: 90.h,
+          horizontal: 20.h,
           vertical: 15.v,
         ),
         decoration: AppDecoration.fillOnSecondaryContainer.copyWith(
@@ -1319,45 +1374,42 @@ class _DashboardScreenState extends State<DashboardScreen> {
             Text(
               "Parameter Range Information",
               style: CustomTextStyles.bodySmallPrimaryContainer.copyWith(
-                fontSize: 13.h,
+                fontSize: 16.h,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 5.v),
-            Text(
-              "Temperature: 24°C - 28°C",
-              style: CustomTextStyles.bodySmallPrimaryContainer.copyWith(
-                fontSize: 10.h,
-              ),
-            ),
-            Text(
-              "TDS: No more than 150",
-              style: CustomTextStyles.bodySmallPrimaryContainer.copyWith(
-                fontSize: 9.h,
-              ),
-            ),
-            Text(
-              "pH: 6.5 - 8.0",
-              style: CustomTextStyles.bodySmallPrimaryContainer.copyWith(
-                fontSize: 9.h,
-              ),
-            ),
-            Text(
-              "Ammonia: No more than 0.2 mg/L",
-              style: CustomTextStyles.bodySmallPrimaryContainer.copyWith(
-                fontSize: 9.h,
-              ),
-            ),
-            Text(
-              "Turbidity: 5 - 37 NTU",
-              style: CustomTextStyles.bodySmallPrimaryContainer.copyWith(
-                fontSize: 9.h,
-              ),
-            ),
+            SizedBox(height: 10.v),
+            _buildParameterInfoRow("Temperature:", "24°C - 28°C"),
+            _buildParameterInfoRow("TDS:", "No more than 150"),
+            _buildParameterInfoRow("pH:", "6.5 - 8.0"),
+            _buildParameterInfoRow("Ammonia:", "No more than 0.2 mg/L"),
+            _buildParameterInfoRow("Turbidity:", "5 - 37 NTU"),
           ],
         ),
       ),
     );
   }
 
+  Widget _buildParameterInfoRow(String parameter, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            parameter,
+            style: CustomTextStyles.bodySmallPrimaryContainer.copyWith(
+              fontSize: 12.h,
+            ),
+          ),
+          Text(
+            value,
+            style: CustomTextStyles.bodySmallPrimaryContainer.copyWith(
+              fontSize: 12.h,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
