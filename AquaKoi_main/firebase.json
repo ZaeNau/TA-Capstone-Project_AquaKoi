@@ -12,8 +12,7 @@
         "lib/firebase_options.dart": {
           "projectId": "ta-capstone-22597",
           "configurations": {
-            "android": "1:508290113524:android:a40b5bd808c943b5dd63a1",
-            "web": "1:508290113524:web:5f11daba36b372e2dd63a1"
+            "android": "1:508290113524:android:a40b5bd808c943b5dd63a1"
           }
         }
       }
