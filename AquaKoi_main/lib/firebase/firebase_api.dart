@@ -1,12 +1,27 @@
 import 'package:aquakoi/main.dart';
 import 'package:aquakoi/routes/app_routes.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 class FirebaseApi {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  Future<void> initNotifications(String userId) async {
+  Future<void> initNotifications() async {
+    User? user = _auth.currentUser;
+    if (user == null) {
+      _auth.authStateChanges().listen((User? user) async {
+        if (user != null) {
+          await _initializeFCMToken(user.uid);
+        }
+      });
+    } else {
+      await _initializeFCMToken(user.uid);
+    }
+  }
+
+  Future<void> _initializeFCMToken(String userId) async {
     await _firebaseMessaging.requestPermission();
 
     final fCMToken = await _firebaseMessaging.getToken();

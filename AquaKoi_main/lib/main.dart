@@ -14,9 +14,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // Replace with actual userId, for example by fetching it from authentication
-  String userId = 'cSFGHidGb4gzLBalujMaowdFDGG2';
-  await FirebaseApi().initNotifications(userId);
+  FirebaseApi().initNotifications();
 
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
