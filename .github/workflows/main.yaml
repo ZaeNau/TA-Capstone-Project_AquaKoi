@@ -1,0 +1,68 @@
+name: Build and Release APK
+
+on:
+  push:
+    tags:
+      - 'v*' # Run this workflow on new tags starting with "v"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Java
+      uses: actions/setup-java@v1
+      with:
+        java-version: '11'
+
+    - name: Set up Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: 'stable'
+
+    - name: Install dependencies
+      run: flutter pub get
+
+    - name: Build APK
+      env:
+        KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+        KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        KEYSTORE_FILE: ${{ secrets.KEYSTORE_FILE }}
+        STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
+      run: |
+        echo "flutterVersionCode=1" >> local.properties
+        echo "flutterVersionName=1.0.0" >> local.properties
+        mkdir -p android/app/keystore
+        echo "${{ secrets.KEYSTORE_FILE }}" | base64 --decode > android/app/keystore/keystore.jks
+        ./gradlew assembleRelease -Pandroid.injected.signing.store.file=android/app/keystore/keystore.jks \
+          -Pandroid.injected.signing.store.password=$STORE_PASSWORD \
+          -Pandroid.injected.signing.key.alias=$KEY_ALIAS \
+          -Pandroid.injected.signing.key.password=$KEY_PASSWORD
+
+    - name: Upload APK
+      uses: actions/upload-artifact@v2
+      with:
+        name: release-apk
+        path: android/app/build/outputs/apk/release/app-release.apk
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
+
+    - name: Upload Release APK
+      uses: actions/upload-release-asset@v1
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: android/app/build/outputs/apk/release/app-release.apk
+        asset_name: app-release.apk
+        asset_content_type: application/vnd.android.package-archive
