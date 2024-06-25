@@ -11,12 +11,21 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v3
 
     - name: Set up Java
       uses: actions/setup-java@v2
       with:
         java-version: '17.0.11'
+        distribution: 'adopt'  # Specify the Java distribution (e.g., 'adopt', 'temurin', 'openjdk')
+        java-package: jdk
+        architecture: x64
+        check-latest: false
+        server-id: github
+        server-username: ${{ github.actor }}  # Use GITHUB_ACTOR to get the GitHub username
+        server-password: ${{ secrets.TOKEN }}
+        overwrite-settings: true
+        job-status: success
 
     - name: Set up Flutter
       uses: subosito/flutter-action@v2
