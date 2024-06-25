@@ -31,11 +31,11 @@ jobs:
       uses: subosito/flutter-action@v2
       with:
         flutter-version: '3.22.2'
-      working-directory: ./AquaKoi_main
+        working-directory: ./TA-Capstone-Project_AquaKoi/AquaKoi_main
 
     - name: Install dependencies
       run: flutter pub get
-      working-directory: ./AquaKoi_main
+      working-directory: ./TA-Capstone-Project_AquaKoi/AquaKoi_main
 
     - name: Build APK
       env:
