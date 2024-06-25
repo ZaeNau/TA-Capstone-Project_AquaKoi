@@ -22,6 +22,7 @@
     {
       "source": "functions",
       "codebase": "default",
+      "region": "asia-southeast1",
       "ignore": [
         "node_modules",
         ".git",
@@ -35,8 +36,8 @@
     "functions": {
       "port": 5001
     },
-    "database":{
-      "port":9000
+    "database": {
+      "port": 9000
     }
   }
 }

@@ -1,9 +1,9 @@
+import 'package:aquakoi/firebase/firebase_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase/firebase_options.dart';
 import 'core/app_export.dart';
-import 'firebase/firebase_api.dart';
 
 var globalMessengerKey = GlobalKey<ScaffoldMessengerState>();
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -14,7 +14,9 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  FirebaseApi().initNotifications();
+  // Contoh penggunaan initNotifications dengan userId
+  String userId = 'cSFGHidGb4gzLBalujMaowdFDGG2'; // Ganti dengan userId yang sesuai
+  await FirebaseApi().initNotifications(userId); // Memperbaiki pemanggilan initNotifications
 
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
