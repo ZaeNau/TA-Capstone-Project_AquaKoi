@@ -64,8 +64,8 @@ class _PanduanScreenState extends State<PanduanScreen> {
                 "assets/images/panduan (5).png",
                 """Panduan 5 
                 \n •	Controlling Kualitas Air pada halaman dashboard 
-                \n1.	Untuk mengatur suhu air, gunakan tombol untuk mengaktifkan atau menonaktifkan “Heater” dan “Cooler”.
-                \n2.	Untuk mengatur total dissolved water(TDS) dan kekeruhan (turbidity), gunakan tombol untuk mengaktifkan atau menonaktifkan “Filter”.""",
+                \n1.  Kondisi menyala atau tidak “Heater” dan “Cooler” akan ter-display jika terjadi abnormal pada paramater.
+                \n2.	Kondisi menyala atau tidak “Filter” akan ter-display jika terjadi abnormal pada Turbidity atau TDS.""",
               ),
               SizedBox(height: 12),
               _buildPanduanImageWithText(

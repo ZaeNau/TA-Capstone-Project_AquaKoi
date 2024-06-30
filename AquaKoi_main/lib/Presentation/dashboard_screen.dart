@@ -697,7 +697,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     // Determine progress bar color based on the percentage
     Color barColor;
-    if (ammoniaPercentageClamped > 0.2 || ammoniaPercentageClamped < 0.15) {
+    if (ammoniaPercentageClamped > 0.2 || ammoniaPercentageClamped < 0) {
       barColor = Colors.red;
     } else {
       barColor = Colors.green;
@@ -799,20 +799,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
+                                  Text(
+                                  "Good",
+                                  style: CustomTextStyles.googleSansGreenA700
+                                      .copyWith(
+                                    color: appTheme.greenA700,
+                                    fontSize: 11.0, // Adjust the font size here
+                                  ),
+                                ),
                                 Text(
                                   "Bad",
                                   style: CustomTextStyles
                                       .googleSansSecondaryContainer
                                       .copyWith(
                                     color: theme.colorScheme.secondaryContainer,
-                                    fontSize: 11.0, // Adjust the font size here
-                                  ),
-                                ),
-                                Text(
-                                  "Good",
-                                  style: CustomTextStyles.googleSansGreenA700
-                                      .copyWith(
-                                    color: appTheme.greenA700,
                                     fontSize: 11.0, // Adjust the font size here
                                   ),
                                 ),
@@ -1379,8 +1379,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
             ),
             SizedBox(height: 10.v),
-            _buildParameterInfoRow("Temperature:", "24°C - 28°C"),
-            _buildParameterInfoRow("TDS:", "No more than 150"),
+            _buildParameterInfoRow("Temperature:", "20°C - 28°C"),
+            _buildParameterInfoRow("TDS:", "100 - 500 ppm"),
             _buildParameterInfoRow("pH:", "6.5 - 8.0"),
             _buildParameterInfoRow("Ammonia:", "No more than 0.2 mg/L"),
             _buildParameterInfoRow("Turbidity:", "5 - 37 NTU"),
