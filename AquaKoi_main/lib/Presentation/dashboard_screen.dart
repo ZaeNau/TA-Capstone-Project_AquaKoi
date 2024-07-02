@@ -697,7 +697,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     // Determine progress bar color based on the percentage
     Color barColor;
-    if (ammoniaPercentageClamped > 0.2 || ammoniaPercentageClamped < 0) {
+    if (ammoniaPercentageClamped > 0.2) {
       barColor = Colors.red;
     } else {
       barColor = Colors.green;
